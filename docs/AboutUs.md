@@ -37,6 +37,16 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Developer
 * Responsibilities: Data
 
+### Chai Jiacheng 
+
+<img src="images/cjaycee.png" width="200px">
+
+[[github](http://github.com/cjaycee)]
+[[portfolio](team/johndoe.md)]
+
+* Role: Developer
+* Responsibilities: Scheduling and tracking
+
 ### Jamunarani Prabhu Pranav
 
 <img src="images/pranav3142.png" width="200px">
