@@ -8,19 +8,10 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
-
-<img src="images/johndoe.png" width="200px">
-
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
-
-* Role: Project Advisor
-
 ### Michelle Liew
 
-<img src="images/michelle.png" width="200px">
+<img src="images/miche1111e.png" width="200px">
+
 [[github](http://github.com/miche1111e)]
 [[portfolio](team/michelle.md)]
 
@@ -31,7 +22,8 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 <img src="images/tonyvict.png" width="200px">
 
-[[github](http://github.com/tonyvict)] [[portfolio](team/tonyvict.md)]
+[[github](http://github.com/tonyvict)] 
+[[portfolio](team/tonyvict.md)]
 
 * Role: Developer
 * Responsibilities: Data
