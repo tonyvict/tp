@@ -22,13 +22,13 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 <img src="images/tonyvict.png" width="200px">
 
-[[github](http://github.com/tonyvict)] 
+[[github](http://github.com/tonyvict)]
 [[portfolio](team/tonyvict.md)]
 
 * Role: Developer
 * Responsibilities: Data
 
-### Chai Jiacheng 
+### Chai Jiacheng
 
 <img src="images/cjaycee.png" width="200px">
 
