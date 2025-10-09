@@ -43,7 +43,7 @@ public class RemarkCommand extends Command {
         requireAllNonNull(index, remark);
 
         this.index = index;
-        this.remark = new Remark(remark);
+        this.remark = remark;
     }
 
 
