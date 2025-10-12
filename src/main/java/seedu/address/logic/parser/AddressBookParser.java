@@ -73,7 +73,7 @@ public class AddressBookParser {
             return new RemarkCommandParser().parse(arguments);
 
         case ScheduleCommand.COMMAND_WORD:
-            return new ScheduleCommand();
+            return new ScheduleCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);
