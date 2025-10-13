@@ -15,7 +15,7 @@ public class ScheduleCommandParser {
     public ScheduleCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args,
-                PREFIX_REMARK);
+                PREFIX_START, PREFIX_END, PREFIX_DATE, PREFIX_SUB);
 
         Index index;
         try {
