@@ -1,11 +1,15 @@
 package seedu.address.model.person;
 
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
-
+/**
+ * Represents a Person's Lesson in the address book.
+ * Guarantees: immutable; is always valid
+ */
 public class Lesson implements Comparable<Lesson> {
 
     public final LocalTime start;

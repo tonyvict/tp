@@ -3,14 +3,24 @@ package seedu.address.model.person;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Represents a Person's list of lessons in the address book.
+ * Guarantees: immutable; is always valid
+ */
 public class LessonList {
 
     private final ArrayList<Lesson> list;
 
+    /**
+     * Constructs an empty {@code LessonList}.
+     */
     public LessonList() {
         this.list = new ArrayList<>();
     }
 
+    /**
+     * Constructs a {@code LessonList} with given ArrayList.
+     */
     public LessonList(ArrayList<Lesson> list) {
         this.list = new ArrayList<>(list);
         sortLessons();
