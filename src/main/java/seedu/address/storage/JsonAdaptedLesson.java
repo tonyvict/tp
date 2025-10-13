@@ -47,6 +47,6 @@ class JsonAdaptedLesson {
         if (start == null || end == null || date == null || sub == null) {
             throw new IllegalValueException("Lesson fields cannot be null!");
         }
-        return new Lesson(start, end, date, su);
+        return new Lesson(start, end, date, sub);
     }
 }
