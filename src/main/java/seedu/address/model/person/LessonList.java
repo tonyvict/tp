@@ -19,7 +19,7 @@ public class LessonList {
     /**
      * Adds a lesson to the list in chronological order.
      */
-    public void addLesson(Lesson lesson) {
+    public void add(Lesson lesson) {
         int insertIndex = findInsertionIndex(lesson);
         list.add(insertIndex, lesson);
     }
@@ -46,7 +46,7 @@ public class LessonList {
     /**
      * Removes a lesson from the list.
      */
-    public boolean removeLesson(Lesson lesson) {
+    public boolean remove(Lesson lesson) {
         return list.remove(lesson);
     }
 

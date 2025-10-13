@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
@@ -66,6 +67,6 @@ public class Lesson implements Comparable<Lesson> {
 
     @Override
     public int hashCode() {
-        return date.hashCode() * 31 + start.hashCode();
+        return Objects.hash(start, end, date, sub);
     }
 }
