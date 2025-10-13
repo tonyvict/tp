@@ -3,12 +3,9 @@ package seedu.address.model.person;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static seedu.address.commons.util.AppUtil.checkArgument;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-public class Lesson {
-
-    public static final String MESSAGE_CONSTRAINTS = "Lesson should";
+public class Lesson implements Comparable<Lesson> {
 
     public final LocalTime start;
     public final LocalTime end;
@@ -25,19 +22,28 @@ public class Lesson {
      */
     public Lesson(String start, String end, String date, String sub) {
         requireAllNonNull(start, end, date, sub);
-        //checkArgument(isValidLesson(new Lesson(start, end, date, sub)), MESSAGE_CONSTRAINTS);
         this.start = LocalTime.parse(start);
         this.end = LocalTime.parse(end);
         this.date = LocalDate.parse(date);
         this.sub = sub;
     }
 
-    //not implemented yet
     /**
-     * Returns if a given lesson is a valid lesson.
+     * Compares this lesson with another lesson chronologically.
+     * Lessons are ordered by date first, then by start time.
+     *
+     * @param other the lesson to compare to
+     * @return negative if this lesson is before other, positive if after, 0 if same time
      */
-    public static boolean isValidLesson(Lesson test) {
-        return true;
+    @Override
+    public int compareTo(Lesson other) {
+        // First compare by date
+        int dateComparison = this.date.compareTo(other.date);
+        if (dateComparison != 0) {
+            return dateComparison;
+        }
+        // If same date, compare by start time
+        return this.start.compareTo(other.start);
     }
 
     @Override
@@ -56,5 +62,10 @@ public class Lesson {
                 && end.equals(otherLesson.end)
                 && date.equals(otherLesson.date)
                 && sub.equals(otherLesson.sub);
+    }
+
+    @Override
+    public int hashCode() {
+        return date.hashCode() * 31 + start.hashCode();
     }
 }
