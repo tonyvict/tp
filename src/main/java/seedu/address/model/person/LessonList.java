@@ -17,23 +17,26 @@ public class LessonList {
     }
 
     /**
-     * Adds a lesson to the list in chronological order.
+     * Returns a new LessonList with the lesson added in chronological order.
+     * Does not modify the original LessonList.
      */
-    public void add(Lesson lesson) {
-        int insertIndex = findInsertionIndex(lesson);
-        list.add(insertIndex, lesson);
+    public LessonList add(Lesson lesson) {
+        ArrayList<Lesson> newList = new ArrayList<>(list);
+        int insertIndex = findInsertionIndex(lesson, newList);
+        newList.add(insertIndex, lesson);
+        return new LessonList(newList);
     }
 
     /**
      * Finds the correct index to insert a lesson while maintaining chronological order.
      */
-    private int findInsertionIndex(Lesson newLesson) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).compareTo(newLesson) > 0) {
+    private int findInsertionIndex(Lesson newLesson, ArrayList<Lesson> targetList) {
+        for (int i = 0; i < targetList.size(); i++) {
+            if (targetList.get(i).compareTo(newLesson) > 0) {
                 return i;
             }
         }
-        return list.size();
+        return targetList.size();
     }
 
     /**

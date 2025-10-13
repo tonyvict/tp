@@ -69,4 +69,10 @@ public class Lesson implements Comparable<Lesson> {
     public int hashCode() {
         return Objects.hash(start, end, date, sub);
     }
+
+    @Override
+    public String toString() {
+        return sub + " class: " + date.toString() + " from " + start.toString() + " to " + end.toString();
+    }
+
 }
