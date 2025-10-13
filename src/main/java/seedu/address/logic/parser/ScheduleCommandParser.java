@@ -8,10 +8,17 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.commands.ScheduleCommand;
+import seedu.address.model.person.Lesson;
 
-
+/**
+ * Parses input arguments and creates a new {@code ScheduleCommand} object
+ */
 public class ScheduleCommandParser {
-
+    /**
+     * Parses the given {@code String} of arguments in the context of the {@code ScheduleCommand}
+     * and returns a {@code ScheduleCommand} object for execution.
+     * @throws ParseException if the user input does not conform the expected format
+     */
     public ScheduleCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args,
@@ -30,7 +37,8 @@ public class ScheduleCommandParser {
         String date = argMultimap.getValue(PREFIX_DATE).orElse("");
         String sub = argMultimap.getValue(PREFIX_SUB).orElse("");
 
-        return new ScheduleCommand(index, start, end, date, sub);
+        Lesson lesson = new Lesson(start, end, date, sub);
+        return new ScheduleCommand(index, lesson);
     }
 
 }
