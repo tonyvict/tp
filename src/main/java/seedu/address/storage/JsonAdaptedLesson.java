@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Lesson;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 /**
  * Jackson-friendly version of {@link Lesson}.

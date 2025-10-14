@@ -55,7 +55,7 @@ public class MarkCommand extends Command {
                 Lesson markedLesson = new Lesson(lesson.start, lesson.end, lesson.date, lesson.sub, true);
                 updatedLessonList = updatedLessonList.add(markedLesson);
                 lessonFound = true;
-            }else{
+            } else {
                 updatedLessonList = updatedLessonList.add(lesson);
             }
         }

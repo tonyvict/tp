@@ -13,8 +13,6 @@ import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 /**
  * Parses input arguments and creates a new {@code ScheduleCommand} object
