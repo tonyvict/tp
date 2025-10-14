@@ -49,7 +49,8 @@ public class MarkCommandTest {
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(personToMark, markedPerson);
 
-        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_ATTENDANCE_SUCCESS, markedPerson.getName().fullName);
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_ATTENDANCE_SUCCESS,
+                                               markedPerson.getName().fullName);
 
         assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
     }
