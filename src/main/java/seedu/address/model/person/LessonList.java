@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Represents a Person's list of lessons in the address book.
@@ -96,5 +97,25 @@ public class LessonList {
      */
     public boolean isEmpty() {
         return list.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        if (!(other instanceof LessonList)) {
+            return false;
+        }
+
+        LessonList otherLessonList = (LessonList) other;
+        return list.equals(otherLessonList.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(list);
     }
 }

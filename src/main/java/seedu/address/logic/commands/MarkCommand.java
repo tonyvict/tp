@@ -31,6 +31,7 @@ public class MarkCommand extends Command {
 
     /**
      * Creates a MarkCommand to mark attendance for the specified {@code Person}.
+     * @param targetIndex of the person in the filtered person list to mark attendance
      */
     public MarkCommand(Index targetIndex) {
         requireNonNull(targetIndex);
