@@ -65,14 +65,8 @@ public class PersonCard extends UiPart<Region> {
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
 
-        StringBuilder sb = new StringBuilder();
-        for (Lesson lesson : person.getLessonList().getLessons()) {
-            sb.append(lesson.toString()).append("\n");
-        }
-        // trim() removes the last newline character
-        lessonList.setText(sb.toString().trim());
-
-        long attendedClasses = person.getLessonList().getLessons().stream().filter(lesson -> lesson.isPresent).count();
+        lessonList.setText(person.getLessonList().getLessons().toString());
+        long attendedClasses = person.getLessonList().getAttendedLessonCount();
         long totalClasses = person.getLessonList().size();
         attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
     }
