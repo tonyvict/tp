@@ -16,6 +16,7 @@ public class Lesson implements Comparable<Lesson> {
     public final LocalTime end;
     public final LocalDate date;
     public final String sub;
+    public final boolean isPresent;
 
     /**
      * Constructs an {@code Lesson}.
@@ -24,15 +25,34 @@ public class Lesson implements Comparable<Lesson> {
      * @param end A valid time after start in HH:mm format
      * @param date A valid date in YYYY-MM-DD format
      * @param sub A valid subject
+     * @param isPresent The attendance status
      */
-    public Lesson(String start, String end, String date, String sub) {
+    public Lesson(String start, String end, String date, String sub, boolean isPresent) {
         requireAllNonNull(start, end, date, sub);
         this.start = LocalTime.parse(start);
         this.end = LocalTime.parse(end);
         this.date = LocalDate.parse(date);
         this.sub = sub;
+        this.isPresent = isPresent;
     }
 
+    /**
+     * Constructs an {@code Lesson} with a specific attendance status.
+     *
+     * @param start A valid time
+     * @param end A valid time after start
+     * @param date A valid date
+     * @param sub A valid subject
+     * @param isPresent The attendance status
+     */
+    public Lesson(LocalTime start, LocalTime end, LocalDate date, String sub, boolean isPresent) {
+        requireAllNonNull(start, end, date, sub);
+        this.start = start;
+        this.end = end;
+        this.date = date;
+        this.sub = sub;
+        this.isPresent = isPresent;
+    }
     /**
      * Compares this lesson with another lesson chronologically.
      * Lessons are ordered by date first, then by start time.
@@ -66,7 +86,8 @@ public class Lesson implements Comparable<Lesson> {
         return start.equals(otherLesson.start)
                 && end.equals(otherLesson.end)
                 && date.equals(otherLesson.date)
-                && sub.equals(otherLesson.sub);
+                && sub.equals(otherLesson.sub)
+                && isPresent == otherLesson.isPresent;
     }
 
     @Override
@@ -76,7 +97,8 @@ public class Lesson implements Comparable<Lesson> {
 
     @Override
     public String toString() {
-        return sub + " class: " + date.toString() + " from " + start.toString() + " to " + end.toString();
+        String attendance = isPresent ? "[Present]" : "[Not Present]";
+        return sub + " class: " + date.toString() + " from " + start.toString() + " to " + end.toString() + attendance;
     }
 
 }
