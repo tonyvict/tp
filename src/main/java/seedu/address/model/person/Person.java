@@ -4,6 +4,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,6 +26,8 @@ public class Person {
     private final Address address;
     private final Remark remark;
     private final Set<Tag> tags = new HashSet<>();
+    private final Set<Attribute> attributes;
+
 
     /**
      * Every field must be present and not null.
@@ -37,6 +40,18 @@ public class Person {
         this.address = address;
         this.remark = remark;
         this.tags.addAll(tags);
+        this.attributes = new HashSet<>();
+    }
+
+    public Person(Name name, Phone phone, Email email, Address address, Remark remark, Set<Tag> tags, Set<Attribute> attributes) {
+        requireAllNonNull(name, phone, email, address, tags, attributes);
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.remark = remark;
+        this.tags.addAll(tags);
+        this.attributes = attributes;
     }
 
     public Name getName() {
@@ -57,6 +72,10 @@ public class Person {
 
     public Remark getRemark() {
         return remark;
+    }
+
+    public Set<Attribute> getAttributes() {
+        return attributes;
     }
 
     /**
@@ -119,6 +138,5 @@ public class Person {
                 .add("tags", tags)
                 .toString();
     }
-
 }
 

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -30,6 +31,7 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final String remark;
+    private final List<JsonAdaptedAttribute> attributes;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
@@ -38,12 +40,14 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
-                             @JsonProperty("remark") String remark, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+                             @JsonProperty("remark") String remark,  @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes,
+                             @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.remark = remark;
+        this.attributes = attributes != null ? attributes : new ArrayList<>();
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -58,6 +62,9 @@ class JsonAdaptedPerson {
         email = source.getEmail().value;
         address = source.getAddress().value;
         remark = source.getRemark().value;
+        attributes = source.getAttributes().stream()
+                .map(JsonAdaptedAttribute::new)
+                .collect(Collectors.toList());
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
@@ -111,8 +118,12 @@ class JsonAdaptedPerson {
         }
         final Remark modelRemark = new Remark(remark);
 
+        final Set<Attribute> modelAttributes = new HashSet<>();
+        for (JsonAdaptedAttribute attribute : attributes) {
+            modelAttributes.add(attribute.toModelType());
+        }
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelRemark, modelTags);
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelRemark, modelTags, modelAttributes);
     }
 
 }
