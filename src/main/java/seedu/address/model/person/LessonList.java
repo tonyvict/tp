@@ -79,6 +79,13 @@ public class LessonList {
     }
 
     /**
+     * Returns the number of attended lessons in the list.
+     */
+    public long getAttendedLessonCount() {
+        return list.stream().filter(lesson -> lesson.isPresent).count();
+    }
+
+    /**
      * Returns an unmodifiable view of the lesson list.
      */
     public ArrayList<Lesson> getLessons() {

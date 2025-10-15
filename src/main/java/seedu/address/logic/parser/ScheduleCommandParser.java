@@ -13,6 +13,7 @@ import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
 
+
 /**
  * Parses input arguments and creates a new {@code ScheduleCommand} object
  */
@@ -40,7 +41,7 @@ public class ScheduleCommandParser {
         String date = argMultimap.getValue(PREFIX_DATE).orElse("");
         String sub = argMultimap.getValue(PREFIX_SUB).orElse("");
 
-        Lesson lesson = new Lesson(start, end, date, sub);
+        Lesson lesson = new Lesson(start, end, date, sub, false);
         return new ScheduleCommand(index, lesson);
     }
 

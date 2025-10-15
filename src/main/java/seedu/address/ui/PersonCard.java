@@ -44,6 +44,9 @@ public class PersonCard extends UiPart<Region> {
     private Label remark;
     @FXML
     private Label lessonList;
+    @FXML
+    private Label attendance;
+
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -60,6 +63,10 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+
         lessonList.setText(person.getLessonList().getLessons().toString());
+        long attendedClasses = person.getLessonList().getAttendedLessonCount();
+        long totalClasses = person.getLessonList().size();
+        attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
     }
 }
