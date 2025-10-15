@@ -111,6 +111,7 @@ public class EditCommand extends Command {
                 updatedAddress,
                 updatedRemark,
                 updatedTags,
+                personToEdit.getAttributes(),
                 updatedLessonList);
     }
 

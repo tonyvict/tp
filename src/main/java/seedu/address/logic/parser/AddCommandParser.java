@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -49,7 +50,7 @@ public class AddCommandParser implements Parser<AddCommand> {
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
         LessonList lessonList = new LessonList();
 
-        Person person = new Person(name, phone, email, address, remark, tagList, lessonList);
+        Person person = new Person(name, phone, email, address, remark, tagList, new HashSet<>(), lessonList);
 
         return new AddCommand(person);
     }
