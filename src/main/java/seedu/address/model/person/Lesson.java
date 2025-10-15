@@ -1,0 +1,104 @@
+package seedu.address.model.person;
+
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Objects;
+
+/**
+ * Represents a Person's Lesson in the address book.
+ * Guarantees: immutable; is always valid
+ */
+public class Lesson implements Comparable<Lesson> {
+
+    public final LocalTime start;
+    public final LocalTime end;
+    public final LocalDate date;
+    public final String sub;
+    public final boolean isPresent;
+
+    /**
+     * Constructs an {@code Lesson}.
+     *
+     * @param start A valid time in HH:mm format
+     * @param end A valid time after start in HH:mm format
+     * @param date A valid date in YYYY-MM-DD format
+     * @param sub A valid subject
+     * @param isPresent The attendance status
+     */
+    public Lesson(String start, String end, String date, String sub, boolean isPresent) {
+        requireAllNonNull(start, end, date, sub);
+        this.start = LocalTime.parse(start);
+        this.end = LocalTime.parse(end);
+        this.date = LocalDate.parse(date);
+        this.sub = sub;
+        this.isPresent = isPresent;
+    }
+
+    /**
+     * Constructs an {@code Lesson} with a specific attendance status.
+     *
+     * @param start A valid time
+     * @param end A valid time after start
+     * @param date A valid date
+     * @param sub A valid subject
+     * @param isPresent The attendance status
+     */
+    public Lesson(LocalTime start, LocalTime end, LocalDate date, String sub, boolean isPresent) {
+        requireAllNonNull(start, end, date, sub);
+        this.start = start;
+        this.end = end;
+        this.date = date;
+        this.sub = sub;
+        this.isPresent = isPresent;
+    }
+    /**
+     * Compares this lesson with another lesson chronologically.
+     * Lessons are ordered by date first, then by start time.
+     *
+     * @param other the lesson to compare to
+     * @return negative if this lesson is before other, positive if after, 0 if same time
+     */
+    @Override
+    public int compareTo(Lesson other) {
+        // First compare by date
+        int dateComparison = this.date.compareTo(other.date);
+        if (dateComparison != 0) {
+            return dateComparison;
+        }
+        // If same date, compare by start time
+        return this.start.compareTo(other.start);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        if (!(other instanceof Lesson)) {
+            return false;
+        }
+
+        Lesson otherLesson = (Lesson) other;
+        return start.equals(otherLesson.start)
+                && end.equals(otherLesson.end)
+                && date.equals(otherLesson.date)
+                && sub.equals(otherLesson.sub)
+                && isPresent == otherLesson.isPresent;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, date, sub);
+    }
+
+    @Override
+    public String toString() {
+        String attendance = isPresent ? "[Present]" : "[Not Present]";
+        return sub + " class: " + date.toString() + " from " + start.toString() + " to " + end.toString() + attendance;
+    }
+
+}

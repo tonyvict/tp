@@ -5,13 +5,15 @@
     "email": "alice@example.com",
     "address": "123, Jurong West Ave 6, #08-111",
     "remark" : "",
-    "tags": [ "friends" ]
+    "tags": [ "friends" ],
+    "lessonList": [ ]
   }, {
     "name": "Alice Paul",
     "phone": "94351253",
     "email": "pauline@example.com",
     "address": "4th street",
-    "remark" : ""
+    "remark" : "",
+    "lessonList": [ ]
   } ]
 }
 

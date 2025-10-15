@@ -6,6 +6,7 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.LessonList;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -29,8 +30,9 @@ public class PersonBuilder {
     private Email email;
     private Address address;
     private Remark remark;
-    private Set<Attribute> attributes;
     private Set<Tag> tags;
+    private Set<Attribute> attributes;
+    private LessonList lessonList;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -41,8 +43,9 @@ public class PersonBuilder {
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
         remark = new Remark(DEFAULT_REMARK);
-        attributes = new HashSet<>();
         tags = new HashSet<>();
+        attributes = new HashSet<>();
+        lessonList = new LessonList();
     }
 
     /**
@@ -54,8 +57,9 @@ public class PersonBuilder {
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
         remark = personToCopy.getRemark();
-        attributes = new HashSet<>(personToCopy.getAttributes());
         tags = new HashSet<>(personToCopy.getTags());
+        attributes = new HashSet<>(personToCopy.getAttributes());
+        lessonList = personToCopy.getLessonList();
     }
 
     /**
@@ -106,16 +110,29 @@ public class PersonBuilder {
         return this;
     }
 
+
     /**
-     * Sets the {@code Remark} of the {@code Person} that we are building.
+     * Sets the {@code Attributes} of the {@code Person} that we are building.
      */
-    public PersonBuilder withRemark(String remark) {
-        this.remark = new Remark(remark);
+    public PersonBuilder withAttributes(Attribute... attributes) {
+        this.attributes = new HashSet<>();
+        for (Attribute attribute : attributes) {
+            this.attributes.add(attribute);
+        }
+        return this;
+    }
+
+    /**
+     * Sets the {@code LessonList} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withLessonList(LessonList lessonList) {
+        this.lessonList = lessonList;
         return this;
     }
 
     public Person build() {
-        return new Person(name, phone, email, address, remark, tags, attributes);
+        return new Person(name, phone, email, address, remark, tags, attributes, lessonList);
     }
 }
+
 

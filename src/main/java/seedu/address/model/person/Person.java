@@ -4,7 +4,6 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,32 +25,29 @@ public class Person {
     private final Address address;
     private final Remark remark;
     private final Set<Tag> tags = new HashSet<>();
-    private final Set<Attribute> attributes;
-
+    private final Set<Attribute> attributes = new HashSet<>();
+    private final LessonList lessonList;
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Remark remark, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name,
+                  Phone phone,
+                  Email email,
+                  Address address,
+                  Remark remark,
+                  Set<Tag> tags,
+                  Set<Attribute> attributes,
+                  LessonList lessonList) {
+        requireAllNonNull(name, phone, email, address, tags, attributes, lessonList);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.remark = remark;
         this.tags.addAll(tags);
-        this.attributes = new HashSet<>();
-    }
-
-    public Person(Name name, Phone phone, Email email, Address address, Remark remark, Set<Tag> tags, Set<Attribute> attributes) {
-        requireAllNonNull(name, phone, email, address, tags, attributes);
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.remark = remark;
-        this.tags.addAll(tags);
-        this.attributes = attributes;
+        this.attributes.addAll(attributes);
+        this.lessonList = lessonList;
     }
 
     public Name getName() {
@@ -74,8 +70,8 @@ public class Person {
         return remark;
     }
 
-    public Set<Attribute> getAttributes() {
-        return attributes;
+    public LessonList getLessonList() {
+        return lessonList;
     }
 
     /**
@@ -84,6 +80,14 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    /**
+     * Returns an immutable attribute set, which throws {@code UnsupportedOperationException}
+     * if modification is attempted.
+     */
+    public Set<Attribute> getAttributes() {
+        return Collections.unmodifiableSet(attributes);
     }
 
     /**
@@ -119,13 +123,15 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags);
+                && tags.equals(otherPerson.tags)
+                && attributes.equals(otherPerson.attributes)
+                && lessonList.equals(otherPerson.lessonList);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, tags, attributes, lessonList);
     }
 
     @Override
@@ -136,6 +142,8 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("attributes", attributes)
+                .add("lesson list", lessonList)
                 .toString();
     }
 

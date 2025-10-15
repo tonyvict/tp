@@ -10,36 +10,27 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.TagCommand;
+import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Attribute;
+import seedu.address.model.person.AttributeContainsPredicate;
 
 /**
- * Parses input arguments and creates a new {@code TagCommand} object.
+ * Parses input arguments and creates a new FilterCommand object
  */
-public class TagCommandParser implements Parser<TagCommand> {
+public class FilterCommandParser implements Parser<FilterCommand> {
 
     /**
-     * Parses the given {@code String} of arguments in the context of the {@code TagCommand}
-     * and returns a {@code TagCommand} object for execution.
-     * @throws ParseException if the user input does not conform to the expected format.
+     * Parses the given {@code String} of arguments in the context of the FilterCommand
+     * and returns a FilterCommand object for execution.
+     * @throws ParseException if the user input does not conform the expected format
      */
-    public TagCommand parse(String args) throws ParseException {
+    public FilterCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_ATTRIBUTE);
 
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE), ive);
-        }
+        Map<String, Set<String>> attributeFilters = new HashMap<>();
 
-        Set<Attribute> attributesToAdd = new HashSet<>();
-
-        // For each attr/ prefix segment (e.g. attr/subject=math,science)
+        // Parse each attribute filter
         for (String attrString : argMultimap.getAllValues(PREFIX_ATTRIBUTE)) {
             if (!attrString.contains("=")) {
                 throw new ParseException("Incorrect format. Use attr/key=value[,value2]...");
@@ -63,15 +54,25 @@ public class TagCommandParser implements Parser<TagCommand> {
                 throw new ParseException("Attribute must have at least one value.");
             }
 
-            Attribute attribute = new Attribute(key, values);
-            attributesToAdd.add(attribute);
+            // Special validation for age attribute
+            if (key.equals("age")) {
+                for (String value : values) {
+                    try {
+                        Integer.parseInt(value);
+                    } catch (NumberFormatException e) {
+                        throw new ParseException("Age must be a valid integer.");
+                    }
+                }
+            }
+
+            attributeFilters.put(key, values);
         }
 
-        if (attributesToAdd.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
+        if (attributeFilters.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
 
-        return new TagCommand(index, attributesToAdd);
+        return new FilterCommand(new AttributeContainsPredicate(attributeFilters));
     }
 
 }

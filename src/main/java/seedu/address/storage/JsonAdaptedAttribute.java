@@ -1,10 +1,5 @@
 package seedu.address.storage;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,45 +9,42 @@ import seedu.address.model.person.Attribute;
 /**
  * Jackson-friendly version of {@link Attribute}.
  */
-public class JsonAdaptedAttribute {
-
-    public static final String MISSING_FIELD_MESSAGE_FORMAT = "Attribute's %s field is missing!";
+class JsonAdaptedAttribute {
 
     private final String key;
-    private final List<String> values;
+    private final String value;
 
     /**
-     * Constructs a {@code JsonAdaptedAttribute} with the given details.
+     * Constructs a {@code JsonAdaptedAttribute} with the given attribute details.
      */
     @JsonCreator
-    public JsonAdaptedAttribute(@JsonProperty("key") String key,
-                                @JsonProperty("values") List<String> values) {
+    public JsonAdaptedAttribute(@JsonProperty("key") String key, @JsonProperty("value") String value) {
         this.key = key;
-        this.values = values;
+        this.value = value;
     }
 
     /**
      * Converts a given {@code Attribute} into this class for Jackson use.
      */
     public JsonAdaptedAttribute(Attribute source) {
-        this.key = source.getKey();
-        this.values = source.getValues().stream().collect(Collectors.toList());
+        key = source.key;
+        value = source.value;
     }
 
     /**
      * Converts this Jackson-friendly adapted attribute object into the model's {@code Attribute} object.
+     *
+     * @throws IllegalValueException if there were any data constraints violated in the adapted attribute.
      */
     public Attribute toModelType() throws IllegalValueException {
-        if (key == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "key"));
+        if (!Attribute.isValidKey(key)) {
+            throw new IllegalValueException("Invalid attribute key: " + key);
         }
-
-        if (values == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "values"));
+        if (!Attribute.isValidValue(value)) {
+            throw new IllegalValueException("Invalid attribute value: " + value);
         }
-
-        Set<String> valueSet = new HashSet<>(values);
-        return new Attribute(key, valueSet);
+        return new Attribute(key, value);
     }
 
 }
+
