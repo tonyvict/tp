@@ -35,9 +35,6 @@ public class JsonAdaptedPersonTest {
     private static final List<JsonAdaptedAttribute> VALID_ATTRIBUTES = BENSON.getAttributes().stream()
             .map(JsonAdaptedAttribute::new)
             .collect(Collectors.toList());
-    private static final List<JsonAdaptedAttribute> VALID_ATTRIBUTES = BENSON.getAttributes().stream()
-            .map(JsonAdaptedAttribute::new)
-            .collect(Collectors.toList());
     private static final List<JsonAdaptedLesson> VALID_LESSON_LIST = BENSON.getLessonList().getLessons().stream()
             .map(JsonAdaptedLesson::new)
             .collect(Collectors.toList());

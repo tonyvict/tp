@@ -32,6 +32,7 @@
       <Label fx:id="address" styleClass="cell_small_label" text="\$address" />
       <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
       <Label fx:id="remark" styleClass="cell_small_label" text="\$remark" />
+        <FlowPane fx:id="attributes" hgap="5" vgap="3" />
       <Label fx:id="lessonList" styleClass="cell_small_label" text="\$lessonList" />
       <Label fx:id="attendance" styleClass="cell_small_label" text="\$attendance" />
     </VBox>

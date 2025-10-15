@@ -110,15 +110,11 @@ public class PersonBuilder {
         return this;
     }
 
-
     /**
-     * Sets the {@code Attributes} of the {@code Person} that we are building.
+     * Sets the {@code Remark} of the {@code Person} that we are building.
      */
-    public PersonBuilder withAttributes(Attribute... attributes) {
-        this.attributes = new HashSet<>();
-        for (Attribute attribute : attributes) {
-            this.attributes.add(attribute);
-        }
+    public PersonBuilder withRemark(String remark) {
+        this.remark = new Remark(remark);
         return this;
     }
 

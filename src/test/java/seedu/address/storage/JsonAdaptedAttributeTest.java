@@ -3,6 +3,11 @@ package seedu.address.storage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -11,9 +16,9 @@ import seedu.address.model.person.Attribute;
 public class JsonAdaptedAttributeTest {
 
     private static final String VALID_KEY = "subject";
-    private static final String VALID_VALUE = "math";
+    private static final List<String> VALID_VALUE = Arrays.asList("math");
     private static final String INVALID_KEY = "";
-    private static final String INVALID_VALUE = "";
+    private static final List<String> INVALID_VALUE = new ArrayList<>();
 
     @Test
     public void toModelType_validAttributeDetails_returnsAttribute() throws Exception {
@@ -38,7 +43,7 @@ public class JsonAdaptedAttributeTest {
     @Test
     public void toModelType_invalidValue_throwsIllegalValueException() {
         JsonAdaptedAttribute attribute = new JsonAdaptedAttribute(VALID_KEY, INVALID_VALUE);
-        String expectedMessage = "Invalid attribute value: ";
+        String expectedMessage = "Invalid attribute value: []";
         assertThrows(IllegalValueException.class, expectedMessage, attribute::toModelType);
     }
 
@@ -65,8 +70,8 @@ public class JsonAdaptedAttributeTest {
 
     @Test
     public void toModelType_whitespaceValue_throwsIllegalValueException() {
-        JsonAdaptedAttribute attribute = new JsonAdaptedAttribute(VALID_KEY, "   ");
-        String expectedMessage = "Invalid attribute value:    ";
+        JsonAdaptedAttribute attribute = new JsonAdaptedAttribute(VALID_KEY, Arrays.asList("   "));
+        String expectedMessage = "Invalid attribute value: [   ]";
         assertThrows(IllegalValueException.class, expectedMessage, attribute::toModelType);
     }
 
@@ -79,8 +84,8 @@ public class JsonAdaptedAttributeTest {
 
     @Test
     public void toModelType_trimmedKeyAndValue_returnsTrimmedAttribute() throws Exception {
-        JsonAdaptedAttribute attribute = new JsonAdaptedAttribute("  subject  ", "  math  ");
-        Attribute expected = new Attribute("subject", "math");
+        JsonAdaptedAttribute attribute = new JsonAdaptedAttribute("  subject  ", Arrays.asList("  math  "));
+        Attribute expected = new Attribute("subject", Arrays.asList("math"));
         assertEquals(expected, attribute.toModelType());
     }
 

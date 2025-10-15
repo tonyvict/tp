@@ -33,8 +33,8 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final String remark;
+    private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final List<JsonAdaptedAttribute> attributes = new ArrayList<>();
-    private final List<JsonAdaptedTag> tags = new ArrayList<>();;
     private final List<JsonAdaptedLesson> lessonList = new ArrayList<>();
 
     /**
@@ -46,10 +46,6 @@ class JsonAdaptedPerson {
                              @JsonProperty("remark") String remark, @JsonProperty("tags") List<JsonAdaptedTag> tags,
                              @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes,
                              @JsonProperty("lessonList") List<JsonAdaptedLesson> lessonList) {
-                             @JsonProperty("remark") String remark,
-                             @JsonProperty("tags") List<JsonAdaptedTag> tags,
-                             @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes) {
-
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -75,9 +71,6 @@ class JsonAdaptedPerson {
         email = source.getEmail().value;
         address = source.getAddress().value;
         remark = source.getRemark().value;
-        attributes.addAll(source.getAttributes().stream()
-                .map(JsonAdaptedAttribute::new)
-                .collect(Collectors.toList()));
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));

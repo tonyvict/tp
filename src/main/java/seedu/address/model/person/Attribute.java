@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,12 +29,52 @@ public class Attribute {
         }
     }
 
+    /**
+     * Constructs a {@code Attribute}.
+     */
+    public Attribute(String key, String value) {
+        requireNonNull(key);
+        requireNonNull(value);
+        this.key = key.trim().toLowerCase();
+        this.values = new HashSet<>();
+        this.values.add(value.trim().toLowerCase());
+    }
+
     public String getKey() {
         return key;
     }
 
     public Set<String> getValues() {
         return values;
+    }
+
+    /**
+     * Returns true if a given string is a valid attribute key.
+     */
+    public static boolean isValidKey(String test) {
+        return test != null && !test.trim().isEmpty();
+    }
+
+    /**
+     * Returns true if a given string is a valid attribute value.
+     */
+    public static boolean isValidValue(String test) {
+        return test != null && !test.trim().isEmpty();
+    }
+
+    /**
+     * Returns true if a given string is a valid attribute value.
+     */
+    public static boolean isValidValue(List<String> test) {
+        if (test == null || test.isEmpty()) {
+            return false;
+        }
+        for (String value : test) {
+            if (value == null || value.trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean containsValue(String value) {
