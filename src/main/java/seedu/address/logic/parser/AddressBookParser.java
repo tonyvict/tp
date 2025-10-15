@@ -95,8 +95,7 @@ public class AddressBookParser {
             return new MarkCommandParser().parse(arguments);
 
         case TagCommand.COMMAND_WORD:
-                return new TagCommandParser().parse(arguments);
-
+            return new TagCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);

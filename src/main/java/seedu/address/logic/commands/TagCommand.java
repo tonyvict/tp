@@ -3,18 +3,17 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import seedu.address.logic.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Person;
+
 
 /**
  * Adds or updates attribute tags for a specified person in the address book.
@@ -70,7 +69,6 @@ public class TagCommand extends Command {
      * Returns a new {@code Person} with the added or overridden attributes.
      */
     private static Person createTaggedPerson(Person personToEdit, Set<Attribute> attributesToAdd) {
-        // Defensive copy of existing attributes
         Set<Attribute> updatedAttributes = new HashSet<>(personToEdit.getAttributes());
 
         // Remove attributes that share the same key (to "override")
@@ -78,7 +76,6 @@ public class TagCommand extends Command {
             updatedAttributes.removeIf(existing -> existing.getKey().equals(newAttr.getKey()));
             updatedAttributes.add(newAttr);
         }
-
 
         return new Person(
                 personToEdit.getName(),
