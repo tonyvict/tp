@@ -56,6 +56,33 @@ public class MarkCommandTest {
     }
 
     @Test
+    public void execute_personWithMultipleLessons_marksOnlyTodaysLesson() {
+        // Setup: Create a person with a lesson yesterday and a lesson today
+        Lesson lessonYesterday = new Lesson("10:00", "11:00", LocalDate.now().minusDays(1).toString(),
+                "History", false);
+        Lesson lessonToday = new Lesson("15:00", "16:00", LocalDate.now().toString(), "Math", false);
+        LessonList lessonList = new LessonList().add(lessonYesterday).add(lessonToday);
+        Person personToMark = new PersonBuilder().withName("Multi-Lesson Person").withLessonList(lessonList).build();
+        model.addPerson(personToMark);
+
+        Index personIndex = Index.fromOneBased(model.getFilteredPersonList().size());
+        MarkCommand markCommand = new MarkCommand(personIndex);
+
+        // Expected model after marking: only today's lesson is marked present
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        Lesson markedLessonToday = new Lesson(lessonToday.start, lessonToday.end, lessonToday.date,
+                lessonToday.sub, true);
+        LessonList expectedLessonList = new LessonList().add(lessonYesterday).add(markedLessonToday);
+        Person markedPerson = new PersonBuilder(personToMark).withLessonList(expectedLessonList).build();
+        expectedModel.setPerson(personToMark, markedPerson);
+
+        String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_ATTENDANCE_SUCCESS,
+                markedPerson.getName().fullName);
+
+        assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void execute_noLessonToday_throwsCommandException() {
         // Person at this index (Benson) has no lessons scheduled
         MarkCommand markCommand = new MarkCommand(INDEX_SECOND_PERSON);
