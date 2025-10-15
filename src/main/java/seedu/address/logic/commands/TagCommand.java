@@ -98,4 +98,5 @@ public class TagCommand extends Command {
                 && index.equals(((TagCommand) other).index)
                 && attributesToAdd.equals(((TagCommand) other).attributesToAdd));
     }
+
 }

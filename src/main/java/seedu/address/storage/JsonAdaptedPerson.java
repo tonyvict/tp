@@ -43,6 +43,7 @@ class JsonAdaptedPerson {
                              @JsonProperty("remark") String remark,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags,
                              @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes) {
+
         this.name = name;
         this.phone = phone;
         this.email = email;
