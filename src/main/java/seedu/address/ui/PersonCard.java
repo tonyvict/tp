@@ -68,4 +68,5 @@ public class PersonCard extends UiPart<Region> {
                     attributes.getChildren().add(new Label(displayText));
                 });
     }
+
 }

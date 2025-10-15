@@ -54,4 +54,5 @@ public class JsonAdaptedAttribute {
         Set<String> valueSet = new HashSet<>(values);
         return new Attribute(key, valueSet);
     }
+
 }

@@ -70,5 +70,4 @@ public class SampleDataUtil {
         return Arrays.stream(attributes)
                 .collect(Collectors.toSet());
     }
-
 }
