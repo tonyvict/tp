@@ -68,9 +68,15 @@ public class FilterCommandParserTest {
     }
 
     @Test
-    public void parse_invalidAge_throwsParseException() {
-        assertThrows(ParseException.class, "Age must be a valid integer.", () ->
-                parser.parse(" attr/age=notanumber"));
+    public void parse_emptyValues_throwsParseException() {
+        assertThrows(ParseException.class, "Attribute must have at least one value.", () ->
+                parser.parse(" attr/subject="));
+    }
+
+    @Test
+    public void parse_whitespaceValues_throwsParseException() {
+        assertThrows(ParseException.class, "Attribute must have at least one value.", () ->
+                parser.parse(" attr/subject=  ,  "));
     }
 
     @Test
