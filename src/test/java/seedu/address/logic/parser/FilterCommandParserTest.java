@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.HashMap;
@@ -28,7 +27,8 @@ public class FilterCommandParserTest {
         // no leading and trailing whitespaces
         Map<String, Set<String>> expectedPredicateKeywordMap = new HashMap<>();
         expectedPredicateKeywordMap.put("subject", Set.of("math"));
-        FilterCommand expectedFilterCommand = new FilterCommand(new AttributeContainsPredicate(expectedPredicateKeywordMap));
+        FilterCommand expectedFilterCommand = new FilterCommand(
+                new AttributeContainsPredicate(expectedPredicateKeywordMap));
         FilterCommand actualCommand = parser.parse(" attr/subject=math");
         assertEquals(expectedFilterCommand, actualCommand);
 
@@ -49,8 +49,9 @@ public class FilterCommandParserTest {
         Map<String, Set<String>> expectedPredicateKeywordMap = new HashMap<>();
         expectedPredicateKeywordMap.put("subject", Set.of("math"));
         expectedPredicateKeywordMap.put("age", Set.of("19"));
-        
-        FilterCommand expectedFilterCommand = new FilterCommand(new AttributeContainsPredicate(expectedPredicateKeywordMap));
+
+        FilterCommand expectedFilterCommand = new FilterCommand(
+                new AttributeContainsPredicate(expectedPredicateKeywordMap));
         FilterCommand actualCommand = parser.parse(" attr/subject=math attr/age=19");
         assertEquals(expectedFilterCommand, actualCommand);
     }
@@ -59,15 +60,16 @@ public class FilterCommandParserTest {
     public void parse_multipleValues_returnsFilterCommand() throws Exception {
         Map<String, Set<String>> expectedPredicateKeywordMap = new HashMap<>();
         expectedPredicateKeywordMap.put("subject", Set.of("math", "science"));
-        
-        FilterCommand expectedFilterCommand = new FilterCommand(new AttributeContainsPredicate(expectedPredicateKeywordMap));
+
+        FilterCommand expectedFilterCommand = new FilterCommand(
+                new AttributeContainsPredicate(expectedPredicateKeywordMap));
         FilterCommand actualCommand = parser.parse(" attr/subject=math,science");
         assertEquals(expectedFilterCommand, actualCommand);
     }
 
     @Test
     public void parse_invalidAge_throwsParseException() {
-        assertThrows(ParseException.class, "Age must be a valid integer.", () -> 
+        assertThrows(ParseException.class, "Age must be a valid integer.", () ->
                 parser.parse(" attr/age=notanumber"));
     }
 
@@ -75,8 +77,9 @@ public class FilterCommandParserTest {
     public void parse_validAge_returnsFilterCommand() throws Exception {
         Map<String, Set<String>> expectedPredicateKeywordMap = new HashMap<>();
         expectedPredicateKeywordMap.put("age", Set.of("19"));
-        
-        FilterCommand expectedFilterCommand = new FilterCommand(new AttributeContainsPredicate(expectedPredicateKeywordMap));
+
+        FilterCommand expectedFilterCommand = new FilterCommand(
+                new AttributeContainsPredicate(expectedPredicateKeywordMap));
         FilterCommand actualCommand = parser.parse(" attr/age=19");
         assertEquals(expectedFilterCommand, actualCommand);
     }

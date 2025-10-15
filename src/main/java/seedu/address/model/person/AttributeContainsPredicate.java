@@ -31,7 +31,7 @@ public class AttributeContainsPredicate implements Predicate<Person> {
 
             // Find matching attribute in person
             boolean hasMatchingAttribute = person.getAttributes().stream()
-                    .anyMatch(attr -> attr.getKey().equals(filterKey) 
+                    .anyMatch(attr -> attr.getKey().equals(filterKey)
                         && filterValues.stream().anyMatch(filterValue -> attr.containsValue(filterValue)));
 
             if (!hasMatchingAttribute) {
