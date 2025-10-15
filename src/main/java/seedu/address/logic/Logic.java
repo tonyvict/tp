@@ -34,6 +34,14 @@ public interface Logic {
     ObservableList<Person> getFilteredPersonList();
 
     /**
+     * Updates the filtered person list with the given predicate.
+     * This method is used by the Quick Search feature for live filtering.
+     *
+     * @param predicate The predicate defining which persons should be displayed.
+     */
+    void updateFilteredPersonList(java.util.function.Predicate<seedu.address.model.person.Person> predicate);
+
+    /**
      * Returns the user prefs' address book file path.
      */
     Path getAddressBookFilePath();

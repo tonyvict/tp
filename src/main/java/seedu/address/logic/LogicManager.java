@@ -72,6 +72,11 @@ public class LogicManager implements Logic {
     }
 
     @Override
+    public void updateFilteredPersonList(java.util.function.Predicate<Person> predicate) {
+        model.updateFilteredPersonList(predicate);
+    }
+
+    @Override
     public Path getAddressBookFilePath() {
         return model.getAddressBookFilePath();
     }
