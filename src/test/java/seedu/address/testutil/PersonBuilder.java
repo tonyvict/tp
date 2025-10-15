@@ -118,6 +118,10 @@ public class PersonBuilder {
         for (Attribute attribute : attributes) {
             this.attributes.add(attribute);
         }
+        return this;
+    }
+
+    /**
      * Sets the {@code LessonList} of the {@code Person} that we are building.
      */
     public PersonBuilder withLessonList(LessonList lessonList) {
@@ -126,7 +130,7 @@ public class PersonBuilder {
     }
 
     public Person build() {
-        return new Person(name, phone, email, address, remark, tags, lessonList, attributes);
+        return new Person(name, phone, email, address, remark, tags, attributes, lessonList);
     }
 }
 

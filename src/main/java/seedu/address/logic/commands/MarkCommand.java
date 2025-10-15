@@ -67,7 +67,8 @@ public class MarkCommand extends Command {
 
         Person markedPerson = new Person(
                 personToMark.getName(), personToMark.getPhone(), personToMark.getEmail(),
-                personToMark.getAddress(), personToMark.getRemark(), personToMark.getTags(), updatedLessonList);
+                personToMark.getAddress(), personToMark.getRemark(), personToMark.getTags(),
+                personToMark.getAttributes(), updatedLessonList);
 
         model.setPerson(personToMark, markedPerson);
 

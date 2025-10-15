@@ -69,13 +69,13 @@ public class FilterCommandTest {
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() throws CommandException {
         Person alice = new PersonBuilder().withName("Alice").withAttributes(
-                new Attribute("subject", Set.of("math", "science"))
+                new Attribute("subject", "math,science")
         ).build();
         Person bob = new PersonBuilder().withName("Bob").withAttributes(
-                new Attribute("subject", Set.of("science"))
+                new Attribute("subject", "science")
         ).build();
         Person charlie = new PersonBuilder().withName("Charlie").withAttributes(
-                new Attribute("subject", Set.of("math"))
+                new Attribute("subject", "math")
         ).build();
 
         model.addPerson(alice);

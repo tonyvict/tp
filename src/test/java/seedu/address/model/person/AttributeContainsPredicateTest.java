@@ -47,7 +47,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", Set.of("math", "science"))
+                new Attribute("subject", "math,science")
         ).build();
 
         assertTrue(predicate.test(person));
@@ -60,7 +60,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", Set.of("math", "science"))
+                new Attribute("subject", "math,science")
         ).build();
 
         assertFalse(predicate.test(person));
@@ -96,14 +96,14 @@ public class AttributeContainsPredicateTest {
 
         // Person with both attributes - should match
         Person personWithBoth = new PersonBuilder().withAttributes(
-                new Attribute("subject", Set.of("math")),
-                new Attribute("age", Set.of("19"))
+                new Attribute("subject", "math"),
+                new Attribute("age", "19")
         ).build();
         assertTrue(predicate.test(personWithBoth));
 
         // Person with only one attribute - should not match
         Person personWithOne = new PersonBuilder().withAttributes(
-                new Attribute("subject", Set.of("math"))
+                new Attribute("subject", "math")
         ).build();
         assertFalse(predicate.test(personWithOne));
     }

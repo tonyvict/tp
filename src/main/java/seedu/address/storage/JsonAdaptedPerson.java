@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.LessonList;
@@ -33,6 +34,7 @@ class JsonAdaptedPerson {
     private final String address;
     private final String remark;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<JsonAdaptedAttribute> attributes = new ArrayList<>();
     private final List<JsonAdaptedLesson> lessonList = new ArrayList<>();
 
     /**
@@ -42,6 +44,7 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
                              @JsonProperty("remark") String remark, @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes,
                              @JsonProperty("lessonList") List<JsonAdaptedLesson> lessonList) {
         this.name = name;
         this.phone = phone;
@@ -50,6 +53,9 @@ class JsonAdaptedPerson {
         this.remark = remark;
         if (tags != null) {
             this.tags.addAll(tags);
+        }
+        if (attributes != null) {
+            this.attributes.addAll(attributes);
         }
         if (lessonList != null) {
             this.lessonList.addAll(lessonList);
@@ -82,6 +88,11 @@ class JsonAdaptedPerson {
         final List<Tag> personTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
             personTags.add(tag.toModelType());
+        }
+
+        final List<Attribute> personAttributes = new ArrayList<>();
+        for (JsonAdaptedAttribute attribute : attributes) {
+            personAttributes.add(attribute.toModelType());
         }
 
         final ArrayList<Lesson> personLessons = new ArrayList<>();
@@ -129,7 +140,9 @@ class JsonAdaptedPerson {
         final LessonList modelLessonList = new LessonList(personLessons);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelRemark, modelTags, modelLessonList);
+        final Set<Attribute> modelAttributes = new HashSet<>(personAttributes);
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelRemark, modelTags,
+                modelAttributes, modelLessonList);
     }
 
 }
