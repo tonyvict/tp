@@ -31,7 +31,7 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final String remark;
-    private final List<JsonAdaptedAttribute> attributes;
+    private final List<JsonAdaptedAttribute> attributes = new ArrayList<>();
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
@@ -40,14 +40,17 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
-                             @JsonProperty("remark") String remark,  @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes,
-                             @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+                             @JsonProperty("remark") String remark,
+                             @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.remark = remark;
-        this.attributes = attributes != null ? attributes : new ArrayList<>();
+        if (attributes != null) {
+            this.attributes.addAll(attributes);
+        }
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -62,9 +65,9 @@ class JsonAdaptedPerson {
         email = source.getEmail().value;
         address = source.getAddress().value;
         remark = source.getRemark().value;
-        attributes = source.getAttributes().stream()
+        attributes.addAll(source.getAttributes().stream()
                 .map(JsonAdaptedAttribute::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
