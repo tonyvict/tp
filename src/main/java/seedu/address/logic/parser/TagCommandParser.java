@@ -37,7 +37,7 @@ public class TagCommandParser implements Parser<TagCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE), ive);
         }
 
-        Map<String, Attribute> attributesToAdd = new HashMap<>();
+        Set<Attribute> attributesToAdd = new HashSet<>();
 
         // For each attr/ prefix segment (e.g. attr/subject=math,science)
         for (String attrString : argMultimap.getAllValues(PREFIX_ATTRIBUTE)) {
@@ -64,7 +64,7 @@ public class TagCommandParser implements Parser<TagCommand> {
             }
 
             Attribute attribute = new Attribute(key, values);
-            attributesToAdd.put(key, attribute);
+            attributesToAdd.add(attribute);
         }
 
         if (attributesToAdd.isEmpty()) {

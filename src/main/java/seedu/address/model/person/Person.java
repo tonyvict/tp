@@ -26,7 +26,7 @@ public class Person {
     private final Address address;
     private final Remark remark;
     private final Set<Tag> tags = new HashSet<>();
-    private final Map<String, Attribute> attributes;
+    private final Set<Attribute> attributes;
 
 
     /**
@@ -40,10 +40,10 @@ public class Person {
         this.address = address;
         this.remark = remark;
         this.tags.addAll(tags);
-        this.attributes = Collections.emptyMap();
+        this.attributes = new HashSet<>();
     }
 
-    public Person(Name name, Phone phone, Email email, Address address, Remark remark, Set<Tag> tags, Map<String, Attribute> attributes) {
+    public Person(Name name, Phone phone, Email email, Address address, Remark remark, Set<Tag> tags, Set<Attribute> attributes) {
         requireAllNonNull(name, phone, email, address, tags, attributes);
         this.name = name;
         this.phone = phone;
@@ -74,7 +74,7 @@ public class Person {
         return remark;
     }
 
-    public Map<String, Attribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return attributes;
     }
 

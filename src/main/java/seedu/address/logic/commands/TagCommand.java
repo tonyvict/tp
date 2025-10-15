@@ -4,8 +4,10 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import seedu.address.logic.Messages;
 import seedu.address.commons.core.index.Index;
@@ -35,12 +37,12 @@ public class TagCommand extends Command {
 
 
     private final Index index;
-    private final Map<String, Attribute> attributesToAdd;
+    private final Set<Attribute> attributesToAdd;
 
     /**
      * Creates a TagCommand to add the specified {@code Attribute}s to a person.
      */
-    public TagCommand(Index index, Map<String, Attribute> attributesToAdd) {
+    public TagCommand(Index index, Set<Attribute> attributesToAdd) {
         requireNonNull(index);
         requireNonNull(attributesToAdd);
         this.index = index;
@@ -67,13 +69,16 @@ public class TagCommand extends Command {
     /**
      * Returns a new {@code Person} with the added or overridden attributes.
      */
-    private static Person createTaggedPerson(Person personToEdit, Map<String, Attribute> attributesToAdd) {
+    private static Person createTaggedPerson(Person personToEdit, Set<Attribute> attributesToAdd) {
         // Defensive copy of existing attributes
-        Map<String, Attribute> updatedAttributes = new HashMap<>(personToEdit.getAttributes());
+        Set<Attribute> updatedAttributes = new HashSet<>(personToEdit.getAttributes());
 
-        for (String key : attributesToAdd.keySet()) {
-            updatedAttributes.put(key, attributesToAdd.get(key)); // overrides if existing
+        // Remove attributes that share the same key (to "override")
+        for (Attribute newAttr : attributesToAdd) {
+            updatedAttributes.removeIf(existing -> existing.getKey().equals(newAttr.getKey()));
+            updatedAttributes.add(newAttr);
         }
+
 
         return new Person(
                 personToEdit.getName(),
