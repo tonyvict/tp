@@ -71,5 +71,4 @@ public class TagCommandParser implements Parser<TagCommand> {
 
         return new TagCommand(index, attributesToAdd);
     }
-
 }
