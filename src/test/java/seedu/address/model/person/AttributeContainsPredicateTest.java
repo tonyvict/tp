@@ -48,7 +48,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", Arrays.asList("math","science"))
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
 
         assertTrue(predicate.test(person));
@@ -61,7 +61,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", Arrays.asList("math","science"))
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
 
         assertFalse(predicate.test(person));

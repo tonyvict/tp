@@ -70,7 +70,7 @@ public class FilterCommandTest {
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() throws CommandException {
         Person alice = new PersonBuilder().withName("Alice").withAttributes(
-                new Attribute("subject", Arrays.asList("math","science"))
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
         Person bob = new PersonBuilder().withName("Bob").withAttributes(
                 new Attribute("subject", Arrays.asList("science"))
