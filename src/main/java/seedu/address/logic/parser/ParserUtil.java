@@ -144,7 +144,7 @@ public class ParserUtil {
     public static Attribute parseAttribute(String attribute) throws ParseException {
         requireNonNull(attribute);
         String trimmedAttribute = attribute.trim();
-        
+
         if (!trimmedAttribute.contains("=")) {
             throw new ParseException("Incorrect format. Use key=value[,value2]...");
         }

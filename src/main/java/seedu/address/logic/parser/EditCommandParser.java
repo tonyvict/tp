@@ -61,7 +61,8 @@ public class EditCommandParser implements Parser<EditCommand> {
             editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
-        parseAttributesForEdit(argMultimap.getAllValues(PREFIX_ATTRIBUTE)).ifPresent(editPersonDescriptor::setAttributes);
+        parseAttributesForEdit(argMultimap.getAllValues(PREFIX_ATTRIBUTE))
+                .ifPresent(editPersonDescriptor::setAttributes);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -96,7 +97,8 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (attributes.isEmpty()) {
             return Optional.empty();
         }
-        Collection<String> attributeSet = attributes.size() == 1 && attributes.contains("") ? Collections.emptySet() : attributes;
+        Collection<String> attributeSet = attributes.size() == 1 && attributes.contains("")
+                ? Collections.emptySet() : attributes;
         return Optional.of(ParserUtil.parseAttributes(attributeSet));
     }
 }

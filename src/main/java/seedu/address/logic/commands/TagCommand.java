@@ -62,7 +62,7 @@ public class TagCommand extends Command {
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format( MESSAGE_ADD_ATTRIBUTE_SUCCESS , editedPerson.getName()));
+        return new CommandResult(String.format(MESSAGE_ADD_ATTRIBUTE_SUCCESS, editedPerson.getName()));
     }
 
     /**
