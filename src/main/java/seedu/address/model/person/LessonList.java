@@ -60,8 +60,10 @@ public class LessonList {
     /**
      * Removes a lesson from the list.
      */
-    public boolean remove(Lesson lesson) {
-        return list.remove(lesson);
+    public LessonList remove(Lesson lesson) {
+        ArrayList<Lesson> newList = new ArrayList<>(list);
+        newList.remove(lesson);
+        return new LessonList(newList);
     }
 
     /**

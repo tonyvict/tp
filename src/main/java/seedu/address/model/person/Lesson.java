@@ -12,13 +12,13 @@ import java.util.Objects;
  */
 public class Lesson implements Comparable<Lesson> {
 
-    public final LocalTime start;
-    public final LocalTime end;
-    public final LocalDate date;
-    public final String sub;
+    private final LocalTime start;
+    private final LocalTime end;
+    private final LocalDate date;
+    private final String sub;
 
     /**
-     * Constructs an {@code Lesson}.
+     * Constructs a {@code Lesson}.
      *
      * @param start A valid time in HH:mm format
      * @param end A valid time after start in HH:mm format
@@ -31,6 +31,22 @@ public class Lesson implements Comparable<Lesson> {
         this.end = LocalTime.parse(end);
         this.date = LocalDate.parse(date);
         this.sub = sub;
+    }
+
+    public LocalTime getStart() {
+        return this.start;
+    }
+
+    public LocalTime getEnd() {
+        return this.end;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public String getSub() {
+        return this.sub;
     }
 
     /**

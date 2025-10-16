@@ -34,10 +34,10 @@ class JsonAdaptedLesson {
      * Converts a given {@code Lesson} into this class for Jackson use.
      */
     public JsonAdaptedLesson(Lesson source) {
-        start = source.start.toString();
-        end = source.end.toString();
-        date = source.date.toString();
-        sub = source.sub;
+        start = source.getStart().toString();
+        end = source.getEnd().toString();
+        date = source.getDate().toString();
+        sub = source.getSub();
     }
 
     /**
