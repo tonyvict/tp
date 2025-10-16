@@ -20,9 +20,9 @@ public class ScheduleCommand extends Command {
     public static final String COMMAND_WORD = "schedule";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Edits the lesson of the person identified "
+            + ": Edits the lesson list of the person identified "
             + "by the index number used in the last person listing. "
-            + "Existing lesson will be overwritten by the input.\n"
+            + "Existing lesson list will have new lesson stated in input added.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "start/ [START TIME] end/ [END TIME} "
             + "date/ [DATE] sub/ [SUBJECT]\n"
