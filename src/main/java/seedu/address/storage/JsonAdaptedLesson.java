@@ -41,7 +41,7 @@ class JsonAdaptedLesson {
         end = source.getEnd().toString();
         date = source.getDate().toString();
         sub = source.getSub();
-        isPresent = source.isPresent;
+        isPresent = source.isPresent();
     }
 
     /**

@@ -12,11 +12,46 @@ import java.util.Objects;
  */
 public class Lesson implements Comparable<Lesson> {
 
-    public final LocalTime start;
-    public final LocalTime end;
-    public final LocalDate date;
-    public final String sub;
-    public final boolean isPresent;
+    private final LocalTime start;
+    private final LocalTime end;
+    private final LocalDate date;
+    private final String sub;
+    private final boolean isPresent;
+
+
+    /**
+     * Constructs a {@code Lesson} with isPresent set to false.
+     *
+     * @param start A valid time in HH:mm format
+     * @param end A valid time after start in HH:mm format
+     * @param date A valid date in YYYY-MM-DD format
+     * @param sub A valid subject
+     */
+    public Lesson(String start, String end, String date, String sub) {
+        requireAllNonNull(start, end, date, sub);
+        this.start = LocalTime.parse(start);
+        this.end = LocalTime.parse(end);
+        this.date = LocalDate.parse(date);
+        this.sub = sub;
+        this.isPresent = false;
+    }
+
+    /**
+     * Constructs a {@code Lesson} with isPresent set to false.
+     *
+     * @param start A valid time in HH:mm format
+     * @param end A valid time after start in HH:mm format
+     * @param date A valid date in YYYY-MM-DD format
+     * @param sub A valid subject
+     */
+    public Lesson(LocalTime start, LocalTime end, LocalDate date, String sub) {
+        requireAllNonNull(start, end, date, sub);
+        this.start = start;
+        this.end = end;
+        this.date = date;
+        this.sub = sub;
+        this.isPresent = false;
+    }
 
     /**
      * Constructs a {@code Lesson}.
@@ -70,6 +105,9 @@ public class Lesson implements Comparable<Lesson> {
         return this.sub;
     }
 
+    public boolean isPresent() {
+        return this.isPresent;
+    }
 
     /**
      * Compares this lesson with another lesson chronologically.

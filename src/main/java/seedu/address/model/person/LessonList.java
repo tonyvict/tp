@@ -84,7 +84,7 @@ public class LessonList {
      * Returns the number of attended lessons in the list.
      */
     public long getAttendedLessonCount() {
-        return list.stream().filter(lesson -> lesson.isPresent).count();
+        return list.stream().filter(lesson -> lesson.isPresent()).count();
     }
 
     /**
