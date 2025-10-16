@@ -30,7 +30,6 @@ public class ScheduleCommand extends Command {
             + "start/ 09:30 end/ 11:30 "
             + "date/ 2025-09-20 sub/ Maths";
 
-    public static final String MESSAGE_ARGUMENTS = "Index: %1$d, Start: %2$s, End: %3$s, Date: %4$s, Sub: %5$s";
     public static final String MESSAGE_ADD_LESSON_SUCCESS = "Scheduled Lesson to Person: %1$s";
 
     private final Index index;
