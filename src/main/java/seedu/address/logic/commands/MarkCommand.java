@@ -53,7 +53,8 @@ public class MarkCommand extends Command {
 
         for (Lesson lesson : personToMark.getLessonList().getLessons()) {
             if (lesson.getDate().equals(LocalDate.now()) && !lesson.isPresent()) {
-                Lesson markedLesson = new Lesson(lesson.getStart(), lesson.getEnd(), lesson.getDate(), lesson.getSub(), true);
+                Lesson markedLesson = new Lesson(lesson.getStart(), lesson.getEnd(),
+                        lesson.getDate(), lesson.getSub(), true);
                 updatedLessonList = updatedLessonList.add(markedLesson);
                 lessonFound = true;
             } else {
