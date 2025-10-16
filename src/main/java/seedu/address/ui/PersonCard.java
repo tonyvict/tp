@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Person;
 
 /**
@@ -44,6 +45,11 @@ public class PersonCard extends UiPart<Region> {
     private Label remark;
     @FXML
     private Label lessonList;
+    @FXML
+    private Label attendance;
+    @FXML
+    private FlowPane attributes;
+
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -60,6 +66,17 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+
         lessonList.setText(person.getLessonList().getLessons().toString());
+        long attendedClasses = person.getLessonList().getAttendedLessonCount();
+        long totalClasses = person.getLessonList().size();
+        attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
+        person.getAttributes().stream()
+                .sorted(Comparator.comparing(Attribute::getKey))
+                .forEach(attr -> {
+                    String displayText = attr.getKey() + ": " + String.join(", ", attr.getValues() + " |");
+                    attributes.getChildren().add(new Label(displayText));
+                });
     }
+
 }

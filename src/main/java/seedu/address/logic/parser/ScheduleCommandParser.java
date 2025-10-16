@@ -18,6 +18,7 @@ import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
 
+
 /**
  * Parses input arguments and creates a new {@code ScheduleCommand} object
  */
@@ -86,7 +87,7 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
             throw new ParseException("End time must be after start time");
         }
 
-        Lesson lesson = new Lesson(start, end, date, sub);
+        Lesson lesson = new Lesson(start, end, date, sub, false);
         return new ScheduleCommand(index, lesson);
     }
 }

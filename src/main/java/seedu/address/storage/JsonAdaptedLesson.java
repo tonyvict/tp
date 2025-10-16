@@ -15,6 +15,7 @@ class JsonAdaptedLesson {
     private final String end;
     private final String date;
     private final String sub;
+    private final boolean isPresent;
 
     /**
      * Constructs a {@code JsonAdaptedLesson} with the given lesson details.
@@ -23,11 +24,13 @@ class JsonAdaptedLesson {
     public JsonAdaptedLesson(@JsonProperty("start") String start,
                              @JsonProperty("end") String end,
                              @JsonProperty("date") String date,
-                             @JsonProperty("sub") String sub) {
+                             @JsonProperty("sub") String sub,
+                             @JsonProperty("isPresent") boolean isPresent) {
         this.start = start;
         this.end = end;
         this.date = date;
         this.sub = sub;
+        this.isPresent = isPresent;
     }
 
     /**
@@ -38,6 +41,7 @@ class JsonAdaptedLesson {
         end = source.getEnd().toString();
         date = source.getDate().toString();
         sub = source.getSub();
+        isPresent = source.isPresent;
     }
 
     /**
@@ -47,6 +51,6 @@ class JsonAdaptedLesson {
         if (start == null || end == null || date == null || sub == null) {
             throw new IllegalValueException("Lesson fields cannot be null!");
         }
-        return new Lesson(start, end, date, sub);
+        return new Lesson(start, end, date, sub, isPresent);
     }
 }

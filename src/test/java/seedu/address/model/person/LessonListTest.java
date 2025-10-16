@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 public class LessonListTest {
 
-    private final Lesson lesson1 = new Lesson("10:00", "11:00", "2023-01-01", "Math");
-    private final Lesson lesson2 = new Lesson("12:00", "13:00", "2023-01-01", "Science");
-    private final Lesson lesson3 = new Lesson("09:00", "10:00", "2023-01-02", "Physics");
+    private final Lesson lesson1 = new Lesson("10:00", "11:00", "2023-01-01", "Math", false);
+    private final Lesson lesson2 = new Lesson("12:00", "13:00", "2023-01-01", "Science", true);
+    private final Lesson lesson3 = new Lesson("09:00", "10:00", "2023-01-02", "Physics", true);
 
     @Test
     public void constructor_fromArrayList_sortsLessons() {
@@ -40,6 +40,21 @@ public class LessonListTest {
         // Test chronological order
         ArrayList<Lesson> expectedOrder = new ArrayList<>(Arrays.asList(lesson1, lesson2));
         assertEquals(expectedOrder, finalList.getLessons());
+    }
+
+    @Test
+    public void getAttendedLessonCount_correctCount() {
+        // No lessons
+        LessonList emptyList = new LessonList();
+        assertEquals(0, emptyList.getAttendedLessonCount());
+
+        // One attended, one not
+        LessonList mixedList = new LessonList().add(lesson1).add(lesson2); // lesson2 is attended
+        assertEquals(1, mixedList.getAttendedLessonCount());
+
+        // All attended
+        LessonList allAttendedList = new LessonList().add(lesson2).add(lesson3); // lesson2 and lesson3 are attended
+        assertEquals(2, allAttendedList.getAttendedLessonCount());
     }
 
     @Test

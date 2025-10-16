@@ -3,7 +3,15 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
-import seedu.address.model.person.*;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Attribute;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Lesson;
+import seedu.address.model.person.LessonList;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
+import seedu.address.model.person.Remark;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -24,6 +32,7 @@ public class PersonBuilder {
     private Address address;
     private Remark remark;
     private Set<Tag> tags;
+    private Set<Attribute> attributes;
     private LessonList lessonList;
 
     /**
@@ -36,6 +45,7 @@ public class PersonBuilder {
         address = new Address(DEFAULT_ADDRESS);
         remark = new Remark(DEFAULT_REMARK);
         tags = new HashSet<>();
+        attributes = new HashSet<>();
         lessonList = new LessonList();
     }
 
@@ -49,6 +59,7 @@ public class PersonBuilder {
         address = personToCopy.getAddress();
         remark = personToCopy.getRemark();
         tags = new HashSet<>(personToCopy.getTags());
+        attributes = new HashSet<>(personToCopy.getAttributes());
         lessonList = personToCopy.getLessonList();
     }
 
@@ -93,6 +104,14 @@ public class PersonBuilder {
     }
 
     /**
+     * Sets the {@code Attribute} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withAttributes(Attribute... attributes) {
+        this.attributes = SampleDataUtil.getAttributeSet(attributes);
+        return this;
+    }
+
+    /**
      * Sets the {@code Remark} of the {@code Person} that we are building.
      */
     public PersonBuilder withRemark(String remark) {
@@ -117,8 +136,7 @@ public class PersonBuilder {
     }
 
     public Person build() {
-        return new Person(name, phone, email, address, remark, tags, lessonList);
+        return new Person(name, phone, email, address, remark, tags, attributes, lessonList);
     }
-
 }
 

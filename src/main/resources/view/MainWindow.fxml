@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -50,6 +49,10 @@
           <padding>
             <Insets top="10" right="10" bottom="10" left="10" />
           </padding>
+
+          <!-- New Quick Search bar -->
+          <StackPane fx:id="quickSearchBoxPlaceholder" VBox.vgrow="NEVER" />
+
           <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
         </VBox>
 

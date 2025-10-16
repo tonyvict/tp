@@ -25,6 +25,7 @@ public class Person {
     private final Address address;
     private final Remark remark;
     private final Set<Tag> tags = new HashSet<>();
+    private final Set<Attribute> attributes = new HashSet<>();
     private final LessonList lessonList;
 
     /**
@@ -36,14 +37,16 @@ public class Person {
                   Address address,
                   Remark remark,
                   Set<Tag> tags,
+                  Set<Attribute> attributes,
                   LessonList lessonList) {
-        requireAllNonNull(name, phone, email, address, tags, lessonList);
+        requireAllNonNull(name, phone, email, address, tags, attributes, lessonList);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.remark = remark;
         this.tags.addAll(tags);
+        this.attributes.addAll(attributes);
         this.lessonList = lessonList;
     }
 
@@ -80,6 +83,14 @@ public class Person {
     }
 
     /**
+     * Returns an immutable attribute set, which throws {@code UnsupportedOperationException}
+     * if modification is attempted.
+     */
+    public Set<Attribute> getAttributes() {
+        return Collections.unmodifiableSet(attributes);
+    }
+
+    /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
      */
@@ -113,13 +124,14 @@ public class Person {
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
                 && tags.equals(otherPerson.tags)
+                && attributes.equals(otherPerson.attributes)
                 && lessonList.equals(otherPerson.lessonList);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags, lessonList);
+        return Objects.hash(name, phone, email, address, tags, attributes, lessonList);
     }
 
     @Override
@@ -131,6 +143,7 @@ public class Person {
                 .add("address", address)
                 .add("remark", remark)
                 .add("tags", tags)
+                .add("attributes", attributes)
                 .add("lesson list", lessonList)
                 .toString();
     }
