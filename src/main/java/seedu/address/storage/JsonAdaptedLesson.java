@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Lesson;
 
-
 /**
  * Jackson-friendly version of {@link Lesson}.
  */
@@ -38,11 +37,11 @@ class JsonAdaptedLesson {
      * Converts a given {@code Lesson} into this class for Jackson use.
      */
     public JsonAdaptedLesson(Lesson source) {
-        start = source.start.toString();
-        end = source.end.toString();
-        date = source.date.toString();
-        sub = source.sub;
-        isPresent = source.isPresent;
+        start = source.getStart().toString();
+        end = source.getEnd().toString();
+        date = source.getDate().toString();
+        sub = source.getSub();
+        isPresent = source.isPresent();
     }
 
     /**

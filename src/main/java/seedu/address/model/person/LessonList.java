@@ -60,8 +60,10 @@ public class LessonList {
     /**
      * Removes a lesson from the list.
      */
-    public boolean remove(Lesson lesson) {
-        return list.remove(lesson);
+    public LessonList remove(Lesson lesson) {
+        ArrayList<Lesson> newList = new ArrayList<>(list);
+        newList.remove(lesson);
+        return new LessonList(newList);
     }
 
     /**
@@ -82,7 +84,7 @@ public class LessonList {
      * Returns the number of attended lessons in the list.
      */
     public long getAttendedLessonCount() {
-        return list.stream().filter(lesson -> lesson.isPresent).count();
+        return list.stream().filter(lesson -> lesson.isPresent()).count();
     }
 
     /**

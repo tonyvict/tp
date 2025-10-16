@@ -6,6 +6,7 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Lesson;
 import seedu.address.model.person.LessonList;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -119,6 +120,14 @@ public class PersonBuilder {
     }
 
     /**
+     * Adds a {@code Lesson} to the {@code LessonList} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withLesson(Lesson lesson) {
+        this.lessonList = this.lessonList.add(lesson);
+        return this;
+    }
+
+    /**
      * Sets the {@code LessonList} of the {@code Person} that we are building.
      */
     public PersonBuilder withLessonList(LessonList lessonList) {
@@ -130,5 +139,4 @@ public class PersonBuilder {
         return new Person(name, phone, email, address, remark, tags, attributes, lessonList);
     }
 }
-
 
