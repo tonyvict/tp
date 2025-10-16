@@ -41,7 +41,8 @@ public class MarkCommandTest {
         Index lastPersonIndex = Index.fromOneBased(model.getFilteredPersonList().size());
         MarkCommand markCommand = new MarkCommand(lastPersonIndex);
 
-        Lesson markedLesson = new Lesson(lessonToday.getStart(), lessonToday.getEnd(), lessonToday.getDate(), lessonToday.getSub(), true);
+        Lesson markedLesson = new Lesson(lessonToday.getStart(), lessonToday.getEnd(),
+                lessonToday.getDate(), lessonToday.getSub(), true);
         LessonList updatedLessonList = new LessonList().add(markedLesson);
         Person markedPerson = new PersonBuilder(personToMark).withLessonList(updatedLessonList).build();
 
