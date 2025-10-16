@@ -1,34 +1,51 @@
 package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.commons.util.AppUtil.checkArgument;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
- * Represents an Attribute in the address book.
- * Guarantees: immutable; key and value are validated as described in {@link #isValidKey(String)} and
- * {@link #isValidValue(String)}
+ * Represents a Person's attribute in the address book.
+ * Guarantees: immutable; is always valid
  */
 public class Attribute {
-
-    public static final String MESSAGE_CONSTRAINTS = "Attribute key and value should not be blank";
-    public static final String VALIDATION_REGEX = "[^\\s].*[^\\s]";
-
     public final String key;
-    public final String value;
+    public final Set<String> values;
 
     /**
      * Constructs a {@code Attribute}.
-     *
-     * @param key A valid attribute key.
-     * @param value A valid attribute value.
+     */
+    public Attribute(String key, Collection<String> values) {
+        requireNonNull(key);
+        requireNonNull(values);
+        this.key = key.trim().toLowerCase();
+        this.values = new HashSet<>();
+        for (String value : values) {
+            this.values.add(value.trim().toLowerCase());
+        }
+    }
+
+    /**
+     * Constructs a {@code Attribute}.
      */
     public Attribute(String key, String value) {
         requireNonNull(key);
         requireNonNull(value);
-        checkArgument(isValidKey(key), "Attribute key should not be blank");
-        checkArgument(isValidValue(value), "Attribute value should not be blank");
-        this.key = key.toLowerCase().trim();
-        this.value = value.trim();
+        this.key = key.trim().toLowerCase();
+        this.values = new HashSet<>();
+        this.values.add(value.trim().toLowerCase());
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public Set<String> getValues() {
+        return values;
     }
 
     /**
@@ -46,10 +63,28 @@ public class Attribute {
     }
 
     /**
-     * Returns true if this attribute contains the given value (case-insensitive).
+     * Returns true if a given string is a valid attribute value.
      */
-    public boolean containsValue(String testValue) {
-        return value.toLowerCase().contains(testValue.toLowerCase());
+    public static boolean isValidValue(List<String> test) {
+        if (test == null || test.isEmpty()) {
+            return false;
+        }
+        for (String value : test) {
+            if (value == null || value.trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean containsValue(String value) {
+        return values.contains(value.trim().toLowerCase());
+    }
+
+
+    @Override
+    public String toString() {
+        return key + " = " + String.join(", ", values);
     }
 
     @Override
@@ -57,26 +92,17 @@ public class Attribute {
         if (other == this) {
             return true;
         }
-
-        // instanceof handles nulls
         if (!(other instanceof Attribute)) {
             return false;
         }
-
         Attribute otherAttribute = (Attribute) other;
-        return key.equals(otherAttribute.key) && value.equals(otherAttribute.value);
+        return key.equals(otherAttribute.key) && values.equals(otherAttribute.values);
     }
 
     @Override
     public int hashCode() {
-        return key.hashCode() + value.hashCode();
-    }
-
-    /**
-     * Format state as text for viewing.
-     */
-    public String toString() {
-        return '[' + key + '=' + value + ']';
+        return Objects.hash(key, values);
     }
 
 }
+

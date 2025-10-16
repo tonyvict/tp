@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", "math,science")
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
 
         assertTrue(predicate.test(person));
@@ -60,7 +61,7 @@ public class AttributeContainsPredicateTest {
         AttributeContainsPredicate predicate = new AttributeContainsPredicate(predicateKeywordMap);
 
         Person person = new PersonBuilder().withAttributes(
-                new Attribute("subject", "math,science")
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
 
         assertFalse(predicate.test(person));
@@ -96,14 +97,14 @@ public class AttributeContainsPredicateTest {
 
         // Person with both attributes - should match
         Person personWithBoth = new PersonBuilder().withAttributes(
-                new Attribute("subject", "math"),
-                new Attribute("age", "19")
+                new Attribute("subject", Arrays.asList("math")),
+                new Attribute("age", Arrays.asList("19"))
         ).build();
         assertTrue(predicate.test(personWithBoth));
 
         // Person with only one attribute - should not match
         Person personWithOne = new PersonBuilder().withAttributes(
-                new Attribute("subject", "math")
+                new Attribute("subject", Arrays.asList("math"))
         ).build();
         assertFalse(predicate.test(personWithOne));
     }

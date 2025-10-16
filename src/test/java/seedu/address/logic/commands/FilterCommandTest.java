@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -69,13 +70,13 @@ public class FilterCommandTest {
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() throws CommandException {
         Person alice = new PersonBuilder().withName("Alice").withAttributes(
-                new Attribute("subject", "math,science")
+                new Attribute("subject", Arrays.asList("math", "science"))
         ).build();
         Person bob = new PersonBuilder().withName("Bob").withAttributes(
-                new Attribute("subject", "science")
+                new Attribute("subject", Arrays.asList("science"))
         ).build();
         Person charlie = new PersonBuilder().withName("Charlie").withAttributes(
-                new Attribute("subject", "math")
+                new Attribute("subject", Arrays.asList("math"))
         ).build();
 
         model.addPerson(alice);
