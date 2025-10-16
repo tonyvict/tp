@@ -104,6 +104,7 @@ public class EditCommand extends Command {
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         Remark updatedRemark = personToEdit.getRemark(); // edit command does not allow editing remarks
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+        Set<Attribute> updatedAttributes = editPersonDescriptor.getAttributes().orElse(personToEdit.getAttributes());
         LessonList updatedLessonList = personToEdit.getLessonList();
 
         return new Person(updatedName,
@@ -112,7 +113,7 @@ public class EditCommand extends Command {
                 updatedAddress,
                 updatedRemark,
                 updatedTags,
-                personToEdit.getAttributes(),
+                updatedAttributes,
                 updatedLessonList);
     }
 
@@ -171,7 +172,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags, attributes);
         }
 
         public void setName(Name name) {
