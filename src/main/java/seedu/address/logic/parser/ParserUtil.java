@@ -10,6 +10,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
@@ -120,5 +121,55 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses {@code Collection<String> attributes} into a {@code Set<Attribute>}.
+     */
+    public static Set<Attribute> parseAttributes(Collection<String> attributes) throws ParseException {
+        requireNonNull(attributes);
+        final Set<Attribute> attributeSet = new HashSet<>();
+        for (String attrString : attributes) {
+            attributeSet.add(parseAttribute(attrString));
+        }
+        return attributeSet;
+    }
+
+    /**
+     * Parses a {@code String attribute} into an {@code Attribute}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code attribute} is invalid.
+     */
+    public static Attribute parseAttribute(String attribute) throws ParseException {
+        requireNonNull(attribute);
+        String trimmedAttribute = attribute.trim();
+
+        if (!trimmedAttribute.contains("=")) {
+            throw new ParseException("Incorrect format. Use key=value[,value2]...");
+        }
+
+        String[] keyValue = trimmedAttribute.split("=", 2); // limit to 2 parts only
+        String key = keyValue[0].trim().toLowerCase();
+
+        if (key.isEmpty()) {
+            throw new ParseException("Attribute key cannot be empty.");
+        }
+
+        // Split values by comma, e.g. "math,science"
+        Set<String> values = new HashSet<>();
+        String[] valueArray = keyValue[1].split(",");
+        for (String value : valueArray) {
+            String trimmedValue = value.trim();
+            if (!trimmedValue.isEmpty()) {
+                values.add(trimmedValue);
+            }
+        }
+
+        if (values.isEmpty()) {
+            throw new ParseException("Attribute must have at least one value.");
+        }
+
+        return new Attribute(key, values);
     }
 }
