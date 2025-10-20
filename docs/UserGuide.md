@@ -100,7 +100,7 @@ Shows a list of all persons in the address book.
 Format: `list`
 
 ![Result of list command](images/listUI.png)
-<p align="center"><em>Figure: list command.</em></p>
+<p align="center"><em>Figure: Result of list command.</em></p>
 
 ### Editing a person : `edit`
 
@@ -120,7 +120,7 @@ Examples:
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
 ![Result of editing a student](images/editUI.png)
-<p align="center"><em>Figure: Result of editting a student.</em></p>
+<p align="center"><em>Figure: Result of editing a student.</em></p>
 
 ### Locating persons by name: `find`
 
@@ -178,6 +178,31 @@ Examples:
 <p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
 
 
+
+
+### Tagging a student with attributes : `tag`
+
+Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.  
+This helps you categorize and filter students more efficiently.
+
+Format:  
+`tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
+
+* Adds or updates the given attributes for the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed student list.
+* The index **must be a positive integer** 1, 2, 3, …​
+* If the same attribute key already exists (e.g., `subject`), it will be **overridden** with the new values.
+* Attributes can have one or multiple comma-separated values.
+* If you use the same key multiple times, only the **last occurrence** is applied.
+* At least one `attr/` prefix must be provided.
+
+Examples:
+* `tag 2 attr/subject=math,science attr/age=16`  
+  Adds a multi-valued attribute for `subject` and `age=16` to the 2nd student.
+
+![Result of tagging a student](images/tagUI.png)
+<p align="center"><em>Figure: Result of tagging student at index 2 with attributes.</em></p>
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
@@ -233,5 +258,6 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
+**Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
 **List** | `list`
 **Help** | `help`

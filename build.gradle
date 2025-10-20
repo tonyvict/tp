@@ -65,7 +65,7 @@ dependencies {
 }
 
 shadowJar {
-    archiveFileName = 'addressbook.jar'
+    archiveFileName = 'ClassRoasterPro.jar'
 }
 
 defaultTasks 'clean', 'test'
