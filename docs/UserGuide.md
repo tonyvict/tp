@@ -160,6 +160,27 @@ Examples:
 ![Result of deleting a student](images/deleteUI.png)
 <p align="center"><em>Figure: Result of deleting a student.</em></p>
 
+### Scheduling a lesson : `schedule`
+
+Adds an upcoming lesson for a student so you can track classes and avoid clashes.
+
+Format:
+`schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`
+
+* Schedules a lesson for the student at the specified `INDEX` (positive integer from the current list).
+* Times use 24-hour `HH:mm` (e.g., `09:30`, `14:00`) and dates use `YYYY-MM-DD` (e.g., `2025-09-20`).
+* `END_TIME` must be strictly after `START_TIME`.
+* Parameters can be in any order.
+* Overlapping lessons for the same student on the same date are rejected.
+* Exact duplicates (same student, date, start, end, subject) are not added.
+
+Examples:
+* `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths` 
+    schedules specified lesson for the 2nd person in the current list 
+
+![result for 'mark student at 1st index'](images/scheduleLessonUI.png)
+<p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
+
 ### Marking attendance : `mark`
 
 Marks a student as present for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
@@ -176,9 +197,6 @@ Examples:
 
 ![result for 'mark student at 1st index'](images/markUI.png)
 <p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
-
-
-
 
 ### Tagging a student with attributes : `tag`
 
@@ -257,6 +275,7 @@ Action | Format, Examples
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
 **List** | `list`
