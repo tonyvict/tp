@@ -74,6 +74,24 @@ Format: `help`
 ![help message](images/helpMessage.png)
 <p align="center"><em>Figure: Help message.</em></p>
 
+### Quick Search Bar 
+
+Allows users to instantly search for contacts as they type without needing to enter any commands. 
+
+![quick search bar](images/quicksearch.png)
+
+<p align="center"><em>Figure: The Quick Search Bar in the top-right corner of the main window.</em></p>
+
+* The Quick Search Bar is located at the top-right corner of the main window.
+* Simply start typing a name — matching results will appear in real time.
+* The search is case-insensitive (e.g. typing john matches John Doe).
+* Results automatically update as you type or delete characters.
+* To clear the search, press the <kbd>Esc</kbd> key or click the clear (✕) button.
+
+<div markdown="span" class="alert alert-primary"> 
+:bulb: You can still use the `find` command for more specific or multi-keyword searches. 
+The Quick Search Bar is ideal for quick lookups during lessons or when managing attendance. 
+</div>
 
 ### Adding a person: `add`
 
