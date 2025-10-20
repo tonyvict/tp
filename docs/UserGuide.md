@@ -78,19 +78,19 @@ Format: `help`
 
 Allows users to instantly search for contacts as they type without needing to enter any commands. 
 
-![quick search bar](images/quicksearch.png)
-
-<p align="center"><em>Figure: The Quick Search Bar in the top-right corner of the main window.</em></p>
-
-* The Quick Search Bar is located at the top-right corner of the main window.
-* Simply start typing a name — matching results will appear in real time.
-* The search is case-insensitive (e.g. typing john matches John Doe).
-* Results automatically update as you type or delete characters.
-
-<div markdown="span" class="alert alert-primary"> 
-:bulb: You can still use the `find` command for more specific or multi-keyword searches. 
+<div markdown="span" class="alert alert-primary"> :bulb: **Tip** 
+You can still use the `find` command for more specific or multi-keyword searches. 
 The Quick Search Bar is ideal for quick lookups during lessons or when managing attendance. 
 </div>
+
+Examples: 
+* Typing `alex` will display contacts such as `Alex Yeoh`
+* Typing `9876` will display contacts with phone number such as 9876123
+* Typing `john12` will display contacts with email `john123@yahoo.com`
+
+![quick search bar](images/quicksearch.png)
+<p align="center"><em>Figure: The Quick Search Bar in the top-right corner of the main window.</em></p>
+
 
 ### Adding a person: `add`
 
