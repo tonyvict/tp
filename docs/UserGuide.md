@@ -86,7 +86,6 @@ Allows users to instantly search for contacts as they type without needing to en
 * Simply start typing a name — matching results will appear in real time.
 * The search is case-insensitive (e.g. typing john matches John Doe).
 * Results automatically update as you type or delete characters.
-* To clear the search, press the <kbd>Esc</kbd> key or click the clear (✕) button.
 
 <div markdown="span" class="alert alert-primary"> 
 :bulb: You can still use the `find` command for more specific or multi-keyword searches. 
