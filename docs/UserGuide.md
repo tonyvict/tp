@@ -238,6 +238,27 @@ Examples:
 ![Result of tagging a student](images/tagUI.png)
 <p align="center"><em>Figure: Result of tagging student at index 2 with attributes.</em></p>
 
+### Filtering students by attributes : `filter`
+
+Filters and displays students whose attributes match the specified criteria, helping you quickly find students with specific characteristics.
+
+Format: `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
+
+* Filters students based on their tagged attributes.
+* The search is case-insensitive for both attribute keys and values.
+* All specified attribute filters must match for a student to be included (AND logic).
+* Multiple values for the same attribute are separated by commas (OR logic within the same attribute).
+* At least one `attr/` prefix must be provided.
+* For age attributes, values must be valid integers.
+
+Examples:
+* `filter attr/subject=math` - Shows students tagged with "math" as their subject
+* `filter attr/subject=math,science attr/age=16` - Shows students who have either "math" or "science" as subject AND are age 16
+* `filter attr/age=15,16,17` - Shows students who are 15, 16, or 17 years old
+
+![Result of filtering students](images/filterUI.png)
+<p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
@@ -292,6 +313,7 @@ Action | Format, Examples
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
