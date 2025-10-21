@@ -30,6 +30,7 @@ public class ScheduleCommand extends Command {
             + "start/ 09:30 end/ 11:30 "
             + "date/ 2025-09-20 sub/ Maths";
 
+    public static final String MESSAGE_DUPLICATE_LESSON = "The student already has the existing lesson!";
     public static final String MESSAGE_ADD_LESSON_SUCCESS = "Scheduled Lesson to Person: %1$s";
 
     private final Index index;
@@ -55,6 +56,11 @@ public class ScheduleCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+
+        if (personToEdit.getLessonList().hasDuplicates(lesson)) {
+            throw new CommandException(MESSAGE_DUPLICATE_LESSON);
+        }
+
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
                 personToEdit.getAddress(), personToEdit.getRemark(),
@@ -67,9 +73,8 @@ public class ScheduleCommand extends Command {
     }
 
     /**
-     * Generates a command execution success message based on whether
-     * the remark is added to or removed from
-     * {@code personToEdit}.
+     * Generates a command execution success message for
+     * the lesson being added to {@code personToEdit}.
      */
     private String generateSuccessMessage(Person personToEdit) {
         String message = MESSAGE_ADD_LESSON_SUCCESS;

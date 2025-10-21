@@ -17,6 +17,24 @@ public class LessonListTest {
     private final Lesson lesson3 = new Lesson("09:00", "10:00", "2023-01-02", "Physics", true);
 
     @Test
+    public void checkForDuplicates_haveDuplicate_returnsTrue() {
+        ArrayList<Lesson> unsortedList = new ArrayList<>(Arrays.asList(lesson1, lesson2, lesson3));
+        LessonList lessonList = new LessonList(unsortedList);
+
+        // Adding lesson1 to lessonList should be a duplicate, should return true
+        assertTrue(lessonList.hasDuplicates(lesson1));
+    }
+
+    @Test
+    public void checkForDuplicates_noDuplicate_returnsFalse() {
+        ArrayList<Lesson> unsortedList = new ArrayList<>(Arrays.asList(lesson1, lesson2));
+        LessonList lessonList = new LessonList(unsortedList);
+
+        // lesson3 is not in the list, should return false
+        assertFalse(lessonList.hasDuplicates(lesson3));
+    }
+
+    @Test
     public void constructor_fromArrayList_sortsLessons() {
         ArrayList<Lesson> unsortedList = new ArrayList<>(Arrays.asList(lesson2, lesson3, lesson1));
         LessonList lessonList = new LessonList(unsortedList);
