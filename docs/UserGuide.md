@@ -178,7 +178,7 @@ Examples:
 * `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths` 
     schedules specified lesson for the 2nd person in the current list 
 
-![result for 'mark student at 1st index'](images/scheduleLessonUI.png)
+![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
 <p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
 
 ### Marking attendance : `mark`
