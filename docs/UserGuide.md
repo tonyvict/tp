@@ -304,6 +304,24 @@ Furthermore, certain edits can cause the AddressBook to behave in unexpected way
 
 --------------------------------------------------------------------------------------------------------------------
 
+## Glossary
+
+| Term         | Definition                                                                                                                               |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| **CLI**      | Command Line Interface. The text-based area where you type commands.                                                                     |
+| **GUI**      | Graphical User Interface. The visual part of the application with windows, buttons, and lists.                                           |
+| **Command**  | An instruction you type to tell the app what to do (e.g., `add`, `list`).                                                                  |
+| **Index**    | The number (starting from 1) next to a student's name in the displayed list. It's used to identify which student a command should apply to. |
+| **Prefix**   | A short code (e.g., `n/`, `p/`, `attr/`) used to specify which parameter you are providing.                                                |
+| **Parameter**| The information you provide to a command (e.g., `John Doe` in `add n/John Doe`).                                                           |
+| **Keyword**  | A word used for searching, especially with the `find` command.                                                                           |
+| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`). Used for tagging and filtering.         |
+| **Remark**   | A short, free-text note you can add to a student's profile to remember important details.                                                  |
+| **Lesson**   | A scheduled class for a student, which includes a date, start time, end time, and subject.                                                 |
+| **Attendance**| A record showing whether a student was present or not for a scheduled lesson.                                                            |
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## Command summary
 
 Action | Format, Examples
