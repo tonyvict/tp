@@ -28,6 +28,18 @@ public class LessonList {
     }
 
     /**
+     * Checks for duplicates of the lesson in the list
+     */
+    public boolean hasDuplicates(Lesson lesson) {
+        for (Lesson l: list) {
+            if (lesson.equals(l)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns a new LessonList with the lesson added in chronological order.
      * Does not modify the original LessonList.
      */

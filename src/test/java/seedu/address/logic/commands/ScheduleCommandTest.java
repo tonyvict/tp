@@ -88,6 +88,42 @@ public class ScheduleCommandTest {
     }
 
     @Test
+    public void execute_duplicateLesson_failure() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson lessonToAdd = new Lesson(VALID_START_TIME, VALID_END_TIME, VALID_DATE, VALID_SUBJECT);
+
+        // Add the lesson for the first time
+        Person personWithLesson = new PersonBuilder(firstPerson)
+                .withLesson(lessonToAdd)
+                .build();
+        model.setPerson(firstPerson, personWithLesson);
+
+        // Try to add the same lesson again
+        ScheduleCommand scheduleCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lessonToAdd);
+
+        assertCommandFailure(scheduleCommand, model, ScheduleCommand.MESSAGE_DUPLICATE_LESSON);
+    }
+
+    @Test
+    public void execute_duplicateLessonFilteredList_failure() {
+        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson lessonToAdd = new Lesson(VALID_START_TIME, VALID_END_TIME, VALID_DATE, VALID_SUBJECT);
+
+        // Add the lesson for the first time
+        Person personWithLesson = new PersonBuilder(firstPerson)
+                .withLesson(lessonToAdd)
+                .build();
+        model.setPerson(firstPerson, personWithLesson);
+
+        // Try to add the same lesson again in filtered list
+        ScheduleCommand scheduleCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lessonToAdd);
+
+        assertCommandFailure(scheduleCommand, model, ScheduleCommand.MESSAGE_DUPLICATE_LESSON);
+    }
+
+    @Test
     public void execute_filteredList_success() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
