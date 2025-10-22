@@ -77,7 +77,8 @@ public class ScheduleCommand extends Command {
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
                 personToEdit.getAddress(), personToEdit.getRemark(),
-                personToEdit.getTags(), personToEdit.getAttributes(), personToEdit.getLessonList().add(lesson));
+                personToEdit.getTags(), personToEdit.getAttributes(),
+                personToEdit.getLessonList().add(lesson), personToEdit.getGradeList());
 
         assert editedPerson.getLessonList().size() == originalLessonCount + 1
                 : "Lesson list should grow by exactly one lesson";

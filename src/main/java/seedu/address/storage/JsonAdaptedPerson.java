@@ -13,6 +13,8 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Grade;
+import seedu.address.model.person.GradeList;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.LessonList;
 import seedu.address.model.person.Name;
@@ -36,6 +38,7 @@ class JsonAdaptedPerson {
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final List<JsonAdaptedAttribute> attributes = new ArrayList<>();
     private final List<JsonAdaptedLesson> lessonList = new ArrayList<>();
+    private final List<JsonAdaptedGrade> grades = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -45,7 +48,8 @@ class JsonAdaptedPerson {
                              @JsonProperty("email") String email, @JsonProperty("address") String address,
                              @JsonProperty("remark") String remark, @JsonProperty("tags") List<JsonAdaptedTag> tags,
                              @JsonProperty("attributes") List<JsonAdaptedAttribute> attributes,
-                             @JsonProperty("lessonList") List<JsonAdaptedLesson> lessonList) {
+                             @JsonProperty("lessonList") List<JsonAdaptedLesson> lessonList,
+                             @JsonProperty("grades") List<JsonAdaptedGrade> grades) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -59,6 +63,9 @@ class JsonAdaptedPerson {
         }
         if (lessonList != null) {
             this.lessonList.addAll(lessonList);
+        }
+        if (grades != null) {
+            this.grades.addAll(grades);
         }
     }
 
@@ -79,6 +86,9 @@ class JsonAdaptedPerson {
                 .collect(Collectors.toList()));
         lessonList.addAll(source.getLessonList().getLessons().stream()
                 .map(JsonAdaptedLesson::new)
+                .collect(Collectors.toList()));
+        grades.addAll(source.getGradeList().getGrades().values().stream()
+                .map(JsonAdaptedGrade::new)
                 .collect(Collectors.toList()));
     }
 
@@ -101,6 +111,11 @@ class JsonAdaptedPerson {
         final ArrayList<Lesson> personLessons = new ArrayList<>();
         for (JsonAdaptedLesson lesson : lessonList) {
             personLessons.add(lesson.toModelType());
+        }
+
+        final ArrayList<Grade> personGrades = new ArrayList<>();
+        for (JsonAdaptedGrade grade : grades) {
+            personGrades.add(grade.toModelType());
         }
 
         if (name == null) {
@@ -147,7 +162,14 @@ class JsonAdaptedPerson {
         for (JsonAdaptedAttribute attribute : attributes) {
             modelAttributes.add(attribute.toModelType());
         }
+
+        // Create GradeList with grades
+        GradeList modelGradeList = new GradeList();
+        for (Grade grade : personGrades) {
+            modelGradeList = modelGradeList.addGrade(grade);
+        }
+
         return new Person(modelName, modelPhone, modelEmail, modelAddress, modelRemark, modelTags,
-                modelAttributes, modelLessonList);
+                modelAttributes, modelLessonList, modelGradeList);
     }
 }

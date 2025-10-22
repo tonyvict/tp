@@ -85,7 +85,8 @@ public class TagCommand extends Command {
                 personToEdit.getRemark(),
                 personToEdit.getTags(),
                 updatedAttributes,
-                personToEdit.getLessonList()
+                personToEdit.getLessonList(),
+                personToEdit.getGradeList()
         );
     }
 

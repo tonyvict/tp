@@ -259,6 +259,27 @@ Examples:
 ![Result of filtering students](images/filterUI.png)
 <p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
 
+### Recording student grades : `grade`
+
+Records and updates subject-assessment-score pairs for a student so tutors can keep a detailed grade book per student.
+
+Format: `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`
+
+* Records grades for the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed student list.
+* The index **must be a positive integer** 1, 2, 3, …​
+* If a subject-assessment combination already exists for the student, the new score will **overwrite** the existing score.
+* If the same subject-assessment appears multiple times in one command, the **last occurrence** wins.
+* At least one `sub/` prefix must be provided.
+* Subject, assessment, and score values cannot be empty.
+
+Examples:
+* `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95` - Records Math WA1 score as 89 and Science Quiz1 score as 95 for the 2nd student
+* `grade 5 sub/ENGLISH/Final/88 sub/HISTORY/Midterm/92` - Records English Final score as 88 and History Midterm score as 92 for the 5th student
+
+![Result of recording grades](images/gradeUI.png)
+<p align="center"><em>Figure: Result of recording grades for a student.</em></p>
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
@@ -332,6 +353,7 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
+**Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
