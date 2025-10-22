@@ -69,7 +69,7 @@ public class UnmarkCommand extends Command {
         Person unmarkedPerson = new Person(
                 personToUnmark.getName(), personToUnmark.getPhone(), personToUnmark.getEmail(),
                 personToUnmark.getAddress(), personToUnmark.getRemark(), personToUnmark.getTags(),
-                personToUnmark.getAttributes(), updatedLessonList);
+                personToUnmark.getAttributes(), updatedLessonList, personToUnmark.getGradeList());
 
         model.setPerson(personToUnmark, unmarkedPerson);
 
