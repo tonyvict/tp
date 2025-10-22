@@ -114,7 +114,8 @@ public class EditCommand extends Command {
                 updatedRemark,
                 updatedTags,
                 updatedAttributes,
-                updatedLessonList);
+                updatedLessonList,
+                personToEdit.getGradeList());
     }
 
     @Override

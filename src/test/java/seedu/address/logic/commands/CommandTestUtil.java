@@ -41,6 +41,14 @@ public class CommandTestUtil {
     public static final String VALID_TAG_FRIEND = "friend";
     public static final Attribute VALID_ATTRIBUTE_SUBJECT = new Attribute("subject", Arrays.asList("Math", "Science"));
 
+    // Grade-related constants
+    public static final String VALID_SUBJECT_MATH = "MATH";
+    public static final String VALID_SUBJECT_SCIENCE = "SCIENCE";
+    public static final String VALID_ASSESSMENT_WA1 = "WA1";
+    public static final String VALID_ASSESSMENT_QUIZ1 = "Quiz1";
+    public static final String VALID_SCORE_89 = "89";
+    public static final String VALID_SCORE_95 = "95";
+
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
     public static final String PHONE_DESC_AMY = " " + PREFIX_PHONE + VALID_PHONE_AMY;
