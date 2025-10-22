@@ -12,31 +12,38 @@ public class HelpCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Displays a list of available commands and their usage.\n"
             + "Example: " + COMMAND_WORD;
 
-    public static final String SHOWING_HELP_MESSAGE =
-            "Available commands:\n\n"
-                    + "📖 General Commands\n"
-                    + "  help                     : Shows this help message\n"
-                    + "  exit                     : Exits the program\n"
-                    + "  clear                    : Clears all students\n"
-                    + "  list                     : Lists all students\n"
-                    + "  find KEYWORDS            : Finds students by name\n"
-                    + "  delete INDEX             : Deletes a student by index\n"
-                    + "  edit INDEX ...           : Edits student details\n"
-                    + "  add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]... : Adds a new student\n\n"
-
-                    + "🏷 Attribute Commands\n"
-                    + "  tag INDEX attr/KEY=VALUE [attr/KEY=VALUE2]...   : Adds or overrides student attributes\n"
-                    + "  deltag INDEX attr/KEY [attr/KEY2]...            : Deletes attributes by key\n"
-                    + "  filter attr/KEY=VALUE [attr/KEY2=VALUE2]...     : Filters students by attributes\n\n"
-
-                    + "📚 Lesson Commands\n"
-                    + "  assign INDEX l/LESSON_NAME d/DAY t/TIME         : Assigns a lesson to a student\n"
-                    + "  done INDEX l/LESSON_NAME                         : Marks lesson as completed\n\n"
-
-                    + "💡 Tip: Use 'help' anytime to redisplay this list.";
+    public static final String SHOWING_HELP_MESSAGE = String.join("\n",
+            "ClassRosterPro — Command List",
+            "",
+            "GENERAL COMMANDS:",
+            " - help - Shows this help message",
+            " - list - Lists all students",
+            " - clear - Clears all students",
+            " - exit - Exits the program",
+            "",
+            "STUDENT COMMANDS:",
+            " - add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...",
+            " - edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...",
+            " - delete INDEX",
+            " - find KEYWORD [MORE_KEYWORDS]",
+            "",
+            "ATTRIBUTE COMMANDS:",
+            " - tag INDEX attr/KEY=VALUE[,VALUE2]... [attr/KEY2=VALUE2]...",
+            " - deltag INDEX attr/KEY [attr/KEY2]...",
+            " - filter attr/KEY=VALUE[,VALUE2]... [attr/KEY2=VALUE2]...",
+            "",
+            "LESSON & ATTENDANCE COMMANDS:",
+            " - schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT",
+            " - mark INDEX",
+            " - unmark INDEX",
+            "",
+            "------------------------------------------",
+            "For full usage details, see the User Guide:",
+            "https://ay2526s1-cs2103t-w13-4.github.io/tp/UserGuide.html"
+    );
 
     @Override
     public CommandResult execute(Model model) {
-        return new CommandResult(SHOWING_HELP_MESSAGE, false, false);
+        return new CommandResult(SHOWING_HELP_MESSAGE, true, false);
     }
 }
