@@ -4,18 +4,20 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.HelpCommand;
 
 /**
- * Controller for a help page
+ * Controller for the Help page.
  */
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
+    public static final String COMMAND_LIST = HelpCommand.SHOWING_HELP_MESSAGE;
     public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
@@ -23,9 +25,9 @@ public class HelpWindow extends UiPart<Stage> {
 
     @FXML
     private Button copyButton;
-
+    
     @FXML
-    private Label helpMessage;
+    private TextArea helpMessage;
 
     /**
      * Creates a new HelpWindow.
@@ -34,7 +36,10 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
+        // Show the full command list in the window
+        helpMessage.setText(COMMAND_LIST + "\n\n" + HELP_MESSAGE);
+        helpMessage.setEditable(false);
+        helpMessage.setWrapText(true);
     }
 
     /**
@@ -46,21 +51,7 @@ public class HelpWindow extends UiPart<Stage> {
 
     /**
      * Shows the help window.
-     * @throws IllegalStateException
-     *     <ul>
-     *         <li>
-     *             if this method is called on a thread other than the JavaFX Application Thread.
-     *         </li>
-     *         <li>
-     *             if this method is called during animation or layout processing.
-     *         </li>
-     *         <li>
-     *             if this method is called on the primary stage.
-     *         </li>
-     *         <li>
-     *             if {@code dialogStage} is already showing.
-     *         </li>
-     *     </ul>
+     * @throws IllegalStateException if called incorrectly (see JavaDoc in UiPart)
      */
     public void show() {
         logger.fine("Showing help page about the application.");
@@ -68,30 +59,22 @@ public class HelpWindow extends UiPart<Stage> {
         getRoot().centerOnScreen();
     }
 
-    /**
-     * Returns true if the help window is currently being shown.
-     */
+    /** Returns true if the help window is currently being shown. */
     public boolean isShowing() {
         return getRoot().isShowing();
     }
 
-    /**
-     * Hides the help window.
-     */
+    /** Hides the help window. */
     public void hide() {
         getRoot().hide();
     }
 
-    /**
-     * Focuses on the help window.
-     */
+    /** Focuses on the help window. */
     public void focus() {
         getRoot().requestFocus();
     }
 
-    /**
-     * Copies the URL to the user guide to the clipboard.
-     */
+    /** Copies the URL to the user guide to the clipboard. */
     @FXML
     private void copyUrl() {
         final Clipboard clipboard = Clipboard.getSystemClipboard();
