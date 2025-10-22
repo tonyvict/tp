@@ -47,9 +47,9 @@ public class GradeListTest {
     public void addGrade_validGrade_success() {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
-        
+
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         assertFalse(updatedGradeList.isEmpty());
         assertEquals(1, updatedGradeList.size());
         assertTrue(updatedGradeList.hasGrade("MATH", "WA1"));
@@ -61,10 +61,10 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade1 = new Grade("MATH", "WA1", "89");
         Grade grade2 = new Grade("MATH", "WA1", "95");
-        
+
         GradeList updatedGradeList = gradeList.addGrade(grade1);
         updatedGradeList = updatedGradeList.addGrade(grade2);
-        
+
         assertEquals(1, updatedGradeList.size());
         assertEquals(grade2, updatedGradeList.getGrade("MATH", "WA1"));
     }
@@ -75,11 +75,11 @@ public class GradeListTest {
         Grade grade1 = new Grade("MATH", "WA1", "89");
         Grade grade2 = new Grade("SCIENCE", "Quiz1", "95");
         Grade grade3 = new Grade("MATH", "Quiz1", "92");
-        
+
         GradeList updatedGradeList = gradeList.addGrade(grade1);
         updatedGradeList = updatedGradeList.addGrade(grade2);
         updatedGradeList = updatedGradeList.addGrade(grade3);
-        
+
         assertEquals(3, updatedGradeList.size());
         assertTrue(updatedGradeList.hasGrade("MATH", "WA1"));
         assertTrue(updatedGradeList.hasGrade("SCIENCE", "Quiz1"));
@@ -91,7 +91,7 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         assertEquals(grade, updatedGradeList.getGrade("MATH", "WA1"));
     }
 
@@ -106,7 +106,7 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         assertTrue(updatedGradeList.hasGrade("MATH", "WA1"));
     }
 
@@ -121,10 +121,10 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         Map<String, Grade> grades = updatedGradeList.getGrades();
         assertEquals(1, grades.size());
-        
+
         // Modifying the returned map should not affect the original
         grades.clear();
         assertEquals(1, updatedGradeList.size());
@@ -141,7 +141,7 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         assertFalse(updatedGradeList.isEmpty());
     }
 
@@ -156,10 +156,10 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade1 = new Grade("MATH", "WA1", "89");
         Grade grade2 = new Grade("SCIENCE", "Quiz1", "95");
-        
+
         GradeList updatedGradeList = gradeList.addGrade(grade1);
         updatedGradeList = updatedGradeList.addGrade(grade2);
-        
+
         assertEquals(2, updatedGradeList.size());
     }
 
@@ -174,7 +174,7 @@ public class GradeListTest {
         GradeList gradeList = new GradeList();
         Grade grade = new Grade("MATH", "WA1", "89");
         GradeList updatedGradeList = gradeList.addGrade(grade);
-        
+
         String result = updatedGradeList.toString();
         assertTrue(result.contains("MATH/WA1/89"));
     }
@@ -184,7 +184,7 @@ public class GradeListTest {
         GradeList gradeList1 = new GradeList();
         GradeList gradeList2 = new GradeList();
         GradeList gradeList3 = new GradeList();
-        
+
         Grade grade = new Grade("MATH", "WA1", "89");
         gradeList1 = gradeList1.addGrade(grade);
         gradeList2 = gradeList2.addGrade(grade);
@@ -211,7 +211,7 @@ public class GradeListTest {
         GradeList gradeList1 = new GradeList();
         GradeList gradeList2 = new GradeList();
         GradeList gradeList3 = new GradeList();
-        
+
         Grade grade = new Grade("MATH", "WA1", "89");
         gradeList1 = gradeList1.addGrade(grade);
         gradeList2 = gradeList2.addGrade(grade);

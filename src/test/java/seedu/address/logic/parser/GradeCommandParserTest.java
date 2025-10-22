@@ -1,10 +1,6 @@
 package seedu.address.logic.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_SUBJECT_MATH;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_SUBJECT_SCIENCE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -25,7 +21,7 @@ public class GradeCommandParserTest {
     public void parse_validArgs_returnsGradeCommand() {
         Set<Grade> expectedGrades = new HashSet<>();
         expectedGrades.add(new Grade("MATH", "WA1", "89"));
-        
+
         assertParseSuccess(parser, "1 sub/MATH/WA1/89",
                 new GradeCommand(INDEX_FIRST_PERSON, expectedGrades));
     }
@@ -35,7 +31,7 @@ public class GradeCommandParserTest {
         Set<Grade> expectedGrades = new HashSet<>();
         expectedGrades.add(new Grade("MATH", "WA1", "89"));
         expectedGrades.add(new Grade("SCIENCE", "Quiz1", "95"));
-        
+
         assertParseSuccess(parser, "1 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95",
                 new GradeCommand(INDEX_FIRST_PERSON, expectedGrades));
     }
@@ -98,7 +94,7 @@ public class GradeCommandParserTest {
     public void parse_validWithWhitespace_success() {
         Set<Grade> expectedGrades = new HashSet<>();
         expectedGrades.add(new Grade("MATH", "WA1", "89"));
-        
+
         assertParseSuccess(parser, "1 sub/ MATH / WA1 / 89 ",
                 new GradeCommand(INDEX_FIRST_PERSON, expectedGrades));
     }

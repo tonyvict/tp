@@ -40,7 +40,7 @@ public class CommandTestUtil {
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
     public static final Attribute VALID_ATTRIBUTE_SUBJECT = new Attribute("subject", Arrays.asList("Math", "Science"));
-    
+
     // Grade-related constants
     public static final String VALID_SUBJECT_MATH = "MATH";
     public static final String VALID_SUBJECT_SCIENCE = "SCIENCE";

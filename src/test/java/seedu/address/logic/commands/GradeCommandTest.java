@@ -1,6 +1,5 @@
 package seedu.address.logic.commands;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -12,7 +11,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -29,9 +27,9 @@ public class GradeCommandTest {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Set<Grade> gradesToAdd = new HashSet<>();
         gradesToAdd.add(new Grade("MATH", "WA1", "89"));
-        
+
         GradeCommand gradeCommand = new GradeCommand(INDEX_FIRST_PERSON, gradesToAdd);
-        
+
         String expectedMessage = String.format(GradeCommand.MESSAGE_ADD_GRADE_SUCCESS,
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
                 personToEdit.getAddress(), personToEdit.getGradeList().addGrade(new Grade("MATH", "WA1", "89")));
@@ -53,10 +51,10 @@ public class GradeCommandTest {
     public void equals() {
         Set<Grade> grades1 = new HashSet<>();
         grades1.add(new Grade("MATH", "WA1", "89"));
-        
+
         Set<Grade> grades2 = new HashSet<>();
         grades2.add(new Grade("SCIENCE", "Quiz1", "95"));
-        
+
         GradeCommand gradeCommand1 = new GradeCommand(INDEX_FIRST_PERSON, grades1);
         GradeCommand gradeCommand2 = new GradeCommand(INDEX_FIRST_PERSON, grades1);
         GradeCommand gradeCommand3 = new GradeCommand(INDEX_SECOND_PERSON, grades1);

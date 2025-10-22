@@ -7,7 +7,6 @@ import static seedu.address.testutil.TypicalGrades.MATH_WA1_89;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.person.Grade;
 
 public class JsonAdaptedGradeTest {
     private static final String INVALID_SUBJECT = "";
