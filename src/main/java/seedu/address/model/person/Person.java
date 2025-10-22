@@ -1,5 +1,6 @@
 package seedu.address.model.person;
 
+import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
@@ -148,5 +149,21 @@ public class Person {
                 .toString();
     }
 
-}
+    public Person removeAttributesByKey(Set<String> keysToDelete) {
+        requireNonNull(keysToDelete);
 
+        Set<Attribute> updatedAttributes = new HashSet<>();
+        for (Attribute attr : this.attributes) {
+            if (!keysToDelete.contains(attr.getKey())) {
+                updatedAttributes.add(attr);
+            }
+        }
+
+        // No change -> return same person
+        if (updatedAttributes.equals(this.attributes)) {
+            return this;
+        }
+
+        return new Person(name, phone, email, address, remark, tags, updatedAttributes, lessonList);
+    }
+}
