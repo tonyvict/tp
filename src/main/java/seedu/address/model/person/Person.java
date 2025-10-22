@@ -13,6 +13,8 @@ import seedu.address.model.tag.Tag;
 /**
  * Represents a Person in the address book.
  * Guarantees: details are present and not null, field values are validated, immutable.
+ *
+ * This class now includes support for grades, attributes, and lessons.
  */
 public class Person {
 
@@ -27,6 +29,7 @@ public class Person {
     private final Set<Tag> tags = new HashSet<>();
     private final Set<Attribute> attributes = new HashSet<>();
     private final LessonList lessonList;
+    private final GradeList gradeList;
 
     /**
      * Every field must be present and not null.
@@ -38,8 +41,9 @@ public class Person {
                   Remark remark,
                   Set<Tag> tags,
                   Set<Attribute> attributes,
-                  LessonList lessonList) {
-        requireAllNonNull(name, phone, email, address, tags, attributes, lessonList);
+                  LessonList lessonList,
+                  GradeList gradeList) {
+        requireAllNonNull(name, phone, email, address, tags, attributes, lessonList, gradeList);
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -48,6 +52,7 @@ public class Person {
         this.tags.addAll(tags);
         this.attributes.addAll(attributes);
         this.lessonList = lessonList;
+        this.gradeList = gradeList;
     }
 
     public Name getName() {
@@ -72,6 +77,10 @@ public class Person {
 
     public LessonList getLessonList() {
         return lessonList;
+    }
+
+    public GradeList getGradeList() {
+        return gradeList;
     }
 
     /**
@@ -125,13 +134,14 @@ public class Person {
                 && address.equals(otherPerson.address)
                 && tags.equals(otherPerson.tags)
                 && attributes.equals(otherPerson.attributes)
-                && lessonList.equals(otherPerson.lessonList);
+                && lessonList.equals(otherPerson.lessonList)
+                && gradeList.equals(otherPerson.gradeList);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags, attributes, lessonList);
+        return Objects.hash(name, phone, email, address, tags, attributes, lessonList, gradeList);
     }
 
     @Override
@@ -145,6 +155,7 @@ public class Person {
                 .add("tags", tags)
                 .add("attributes", attributes)
                 .add("lesson list", lessonList)
+                .add("grades", gradeList)
                 .toString();
     }
 
