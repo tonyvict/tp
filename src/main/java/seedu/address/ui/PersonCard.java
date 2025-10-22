@@ -12,6 +12,7 @@ import seedu.address.model.person.Person;
 
 /**
  * An UI component that displays information of a {@code Person}.
+ * This card shows all person details including grades, attributes, and lessons.
  */
 public class PersonCard extends UiPart<Region> {
 
@@ -49,6 +50,8 @@ public class PersonCard extends UiPart<Region> {
     private Label attendance;
     @FXML
     private FlowPane attributes;
+    @FXML
+    private FlowPane grades;
 
 
     /**
@@ -76,6 +79,14 @@ public class PersonCard extends UiPart<Region> {
                 .forEach(attr -> {
                     String displayText = attr.getKey() + ": " + String.join(", ", attr.getValues() + " |");
                     attributes.getChildren().add(new Label(displayText));
+                });
+
+        // Display grades
+        person.getGradeList().getGrades().values().stream()
+                .sorted(Comparator.comparing(grade -> grade.getSubject() + "/" + grade.getAssessment()))
+                .forEach(grade -> {
+                    String displayText = grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore();
+                    grades.getChildren().add(new Label(displayText));
                 });
     }
 

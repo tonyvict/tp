@@ -4,7 +4,9 @@ import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -27,6 +29,8 @@ public class MarkCommand extends Command {
     public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s -> Present.";
     public static final String MESSAGE_NO_LESSON_TODAY = "No classes found for %1$s today!";
 
+    private static final Logger logger = LogsCenter.getLogger(MarkCommand.class);
+
     private final Index targetIndex;
 
     /**
@@ -35,15 +39,19 @@ public class MarkCommand extends Command {
      */
     public MarkCommand(Index targetIndex) {
         requireNonNull(targetIndex);
+        assert targetIndex != null : "targetIndex should not be null";
         this.targetIndex = targetIndex;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        logger.info("Executing MarkCommand for index: " + targetIndex.getOneBased());
+        assert model != null : "model should not be null";
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
+            logger.warning("Invalid person index provided: " + targetIndex.getOneBased());
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
@@ -63,16 +71,17 @@ public class MarkCommand extends Command {
         }
 
         if (!lessonFound) {
+            logger.info("No unmarked lesson found for today for person: " + personToMark.getName().fullName);
             throw new CommandException(String.format(MESSAGE_NO_LESSON_TODAY, personToMark.getName().fullName));
         }
 
         Person markedPerson = new Person(
                 personToMark.getName(), personToMark.getPhone(), personToMark.getEmail(),
                 personToMark.getAddress(), personToMark.getRemark(), personToMark.getTags(),
-                personToMark.getAttributes(), updatedLessonList);
+                personToMark.getAttributes(), updatedLessonList, personToMark.getGradeList());
 
         model.setPerson(personToMark, markedPerson);
-
+        logger.info("Attendance marked for person: " + personToMark.getName().fullName);
         return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName));
     }
 
