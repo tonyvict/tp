@@ -8,6 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.model.person.Attribute;
+import seedu.address.model.person.Lesson;
 import seedu.address.model.person.Person;
 
 /**
@@ -66,8 +67,14 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
-
-        lessonList.setText(person.getLessonList().getLessons().toString());
+        //making lessons into numbered list
+        StringBuilder lessonSb = new StringBuilder();
+        int lessonNumber = 1;
+        for (Lesson lesson : person.getLessonList().getLessons()) {
+            lessonSb.append(lessonNumber++).append(". ").append(lesson.toString()).append("\n");
+        }
+        lessonList.setText(lessonSb.toString().trim());
+        //calculating attendance
         long attendedClasses = person.getLessonList().getAttendedLessonCount();
         long totalClasses = person.getLessonList().size();
         attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
