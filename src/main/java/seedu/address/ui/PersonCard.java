@@ -10,6 +10,7 @@ import javafx.scene.layout.Region;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.Person;
+import javafx.scene.layout.VBox;
 
 /**
  * An UI component that displays information of a {@code Person}.
@@ -41,6 +42,8 @@ public class PersonCard extends UiPart<Region> {
     private Label address;
     @FXML
     private Label email;
+    @FXML
+    private VBox detailsPane;
     @FXML
     private FlowPane tags;
     @FXML
@@ -95,6 +98,8 @@ public class PersonCard extends UiPart<Region> {
                     String displayText = grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore();
                     grades.getChildren().add(new Label(displayText));
                 });
+        detailsPane.visibleProperty().bind(person.expandedProperty());
+        detailsPane.managedProperty().bind(person.expandedProperty());
     }
 
 }

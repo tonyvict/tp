@@ -1,7 +1,11 @@
 package seedu.address.model.person;
 
+
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,6 +33,8 @@ public class Person {
     private final Remark remark;
     private final Set<Tag> tags = new HashSet<>();
     private final Set<Attribute> attributes = new HashSet<>();
+    // UI-specific state, not part of core data model
+    private final transient BooleanProperty isExpanded = new SimpleBooleanProperty(false);
     private final LessonList lessonList;
     private final GradeList gradeList;
 
@@ -107,6 +113,23 @@ public class Person {
     public LessonList getLessonList() {
         return lessonList;
     }
+
+    // ================= UI-specific methods ===================================
+
+    public boolean isExpanded() {
+        return isExpanded.get();
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded.set(expanded);
+    }
+
+    public BooleanProperty expandedProperty() {
+        return isExpanded;
+    }
+
+    // =========================================================================
+
 
     /**
      * Returns the list of grades associated with the person.
