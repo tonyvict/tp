@@ -9,8 +9,8 @@ public class HelpCommand extends Command {
 
     public static final String COMMAND_WORD = "help";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD +
-            ": Displays a list of available commands and their usage.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Displays a list of available commands and their usage.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String SHOWING_HELP_MESSAGE = String.join("\n",
