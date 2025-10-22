@@ -6,6 +6,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_LESSON;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUB;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
@@ -31,6 +33,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.MarkCommand;
 import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.logic.commands.ScheduleCommand;
+import seedu.address.logic.commands.UnscheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -114,6 +117,13 @@ public class AddressBookParserTest {
                 + INDEX_FIRST_PERSON.getOneBased() + " " + PREFIX_START + "10:00" + " " + PREFIX_END + "11:00"
                 + " " + PREFIX_DATE + "2025-10-20" + " " + PREFIX_SUB + "Math");
         assertEquals(new ScheduleCommand(INDEX_FIRST_PERSON, lesson), command);
+    }
+
+    @Test
+    public void parseCommand_unschedule() throws Exception {
+        UnscheduleCommand command = (UnscheduleCommand) parser.parseCommand(UnscheduleCommand.COMMAND_WORD + " "
+                + INDEX_FIRST_PERSON.getOneBased() + " " + PREFIX_LESSON + "1");
+        assertEquals(new UnscheduleCommand(INDEX_FIRST_PERSON, Index.fromOneBased(1)), command);
     }
 
     @Test
