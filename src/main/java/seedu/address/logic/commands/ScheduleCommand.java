@@ -64,7 +64,8 @@ public class ScheduleCommand extends Command {
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
                 personToEdit.getAddress(), personToEdit.getRemark(),
-                personToEdit.getTags(), personToEdit.getAttributes(), personToEdit.getLessonList().add(lesson));
+                personToEdit.getTags(), personToEdit.getAttributes(),
+                personToEdit.getLessonList().add(lesson), personToEdit.getGradeList());
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
