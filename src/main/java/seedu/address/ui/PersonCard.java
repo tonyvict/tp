@@ -12,6 +12,7 @@ import seedu.address.model.person.Person;
 
 /**
  * An UI component that displays information of a {@code Person}.
+ * This card shows all person details including grades, attributes, and lessons.
  */
 public class PersonCard extends UiPart<Region> {
 
