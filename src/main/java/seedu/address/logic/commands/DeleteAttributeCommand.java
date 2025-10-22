@@ -30,6 +30,12 @@ public class DeleteAttributeCommand extends Command {
     private final Index index;
     private final Set<String> attributeKeysToDelete;
 
+    /**
+     * Creates a DeleteAttributeCommand to remove the specified attributes from the given person.
+     *
+     * @param index Index of the person in the displayed person list whose attributes are to be deleted.
+     * @param attributeKeysToDelete Set of attribute keys to be removed from the person.
+     */
     public DeleteAttributeCommand(Index index, Set<String> attributeKeysToDelete) {
         requireNonNull(index);
         requireNonNull(attributeKeysToDelete);
