@@ -70,6 +70,6 @@ shadowJar {
 
 defaultTasks 'clean', 'test'
 
-run{
+run {
     enableAssertions = true
 }
