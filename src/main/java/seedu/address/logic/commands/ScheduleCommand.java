@@ -4,7 +4,9 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -33,6 +35,8 @@ public class ScheduleCommand extends Command {
     public static final String MESSAGE_DUPLICATE_LESSON = "The student already has the existing lesson!";
     public static final String MESSAGE_ADD_LESSON_SUCCESS = "Scheduled Lesson to Person: %1$s";
 
+    private static final Logger logger = LogsCenter.getLogger(ScheduleCommand.class);
+
     private final Index index;
     private final Lesson lesson;
 
@@ -49,17 +53,26 @@ public class ScheduleCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        requireAllNonNull(model, index, lesson);
+        logger.fine(() -> String.format("Executing ScheduleCommand for person index %s with lesson %s",
+                index.getOneBased(), lesson));
+
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
+            logger.fine("ScheduleCommand failed due to invalid person index.");
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+        assert personToEdit != null : "Person to edit should not be null";
 
         if (personToEdit.getLessonList().hasDuplicates(lesson)) {
+            logger.fine("ScheduleCommand detected duplicate lesson; aborting.");
             throw new CommandException(MESSAGE_DUPLICATE_LESSON);
         }
+
+        int originalLessonCount = personToEdit.getLessonList().size();
 
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
@@ -67,9 +80,13 @@ public class ScheduleCommand extends Command {
                 personToEdit.getTags(), personToEdit.getAttributes(),
                 personToEdit.getLessonList().add(lesson), personToEdit.getGradeList());
 
+        assert editedPerson.getLessonList().size() == originalLessonCount + 1
+                : "Lesson list should grow by exactly one lesson";
+
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
+        logger.fine(() -> String.format("ScheduleCommand succeeded for person %s", index.getOneBased()));
         return new CommandResult(generateSuccessMessage(editedPerson));
     }
 

@@ -3,11 +3,9 @@ package seedu.address.model.person;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.address.commons.util.StringUtil;
-
 /**
  * Tests that a {@code Person}'s name, phone, or email contains any of the given keywords.
- * Matching is case-insensitive and allows partial matches.
+ * Matching is case-insensitive and allows partial matches (substrings).
  */
 public class PersonContainsKeywordPredicate implements Predicate<Person> {
 
@@ -38,11 +36,13 @@ public class PersonContainsKeywordPredicate implements Predicate<Person> {
             return true;
         }
 
-        return keywords.stream().anyMatch(keyword ->
-                StringUtil.containsWordIgnoreCase(person.getName().fullName, keyword)
-                        || person.getPhone().value.toLowerCase().contains(keyword.toLowerCase())
-                        || person.getEmail().value.toLowerCase().contains(keyword.toLowerCase())
-        );
+        return keywords.stream().anyMatch(keyword -> {
+            String lowerCaseKeyword = keyword.toLowerCase();
+
+            return person.getName().fullName.toLowerCase().contains(lowerCaseKeyword)
+                    || person.getPhone().value.toLowerCase().contains(lowerCaseKeyword)
+                    || person.getEmail().value.toLowerCase().contains(lowerCaseKeyword);
+        });
     }
 
     /**
@@ -59,5 +59,6 @@ public class PersonContainsKeywordPredicate implements Predicate<Person> {
                 && keywords.equals(((PersonContainsKeywordPredicate) other).keywords));
     }
 }
+
 
 
