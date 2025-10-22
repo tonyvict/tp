@@ -175,6 +175,6 @@ public class Person {
             return this;
         }
 
-        return new Person(name, phone, email, address, remark, tags, updatedAttributes, lessonList);
+        return new Person(name, phone, email, address, remark, tags, updatedAttributes, lessonList, gradeList);
     }
 }
