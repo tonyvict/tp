@@ -31,16 +31,19 @@ public class UnmarkCommandTest {
 
     @Test
     public void execute_unmarkPersonWithLessonToday_success() {
-        // Setup: Create a person with a lesson scheduled for today and marked present
+        // Create a person with a lesson scheduled for today and marked present
         Lesson lessonToday = new Lesson("15:00", "16:00", LocalDate.now().toString(), "Math", true);
         Person personToUnmark = new PersonBuilder().withName("Unmarkable Person")
                 .withLessonList(new LessonList().add(lessonToday)).build();
         model.addPerson(personToUnmark);
 
-        Lesson unmarkedLesson = new Lesson(lessonToday.getStart(), lessonToday.getEnd(), lessonToday.getDate(), lessonToday.getSub(), false);
+        //Lesson scheduled tdy but not marked present
+        Lesson unmarkedLesson = new Lesson(lessonToday.getStart(), lessonToday.getEnd(), lessonToday.getDate(),
+                lessonToday.getSub(), false);
         Person unmarkedPerson = new PersonBuilder(personToUnmark)
                 .withLessonList(new LessonList().add(unmarkedLesson)).build();
 
+        //Success message
         String expectedMessage = String.format(UnmarkCommand.MESSAGE_UNMARK_ATTENDANCE_SUCCESS,
                 unmarkedPerson.getName().fullName);
 
@@ -63,10 +66,10 @@ public class UnmarkCommandTest {
         Person personToUnmark = new PersonBuilder().withName("Unmarkable Person")
                 .withLessonList(new LessonList().add(lessonToday)).build();
         model.addPerson(personToUnmark);
-
+        //model setup
         Index lastPersonIndex = Index.fromOneBased(model.getFilteredPersonList().size());
         UnmarkCommand unmarkCommand = new UnmarkCommand(lastPersonIndex);
-
+        //expecting exception
         String expectedMessage = String.format(UnmarkCommand.MESSAGE_NO_LESSON_TODAY_OR_ALREADY_UNMARKED,
                 personToUnmark.getName().fullName);
 
@@ -75,6 +78,7 @@ public class UnmarkCommandTest {
 
     @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
+        //catch out of bounds index exception
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         UnmarkCommand unmarkCommand = new UnmarkCommand(outOfBoundIndex);
 
