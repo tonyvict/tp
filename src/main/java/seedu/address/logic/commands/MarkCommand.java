@@ -35,12 +35,14 @@ public class MarkCommand extends Command {
      */
     public MarkCommand(Index targetIndex) {
         requireNonNull(targetIndex);
+        assert targetIndex != null : "targetIndex should not be null";
         this.targetIndex = targetIndex;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        assert model != null : "model should not be null";
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
