@@ -31,7 +31,7 @@ public class DeleteAttributeCommand extends Command {
     private final Set<String> attributeKeysToDelete;
 
     /**
-     * Creates a DeleteAttributeCommand to remove the specified attributes from the given person.
+     * Creates a {@code DeleteAttributeCommand} to remove the specified attributes from the given person.
      *
      * @param index Index of the person in the displayed person list whose attributes are to be deleted.
      * @param attributeKeysToDelete Set of attribute keys to be removed from the person.
@@ -43,6 +43,14 @@ public class DeleteAttributeCommand extends Command {
         this.attributeKeysToDelete = attributeKeysToDelete;
     }
 
+    /**
+     * Executes the delete attribute command.
+     * Removes the specified attributes from the target person in the model.
+     *
+     * @param model {@code Model} which contains the list of persons.
+     * @return Command result indicating success or failure message.
+     * @throws CommandException if the person index is invalid.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
@@ -65,6 +73,13 @@ public class DeleteAttributeCommand extends Command {
                 editedPerson.getName(), attributeKeysToDelete));
     }
 
+    /**
+     * Returns true if both {@code DeleteAttributeCommand} objects are equal
+     * (i.e. have the same index and attribute keys to delete).
+     *
+     * @param other The other object to compare to.
+     * @return True if both commands are equivalent, false otherwise.
+     */
     @Override
     public boolean equals(Object other) {
         return other == this

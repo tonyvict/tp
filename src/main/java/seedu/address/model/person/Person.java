@@ -34,6 +34,16 @@ public class Person {
 
     /**
      * Every field must be present and not null.
+     *
+     * @param name Person's name.
+     * @param phone Person's phone number.
+     * @param email Person's email address.
+     * @param address Person's home address.
+     * @param remark Additional remarks about the person.
+     * @param tags Set of tags associated with the person.
+     * @param attributes Set of attributes describing the person.
+     * @param lessonList List of lessons associated with the person.
+     * @param gradeList List of grades associated with the person.
      */
     public Person(Name name,
                   Phone phone,
@@ -56,30 +66,51 @@ public class Person {
         this.gradeList = gradeList;
     }
 
+    /**
+     * Returns the name of the person.
+     */
     public Name getName() {
         return name;
     }
 
+    /**
+     * Returns the phone number of the person.
+     */
     public Phone getPhone() {
         return phone;
     }
 
+    /**
+     * Returns the email of the person.
+     */
     public Email getEmail() {
         return email;
     }
 
+    /**
+     * Returns the address of the person.
+     */
     public Address getAddress() {
         return address;
     }
 
+    /**
+     * Returns the remark associated with the person.
+     */
     public Remark getRemark() {
         return remark;
     }
 
+    /**
+     * Returns the list of lessons associated with the person.
+     */
     public LessonList getLessonList() {
         return lessonList;
     }
 
+    /**
+     * Returns the list of grades associated with the person.
+     */
     public GradeList getGradeList() {
         return gradeList;
     }
@@ -87,6 +118,8 @@ public class Person {
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
+     *
+     * @return Unmodifiable view of the tag set.
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
@@ -95,6 +128,8 @@ public class Person {
     /**
      * Returns an immutable attribute set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
+     *
+     * @return Unmodifiable view of the attribute set.
      */
     public Set<Attribute> getAttributes() {
         return Collections.unmodifiableSet(attributes);
@@ -103,6 +138,9 @@ public class Person {
     /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
+     *
+     * @param otherPerson The other person to compare to.
+     * @return True if both have the same name, false otherwise.
      */
     public boolean isSamePerson(Person otherPerson) {
         if (otherPerson == this) {
@@ -116,6 +154,9 @@ public class Person {
     /**
      * Returns true if both persons have the same identity and data fields.
      * This defines a stronger notion of equality between two persons.
+     *
+     * @param other The other object to compare to.
+     * @return True if both persons are identical in all fields.
      */
     @Override
     public boolean equals(Object other) {
@@ -139,12 +180,22 @@ public class Person {
                 && gradeList.equals(otherPerson.gradeList);
     }
 
+    /**
+     * Returns a hash code value for this person.
+     *
+     * @return Hash code based on the person’s fields.
+     */
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(name, phone, email, address, tags, attributes, lessonList, gradeList);
     }
 
+    /**
+     * Returns a string representation of the person, including all its details.
+     *
+     * @return String containing the person's details.
+     */
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -165,7 +216,8 @@ public class Person {
      * If none of the specified keys exist, returns the same {@code Person} instance.
      *
      * @param keysToDelete Set of attribute keys to be removed from this person.
-     * @return A new {@code Person} without the specified attributes, or the same person if no attributes were removed.
+     * @return A new {@code Person} without the specified attributes,
+     *         or the same person if no attributes were removed.
      */
     public Person removeAttributesByKey(Set<String> keysToDelete) {
         requireNonNull(keysToDelete);
