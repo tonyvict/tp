@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.ClearCommand;
+import seedu.address.logic.commands.CloseCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
@@ -31,6 +32,7 @@ import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.MarkCommand;
+import seedu.address.logic.commands.OpenCommand;
 import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.commands.UnmarkCommand;
@@ -146,6 +148,20 @@ public class AddressBookParserTest {
         UnmarkCommand command = (UnmarkCommand) parser.parseCommand(
                 UnmarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new UnmarkCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_open() throws Exception {
+        OpenCommand command = (OpenCommand) parser.parseCommand(
+                OpenCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+        assertEquals(new OpenCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_close() throws Exception {
+        CloseCommand command = (CloseCommand) parser.parseCommand(
+                CloseCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+        assertEquals(new CloseCommand(INDEX_FIRST_PERSON), command);
     }
 
     @Test

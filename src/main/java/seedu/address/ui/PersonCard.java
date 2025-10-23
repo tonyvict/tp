@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.Person;
@@ -41,6 +42,8 @@ public class PersonCard extends UiPart<Region> {
     private Label address;
     @FXML
     private Label email;
+    @FXML
+    private VBox detailsPane;
     @FXML
     private FlowPane tags;
     @FXML
@@ -81,6 +84,8 @@ public class PersonCard extends UiPart<Region> {
         long attendedClasses = person.getLessonList().getAttendedLessonCount();
         long totalClasses = person.getLessonList().size();
         attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
+        // Display attributes
+        //gets attributes and sorts them by key
         person.getAttributes().stream()
                 .sorted(Comparator.comparing(Attribute::getKey))
                 .forEach(attr -> {
@@ -95,6 +100,8 @@ public class PersonCard extends UiPart<Region> {
                     String displayText = grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore();
                     grades.getChildren().add(new Label(displayText));
                 });
+        detailsPane.visibleProperty().bind(person.expandedProperty());
+        detailsPane.managedProperty().bind(person.expandedProperty());
     }
 
 }
