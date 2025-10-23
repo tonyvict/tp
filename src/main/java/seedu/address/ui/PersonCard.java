@@ -7,10 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.Person;
-import javafx.scene.layout.VBox;
 
 /**
  * An UI component that displays information of a {@code Person}.
@@ -84,6 +84,8 @@ public class PersonCard extends UiPart<Region> {
         long attendedClasses = person.getLessonList().getAttendedLessonCount();
         long totalClasses = person.getLessonList().size();
         attendance.setText("Attendance: " + attendedClasses + " / " + totalClasses);
+        // Display attributes
+        //gets attributes and sorts them by key
         person.getAttributes().stream()
                 .sorted(Comparator.comparing(Attribute::getKey))
                 .forEach(attr -> {
