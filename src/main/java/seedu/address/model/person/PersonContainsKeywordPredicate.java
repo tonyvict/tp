@@ -2,12 +2,17 @@ package seedu.address.model.person;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
+
+import seedu.address.commons.core.LogsCenter;
 
 /**
  * Tests that a {@code Person}'s name, phone, or email contains any of the given keywords.
- * Matching is case-insensitive and allows partial matches (substrings).
+ * Matching is case-insensitive and allows partial matches.
  */
 public class PersonContainsKeywordPredicate implements Predicate<Person> {
+
+    private static final Logger logger = LogsCenter.getLogger(PersonContainsKeywordPredicate.class);
 
     private final List<String> keywords;
 
@@ -17,6 +22,7 @@ public class PersonContainsKeywordPredicate implements Predicate<Person> {
      * @param keywords The list of keywords to match against a person's fields.
      */
     public PersonContainsKeywordPredicate(List<String> keywords) {
+        assert keywords != null : "Keywords list should not be null";
         this.keywords = keywords;
     }
 
@@ -32,17 +38,35 @@ public class PersonContainsKeywordPredicate implements Predicate<Person> {
      */
     @Override
     public boolean test(Person person) {
-        if (keywords == null || keywords.isEmpty()) {
+        assert person != null : "Person to test should not be null";
+
+        if (keywords == null) {
+            logger.warning("Keywords list is null — returning true defensively");
             return true;
         }
 
-        return keywords.stream().anyMatch(keyword -> {
-            String lowerCaseKeyword = keyword.toLowerCase();
+        if (keywords.isEmpty()) {
+            return true;
+        }
 
-            return person.getName().fullName.toLowerCase().contains(lowerCaseKeyword)
-                    || person.getPhone().value.toLowerCase().contains(lowerCaseKeyword)
-                    || person.getEmail().value.toLowerCase().contains(lowerCaseKeyword);
+        String name = person.getName().fullName.toLowerCase();
+        String phone = person.getPhone().value.toLowerCase();
+        String email = person.getEmail().value.toLowerCase();
+
+        boolean matchFound = keywords.stream().anyMatch(keyword -> {
+            assert keyword != null : "Individual keyword should not be null";
+            String lowerKeyword = keyword.toLowerCase().trim();
+
+            return name.contains(lowerKeyword)
+                    || phone.contains(lowerKeyword)
+                    || email.contains(lowerKeyword);
         });
+
+        if (!matchFound) {
+            logger.fine("No match found for: " + keywords + " in person: " + person.getName());
+        }
+
+        return matchFound;
     }
 
     /**
@@ -59,6 +83,7 @@ public class PersonContainsKeywordPredicate implements Predicate<Person> {
                 && keywords.equals(((PersonContainsKeywordPredicate) other).keywords));
     }
 }
+
 
 
 
