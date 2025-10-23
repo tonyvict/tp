@@ -108,6 +108,9 @@ public class ModelManager implements Model {
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
 
+        // Preserve the UI expanded state across updates
+        editedPerson.setExpanded(target.isExpanded());
+
         addressBook.setPerson(target, editedPerson);
     }
 
