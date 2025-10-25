@@ -20,6 +20,7 @@ Class Name
 Class Phone
 Class Tag
 Class Remark
+Class Lesson
 Class LessonList
 
 Class I #FFFFFF
@@ -46,6 +47,7 @@ Person *--> Address
 Person *--> "*" Tag
 Person *--> Remark
 Person *--> LessonList
+LessonList *--> "*" Lesson
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
