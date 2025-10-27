@@ -217,6 +217,24 @@ Examples:
 ![result for 'mark student at 1st index'](images/markUI.png)
 <p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
 
+### Unmarking attendance : `unmark`
+
+Unmarks a student's attendance for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
+
+Format: `unmark INDEX`
+
+*   Unmarks attendance for the person at the specified `INDEX`.
+*   The index refers to the index number shown in the displayed person list.
+*   The index **must be a positive integer** 1, 2, 3, …
+*   An error will be shown if the student has no lessons scheduled for today or if all today's lessons are already unmarked.
+*   Only lessons that are currently marked as present will be unmarked.
+
+Examples:
+* `unmark 1` unmarks the 1st person in the current list as absent for today's lesson.
+
+![result for 'unmark student at 1st index'](images/unmarkUI.png)
+<p align="center"><em>Figure: Result of unmarking attendance for the student at index 1.</em></p>
+
 ### Tagging a student with attributes : `tag`
 
 Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.  
