@@ -31,6 +31,7 @@ public class CommandBox extends UiPart<Region> {
     private final CommandExecutor commandExecutor;
     private final Logic logic;
     private Timer debounceTimer;
+    private boolean isExecutingCommand = false;
 
     @FXML
     private TextField commandTextField;
@@ -68,7 +69,9 @@ public class CommandBox extends UiPart<Region> {
         // ESC clears input and resets full list (if Logic available)
         commandTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
-                if (logic != null) {
+                String currentText = commandTextField.getText();
+                // Only reset filter if we're currently in search mode
+                if (logic != null && (currentText.startsWith("search") || currentText.startsWith("/search"))) {
                     logic.updateFilteredPersonList(person -> true);
                 }
                 commandTextField.clear();
@@ -81,6 +84,11 @@ public class CommandBox extends UiPart<Region> {
 
         // Live search when input starts with "search" or "/search"
         commandTextField.textProperty().addListener((unused1, oldValue, newValue) -> {
+            // Skip live search if we're executing a command
+            if (isExecutingCommand) {
+                return;
+            }
+
             // Debounce updates to avoid spamming the model
             debounceTimer.cancel();
             debounceTimer = new Timer(true);
@@ -108,8 +116,7 @@ public class CommandBox extends UiPart<Region> {
                 s.startsWith("search") || s.startsWith("/search");
 
         if (!isSearchMode) {
-            // Not in search mode: show all persons
-            logic.updateFilteredPersonList(person -> true);
+            // Not in search mode: don't modify existing filters
             return;
         }
 
@@ -149,10 +156,13 @@ public class CommandBox extends UiPart<Region> {
         }
 
         try {
+            isExecutingCommand = true; // Set flag to prevent live search interference
             commandExecutor.execute(commandText);
             commandTextField.setText("");
         } catch (CommandException | ParseException e) {
             setStyleToIndicateCommandFailure();
+        } finally {
+            isExecutingCommand = false; // Always reset flag
         }
     }
 
