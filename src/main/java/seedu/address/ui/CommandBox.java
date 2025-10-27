@@ -64,14 +64,17 @@ public class CommandBox extends UiPart<Region> {
      */
     private void initializeCoreListeners(boolean enableLiveSearch) {
         // Reset error style whenever text changes
-        commandTextField.textProperty().addListener((unused1, unused2, unused3) -> setStyleToDefault());
+        commandTextField.textProperty().addListener((unused1,
+                                                     unused2, unused3) ->
+                setStyleToDefault());
 
         // ESC clears input and resets full list (if Logic available)
         commandTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 String currentText = commandTextField.getText();
                 // Only reset filter if we're currently in search mode
-                if (logic != null && (currentText.startsWith("search") || currentText.startsWith("/search"))) {
+                if (logic != null && (currentText.startsWith("search")
+                        || currentText.startsWith("/search"))) {
                     logic.updateFilteredPersonList(person -> true);
                 }
                 commandTextField.clear();
@@ -83,7 +86,8 @@ public class CommandBox extends UiPart<Region> {
         }
 
         // Live search when input starts with "search" or "/search"
-        commandTextField.textProperty().addListener((unused1, oldValue, newValue) -> {
+        commandTextField.textProperty().addListener((unused1,
+                                                     oldValue, newValue) -> {
             // Skip live search if we're executing a command
             if (isExecutingCommand) {
                 return;
@@ -96,7 +100,8 @@ public class CommandBox extends UiPart<Region> {
             debounceTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(() -> handleLiveSearchTextChanged(newValue));
+                    Platform.runLater(() ->
+                            handleLiveSearchTextChanged(newValue));
                 }
             }, DEBOUNCE_DELAY_MS);
         });
