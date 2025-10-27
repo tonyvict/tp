@@ -67,11 +67,11 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Displays a pop-up window containing a complete list of all available commands, grouped by category
 
 Format: `help`
 
-![help message](images/helpMessage.png)
+![help_message](images/helpMessage.png)
 <p align="center"><em>Figure: Help message.</em></p>
 
 ### Adding a person: `add`
