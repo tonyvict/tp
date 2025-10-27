@@ -65,18 +65,11 @@ public class CommandBox extends UiPart<Region> {
     private void initializeCoreListeners(boolean enableLiveSearch) {
         // Reset error style whenever text changes
         commandTextField.textProperty().addListener((unused1,
-                                                     unused2, unused3) ->
-                setStyleToDefault());
+                                                     unused2, unused3) -> setStyleToDefault());
 
-        // ESC clears input and resets full list (if Logic available)
+        // ESC only clears command box text, does NOT reset filters
         commandTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
-                String currentText = commandTextField.getText();
-                // Only reset filter if we're currently in search mode
-                if (logic != null && (currentText.startsWith("search")
-                        || currentText.startsWith("/search"))) {
-                    logic.updateFilteredPersonList(person -> true);
-                }
                 commandTextField.clear();
             }
         });
@@ -100,15 +93,15 @@ public class CommandBox extends UiPart<Region> {
             debounceTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(() ->
-                            handleLiveSearchTextChanged(newValue));
+                    Platform.runLater(() -> handleLiveSearchTextChanged(newValue));
                 }
             }, DEBOUNCE_DELAY_MS);
         });
     }
 
     /**
-     * Apply or clear live filtering based on the command box text.
+     * Apply live filtering based on the command box text.
+     * Search filters are now persistent and only change when new search criteria are entered.
      */
     private void handleLiveSearchTextChanged(String text) {
         if (logic == null) {
@@ -117,16 +110,15 @@ public class CommandBox extends UiPart<Region> {
 
         String s = text == null ? "" : text;
 
-        boolean isSearchMode =
-                s.startsWith("search") || s.startsWith("/search");
+        boolean isSearchMode = s.startsWith("search") || s.startsWith("/search");
 
         if (!isSearchMode) {
             // Not in search mode: don't modify existing filters
+            // This makes search filters persistent even when command box is empty
             return;
         }
 
         // Extract keywords after the command keyword
-        // Accepts "search", "search ", "/search", "/search "
         String withoutCmd = s.startsWith("/search")
                 ? s.substring("/search".length())
                 : s.substring("search".length());
@@ -134,6 +126,7 @@ public class CommandBox extends UiPart<Region> {
         String trimmed = withoutCmd.trim();
 
         if (trimmed.isEmpty()) {
+            // Empty search: show all persons (user explicitly cleared search)
             logic.updateFilteredPersonList(person -> true);
             return;
         }
@@ -156,7 +149,7 @@ public class CommandBox extends UiPart<Region> {
         // If user is in "search" mode, don't execute as a normal command.
         // Live filtering is already applied; Enter should not cause "unknown command".
         if (commandText.startsWith("search") || commandText.startsWith("/search")) {
-            // Do nothing on Enter (keep the filter active). Users can press ESC to clear.
+            // Do nothing on Enter (keep the filter active). Users can press ESC to clear the text.
             return;
         }
 
