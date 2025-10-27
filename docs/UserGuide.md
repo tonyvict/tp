@@ -180,6 +180,26 @@ Examples:
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
 <p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
 
+### Unscheduling a lesson : `unschedule`
+
+Removes a scheduled lesson from a student's timetable.
+
+Format:
+`unschedule INDEX lesson/LESSON_INDEX`
+
+* Removes the lesson at `LESSON_INDEX` from the student at the specified `INDEX`.
+* Both `INDEX` and `LESSON_INDEX` must be positive integers from their respective lists.
+* `INDEX` refers to the student's position in the currently displayed person list.
+* `LESSON_INDEX` refers to the lesson's position in that student's lesson list.
+* The student must have at least one scheduled lesson.
+
+Examples:
+* `unschedule 1 lesson/1`
+  removes the 1st lesson from the 1st person in the current list
+
+![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
+<p align="center"><em>Figure: Result of unscheduling the 1st lesson from the student at index 1.</em></p>
+
 ### Marking attendance : `mark`
 
 Marks a student as present for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
