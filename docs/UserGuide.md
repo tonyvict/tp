@@ -277,7 +277,7 @@ Examples:
 * `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95` - Records Math WA1 score as 89 and Science Quiz1 score as 95 for the 2nd student
 * `grade 5 sub/ENGLISH/Final/88 sub/HISTORY/Midterm/92` - Records English Final score as 88 and History Midterm score as 92 for the 5th student
 
-![Result of recording grades](images/gradeUI.png)
+![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
 
 ### Clearing all entries : `clear`
