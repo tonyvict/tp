@@ -245,9 +245,9 @@ Examples:
 
 Allows users to instantly search for contacts by name, email or phone number.
 
-<div markdown="span" class="alert alert-primary"> :bulb: **Tip** 
-You can still use the `find` command for more specific or multi-keyword searches. 
-The Quick Search feature is ideal for quick lookups during lessons or when managing attendance. 
+<div markdown="span" class="alert alert-primary"> :bulb: **Tip**
+You can still use the `find` command for more specific or multi-keyword searches.
+The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
 Examples:
