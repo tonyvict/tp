@@ -20,4 +20,7 @@ Person *--> Email
 Person *--> Address
 Person *--> LessonList
 LessonList *-->"*" Lesson
+Person *--> GradeList
+GradeList *--> "*" Grade
+Person *--> "*" Attribute
 @enduml
