@@ -86,7 +86,8 @@ public class MarkCommand extends Command {
                 personToMark.getAttributes(), updatedLessonList, personToMark.getGradeList());
 
         model.setPerson(personToMark, markedPerson);
-        logger.info("Attendance marked for lesson " + lessonIndex.getOneBased() + " of person: " + personToMark.getName().fullName);
+        logger.info("Attendance marked for lesson " + lessonIndex.getOneBased() + " of person: "
+                + personToMark.getName().fullName);
         return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName));
     }
 
