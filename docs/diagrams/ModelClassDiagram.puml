@@ -22,6 +22,8 @@ Class Tag
 Class Remark
 Class Lesson
 Class LessonList
+Class Grade
+Class GradeList
 
 Class I #FFFFFF
 }
@@ -48,6 +50,8 @@ Person *--> "*" Tag
 Person *--> Remark
 Person *--> LessonList
 LessonList *--> "*" Lesson
+Person *--> GradeList
+GradeList *--> "*" Grade
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
