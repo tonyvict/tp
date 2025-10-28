@@ -27,7 +27,7 @@ public class MarkCommand extends Command {
             + "lesson/LESSON_INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1 l/3";
 
-    public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s -> Present.";
+    public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s, Lesson: %2$s -> Present";
     public static final String MESSAGE_LESSON_ALREADY_MARKED = "This lesson is already marked as present.";
 
     private static final Logger logger = LogsCenter.getLogger(MarkCommand.class);
@@ -88,7 +88,8 @@ public class MarkCommand extends Command {
         model.setPerson(personToMark, markedPerson);
         logger.info("Attendance marked for lesson " + lessonIndex.getOneBased() + " of person: "
                 + personToMark.getName().fullName);
-        return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName));
+        return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName,
+                markedLesson.getLessonDetails()));
     }
 
     @Override

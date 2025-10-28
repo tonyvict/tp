@@ -110,6 +110,13 @@ public class Lesson implements Comparable<Lesson> {
     }
 
     /**
+     * Returns a string with the lesson's details, excluding attendance.
+     */
+    public String getLessonDetails() {
+        return sub + " class on " + date.toString() + " from " + start.toString() + " to " + end.toString();
+    }
+
+    /**
      * Compares this lesson with another lesson chronologically.
      * Lessons are ordered by date first, then by start time.
      *

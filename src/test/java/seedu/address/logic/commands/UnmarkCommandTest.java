@@ -52,7 +52,8 @@ public class UnmarkCommandTest {
         expectedModel.setPerson(personToUnmark, unmarkedPerson);
 
         String expectedMessage = String.format(UnmarkCommand.MESSAGE_UNMARK_ATTENDANCE_SUCCESS,
-                unmarkedPerson.getName().fullName);
+                unmarkedPerson.getName().fullName,
+                unmarkedLesson.getLessonDetails());
 
         assertCommandSuccess(unmarkCommand, model, expectedMessage, expectedModel);
     }

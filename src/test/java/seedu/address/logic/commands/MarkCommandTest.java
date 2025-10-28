@@ -56,7 +56,8 @@ public class MarkCommandTest {
         expectedModel.setPerson(expectedPersonToMark, markedPerson);
 
         String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_ATTENDANCE_SUCCESS,
-                                               markedPerson.getName().fullName);
+                                               markedPerson.getName().fullName,
+                                               markedLesson.getLessonDetails());
         assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
     }
 
