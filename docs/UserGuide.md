@@ -180,6 +180,26 @@ Examples:
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
 <p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
 
+### Unscheduling a lesson : `unschedule`
+
+Removes a scheduled lesson from a student's timetable.
+
+Format:
+`unschedule INDEX lesson/LESSON_INDEX`
+
+* Removes the lesson at `LESSON_INDEX` from the student at the specified `INDEX`.
+* Both `INDEX` and `LESSON_INDEX` must be positive integers from their respective lists.
+* `INDEX` refers to the student's position in the currently displayed person list.
+* `LESSON_INDEX` refers to the lesson's position in that student's lesson list.
+* The student must have at least one scheduled lesson.
+
+Examples:
+* `unschedule 1 lesson/1`
+  removes the 1st lesson from the 1st person in the current list
+
+![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
+<p align="center"><em>Figure: Result of unscheduling the 1st lesson from the student at index 1.</em></p>
+
 ### Marking attendance : `mark`
 
 Marks a student as present for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
@@ -196,6 +216,24 @@ Examples:
 
 ![result for 'mark student at 1st index'](images/markUI.png)
 <p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
+
+### Unmarking attendance : `unmark`
+
+Unmarks a student's attendance for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
+
+Format: `unmark INDEX`
+
+*   Unmarks attendance for the person at the specified `INDEX`.
+*   The index refers to the index number shown in the displayed person list.
+*   The index **must be a positive integer** 1, 2, 3, …
+*   An error will be shown if the student has no lessons scheduled for today or if all today's lessons are already unmarked.
+*   Only lessons that are currently marked as present will be unmarked.
+
+Examples:
+* `unmark 1` unmarks the 1st person in the current list as absent for today's lesson.
+
+![result for 'unmark student at 1st index'](images/unmarkUI.png)
+<p align="center"><em>Figure: Result of unmarking attendance for the student at index 1.</em></p>
 
 ### Tagging a student with attributes : `tag`
 
@@ -355,7 +393,9 @@ Action | Format, Examples
 **Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
 **Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
+**Unschedule Lesson** | `unschedule INDEX lesson/LESSON_INDEX`<br> e.g., `unschedule 1 lesson/1`
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
+**Unmark Attendance** | `unmark INDEX`<br> e.g., `unmark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
 **List** | `list`
 **Help** | `help`
