@@ -67,30 +67,12 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Displays a pop-up window containing a complete list of all available commands, grouped by category
 
 Format: `help`
 
-![help message](images/helpMessage.png)
+![help_message](images/helpMessage.png)
 <p align="center"><em>Figure: Help message.</em></p>
-
-### Quick Search Bar
-
-Allows users to instantly search for contacts as they type without needing to enter any commands.
-
-<div markdown="span" class="alert alert-primary"> :bulb: **Tip**
-You can still use the `find` command for more specific or multi-keyword searches.
-The Quick Search Bar is ideal for quick lookups during lessons or when managing attendance.
-</div>
-
-Examples:
-* Typing `alex` will display contacts such as `Alex Yeoh`
-* Typing `9876` will display contacts with phone number such as 9876123
-* Typing `john12` will display contacts with email `john123@yahoo.com`
-
-![quick search bar](images/quicksearch.png)
-<p align="center"><em>Figure: The Quick Search Bar in the top-right corner of the main window.</em></p>
-
 
 ### Adding a person: `add`
 
@@ -259,6 +241,24 @@ Examples:
 ![Result of filtering students](images/filterUI.png)
 <p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
 
+### Quick Search : `search`
+
+Allows users to instantly search for contacts by name, email or phone number.
+
+<div markdown="span" class="alert alert-primary"> :bulb: **Tip** 
+You can still use the `find` command for more specific or multi-keyword searches. 
+The Quick Search feature is ideal for quick lookups during lessons or when managing attendance. 
+</div>
+
+Examples:
+* Typing `search alex` will display contacts such as `Alex Yeoh`
+* Typing `search 9876` will display contacts with phone number such as 9876123
+* Typing `search john12` will display contacts with email `john123@yahoo.com`
+
+![quick search](images/quicksearch.png)
+<p align="center"><em>Figure: Result of searching a student's name.</em></p>
+
+
 ### Recording student grades : `grade`
 
 Records and updates subject-assessment-score pairs for a student so tutors can keep a detailed grade book per student.
@@ -277,7 +277,7 @@ Examples:
 * `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95` - Records Math WA1 score as 89 and Science Quiz1 score as 95 for the 2nd student
 * `grade 5 sub/ENGLISH/Final/88 sub/HISTORY/Midterm/92` - Records English Final score as 88 and History Midterm score as 92 for the 5th student
 
-![Result of recording grades](images/gradeUI.png)
+![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
 
 ### Clearing all entries : `clear`
