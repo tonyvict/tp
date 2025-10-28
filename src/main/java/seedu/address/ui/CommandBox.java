@@ -31,6 +31,7 @@ public class CommandBox extends UiPart<Region> {
     private final CommandExecutor commandExecutor;
     private final Logic logic;
     private Timer debounceTimer;
+    private boolean isExecutingCommand = false;
 
     @FXML
     private TextField commandTextField;
@@ -63,14 +64,12 @@ public class CommandBox extends UiPart<Region> {
      */
     private void initializeCoreListeners(boolean enableLiveSearch) {
         // Reset error style whenever text changes
-        commandTextField.textProperty().addListener((unused1, unused2, unused3) -> setStyleToDefault());
+        commandTextField.textProperty().addListener((unused1,
+                                                     unused2, unused3) -> setStyleToDefault());
 
-        // ESC clears input and resets full list (if Logic available)
+        // ESC only clears command box text, does NOT reset filters
         commandTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
-                if (logic != null) {
-                    logic.updateFilteredPersonList(person -> true);
-                }
                 commandTextField.clear();
             }
         });
@@ -80,7 +79,13 @@ public class CommandBox extends UiPart<Region> {
         }
 
         // Live search when input starts with "search" or "/search"
-        commandTextField.textProperty().addListener((unused1, oldValue, newValue) -> {
+        commandTextField.textProperty().addListener((unused1,
+                                                     oldValue, newValue) -> {
+            // Skip live search if we're executing a command
+            if (isExecutingCommand) {
+                return;
+            }
+
             // Debounce updates to avoid spamming the model
             debounceTimer.cancel();
             debounceTimer = new Timer(true);
@@ -95,7 +100,8 @@ public class CommandBox extends UiPart<Region> {
     }
 
     /**
-     * Apply or clear live filtering based on the command box text.
+     * Apply live filtering based on the command box text.
+     * Search filters are now persistent and only change when new search criteria are entered.
      */
     private void handleLiveSearchTextChanged(String text) {
         if (logic == null) {
@@ -104,17 +110,15 @@ public class CommandBox extends UiPart<Region> {
 
         String s = text == null ? "" : text;
 
-        boolean isSearchMode =
-                s.startsWith("search") || s.startsWith("/search");
+        boolean isSearchMode = s.startsWith("search") || s.startsWith("/search");
 
         if (!isSearchMode) {
-            // Not in search mode: show all persons
-            logic.updateFilteredPersonList(person -> true);
+            // Not in search mode: don't modify existing filters
+            // This makes search filters persistent even when command box is empty
             return;
         }
 
         // Extract keywords after the command keyword
-        // Accepts "search", "search ", "/search", "/search "
         String withoutCmd = s.startsWith("/search")
                 ? s.substring("/search".length())
                 : s.substring("search".length());
@@ -122,6 +126,7 @@ public class CommandBox extends UiPart<Region> {
         String trimmed = withoutCmd.trim();
 
         if (trimmed.isEmpty()) {
+            // Empty search: show all persons (user explicitly cleared search)
             logic.updateFilteredPersonList(person -> true);
             return;
         }
@@ -144,15 +149,18 @@ public class CommandBox extends UiPart<Region> {
         // If user is in "search" mode, don't execute as a normal command.
         // Live filtering is already applied; Enter should not cause "unknown command".
         if (commandText.startsWith("search") || commandText.startsWith("/search")) {
-            // Do nothing on Enter (keep the filter active). Users can press ESC to clear.
+            // Do nothing on Enter (keep the filter active). Users can press ESC to clear the text.
             return;
         }
 
         try {
+            isExecutingCommand = true; // Set flag to prevent live search interference
             commandExecutor.execute(commandText);
             commandTextField.setText("");
         } catch (CommandException | ParseException e) {
             setStyleToIndicateCommandFailure();
+        } finally {
+            isExecutingCommand = false; // Always reset flag
         }
     }
 

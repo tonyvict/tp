@@ -2,7 +2,7 @@
 layout: page
 title: User Guide
 ---
-As a private tutor, managing student contacts, schedules and attendance can be overwhelming. 
+As a private tutor, managing student contacts, schedules and attendance can be overwhelming.
 **ClassRosterPro is a desktop app designed specifically for you**, streamlining these tasks to reduce your workload
 and free up more time to focus on what truly matters: teaching and preparing quality lessons.
 
@@ -174,8 +174,8 @@ Format:
 * Exact duplicates (same student, date, start, end, subject) are not added.
 
 Examples:
-* `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths` 
-    schedules specified lesson for the 2nd person in the current list 
+* `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths`
+    schedules specified lesson for the 2nd person in the current list
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
 <p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
@@ -199,10 +199,10 @@ Examples:
 
 ### Tagging a student with attributes : `tag`
 
-Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.  
+Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.
 This helps you categorize and filter students more efficiently.
 
-Format:  
+Format:
 `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
 
 * Adds or updates the given attributes for the student at the specified `INDEX`.
@@ -214,7 +214,7 @@ Format:
 * At least one `attr/` prefix must be provided.
 
 Examples:
-* `tag 2 attr/subject=math,science attr/age=16`  
+* `tag 2 attr/subject=math,science attr/age=16`
   Adds a multi-valued attribute for `subject` and `age=16` to the 2nd student.
 
 ![Result of tagging a student](images/tagUI.png)
@@ -245,9 +245,9 @@ Examples:
 
 Allows users to instantly search for contacts by name, email or phone number.
 
-<div markdown="span" class="alert alert-primary"> :bulb: **Tip** 
-You can still use the `find` command for more specific or multi-keyword searches. 
-The Quick Search feature is ideal for quick lookups during lessons or when managing attendance. 
+<div markdown="span" class="alert alert-primary"> :bulb: **Tip**
+You can still use the `find` command for more specific or multi-keyword searches.
+The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
 Examples:
