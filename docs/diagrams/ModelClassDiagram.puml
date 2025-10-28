@@ -24,6 +24,7 @@ Class Lesson
 Class LessonList
 Class Grade
 Class GradeList
+Class Attribute
 
 Class I #FFFFFF
 }
@@ -47,6 +48,7 @@ Person *--> Phone
 Person *--> Email
 Person *--> Address
 Person *--> "*" Tag
+Person *--> "*" Attribute
 Person *--> Remark
 Person *--> LessonList
 LessonList *--> "*" Lesson
