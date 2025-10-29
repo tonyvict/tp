@@ -40,6 +40,9 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
 
             return new DeleteAttributeCommand(index, keys);
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     DeleteAttributeCommand.MESSAGE_USAGE), pe);
         }

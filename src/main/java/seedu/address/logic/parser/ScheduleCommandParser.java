@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
@@ -40,9 +39,12 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
         Index index;
         try {
             index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
+        } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    ScheduleCommand.MESSAGE_USAGE), ive);
+                    ScheduleCommand.MESSAGE_USAGE), pe);
         }
 
         // Check for missing arguments

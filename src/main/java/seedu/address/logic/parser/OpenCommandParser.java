@@ -21,6 +21,9 @@ public class OpenCommandParser implements Parser<OpenCommand> {
             Index index = ParserUtil.parseIndex(args);
             return new OpenCommand(index);
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, OpenCommand.MESSAGE_USAGE), pe);
         }

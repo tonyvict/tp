@@ -28,13 +28,28 @@ public class MarkCommandParser implements Parser<MarkCommand> {
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_LESSON);
 
+        Index personIndex;
         try {
-            Index personIndex = ParserUtil.parseIndex(argMultimap.getPreamble());
-            Index lessonIndex = ParserUtil.parseIndex(argMultimap.getValue(PREFIX_LESSON).get());
-            return new MarkCommand(personIndex, lessonIndex);
+            personIndex = ParserUtil.parseIndex(argMultimap.getPreamble());
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
         }
+
+        String lessonIndexString = argMultimap.getValue(PREFIX_LESSON).get();
+        Index lessonIndex;
+        try {
+            lessonIndex = ParserUtil.parseIndex(lessonIndexString);
+        } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw new ParseException(ParserUtil.MESSAGE_INVALID_LESSON_INDEX);
+            }
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
+        }
+
+        return new MarkCommand(personIndex, lessonIndex);
     }
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());

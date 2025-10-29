@@ -21,7 +21,10 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_INDEX =
+            "Please input a positive integer between 1 and 2,147,483,647 for INDEX";
+    public static final String MESSAGE_INVALID_LESSON_INDEX =
+            "Please input a positive integer between 1 and 2,147,483,647 for LESSON_INDEX";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be

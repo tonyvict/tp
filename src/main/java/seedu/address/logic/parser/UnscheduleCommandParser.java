@@ -27,6 +27,9 @@ public class UnscheduleCommandParser implements Parser<UnscheduleCommand> {
         try {
             personIndex = ParserUtil.parseIndex(argMultimap.getPreamble());
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UnscheduleCommand.MESSAGE_USAGE), pe);
         }
@@ -36,10 +39,14 @@ public class UnscheduleCommandParser implements Parser<UnscheduleCommand> {
                     UnscheduleCommand.MESSAGE_USAGE));
         }
 
+        String lessonIndexString = argMultimap.getValue(PREFIX_LESSON).get();
         Index lessonIndex;
         try {
-            lessonIndex = ParserUtil.parseIndex(argMultimap.getValue(PREFIX_LESSON).get());
+            lessonIndex = ParserUtil.parseIndex(lessonIndexString);
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw new ParseException(ParserUtil.MESSAGE_INVALID_LESSON_INDEX);
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UnscheduleCommand.MESSAGE_USAGE), pe);
         }

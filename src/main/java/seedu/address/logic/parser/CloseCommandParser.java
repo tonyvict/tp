@@ -21,6 +21,9 @@ public class CloseCommandParser implements Parser<CloseCommand> {
             Index index = ParserUtil.parseIndex(args);
             return new CloseCommand(index);
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw pe;
+            }
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, CloseCommand.MESSAGE_USAGE), pe);
         }

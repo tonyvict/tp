@@ -3,6 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_LESSON_INDEX;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
@@ -26,19 +28,16 @@ public class UnscheduleCommandParserTest {
 
     @Test
     public void parse_missingLessonPrefix_failure() {
-        assertParseFailure(parser, "1 2",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnscheduleCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "1 2", MESSAGE_INVALID_INDEX);
     }
 
     @Test
     public void parse_invalidPersonIndex_failure() {
-        assertParseFailure(parser, "a lesson/1",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnscheduleCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "a lesson/1", MESSAGE_INVALID_INDEX);
     }
 
     @Test
     public void parse_invalidLessonIndex_failure() {
-        assertParseFailure(parser, INDEX_SECOND_PERSON.getOneBased() + " lesson/a",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnscheduleCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, INDEX_SECOND_PERSON.getOneBased() + " lesson/a", MESSAGE_INVALID_LESSON_INDEX);
     }
 }
