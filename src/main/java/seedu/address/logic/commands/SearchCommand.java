@@ -2,7 +2,6 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import seedu.address.commons.core.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.person.PersonContainsKeywordPredicate;
 
@@ -20,6 +19,9 @@ public class SearchCommand extends Command {
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
             + "Example: " + COMMAND_WORD + " alice john";
 
+    public static final String MESSAGE_SEARCH_SUCCESS = "Found %1$d matching contact(s)!";
+    public static final String MESSAGE_SEARCH_EMPTY = "No matching contacts found.";
+
     private final PersonContainsKeywordPredicate predicate;
 
     public SearchCommand(PersonContainsKeywordPredicate predicate) {
@@ -30,9 +32,13 @@ public class SearchCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredPersonList(predicate);
-        return new CommandResult(
-                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
-                        model.getFilteredPersonList().size()));
+
+        int size = model.getFilteredPersonList().size();
+        String message = (size == 0)
+                ? MESSAGE_SEARCH_EMPTY
+                : String.format(MESSAGE_SEARCH_SUCCESS, size);
+
+        return new CommandResult(message);
     }
 
     @Override
