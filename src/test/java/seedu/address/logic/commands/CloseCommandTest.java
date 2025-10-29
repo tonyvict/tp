@@ -45,6 +45,14 @@ public class CloseCommandTest {
     }
 
     @Test
+    public void execute_cardAlreadyClosed_throwsCommandException() {
+        // Cards are closed by default, so we can just try to close it
+        CloseCommand closeCommand = new CloseCommand(INDEX_FIRST_PERSON);
+
+        assertCommandFailure(closeCommand, model, CloseCommand.MESSAGE_CARD_ALREADY_CLOSED);
+    }
+
+    @Test
     public void equals() {
         CloseCommand closeFirstCommand = new CloseCommand(INDEX_FIRST_PERSON);
         CloseCommand closeSecondCommand = new CloseCommand(INDEX_SECOND_PERSON);
