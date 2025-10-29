@@ -14,6 +14,9 @@ import seedu.address.testutil.Assert;
 
 public class DeleteAttributeCommandParserTest {
 
+    private static final String MESSAGE_INVALID_FORMAT = String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+            DeleteAttributeCommand.MESSAGE_USAGE);
+
     private final DeleteAttributeCommandParser parser = new DeleteAttributeCommandParser();
 
     @Test
@@ -42,36 +45,26 @@ public class DeleteAttributeCommandParserTest {
 
     @Test
     public void parse_missingAttrPrefix_throwsParseException() {
-        Assert.assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                () -> parser.parse("1 subject"));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("1 subject"));
     }
 
     @Test
     public void parse_missingIndex_throwsParseException() {
-        Assert.assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                () -> parser.parse("attr/subject"));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("attr/subject"));
     }
 
     @Test
     public void parse_emptyArgs_throwsParseException() {
-        Assert.assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                () -> parser.parse(""));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse(""));
     }
 
     @Test
     public void parse_attrPrefixWithoutKey_throwsParseException() {
-        Assert.assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                () -> parser.parse("4 attr/"));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("4 attr/"));
     }
 
     @Test
     public void parse_attrPrefixWithWhitespaceOnly_throwsParseException() {
-        Assert.assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                () -> parser.parse("5 attr/   "));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("5 attr/   "));
     }
 }
