@@ -75,11 +75,11 @@ Format: `help`
 <p align="center"><em>Figure: Help message.</em></p>
 
 ### Opening the contact card: `open`
-Allows you to toggle to view more details of the contact 
+Allows you to toggle to view more details of the contact
 
 Format: `open INDEX`
 
-Examples: 
+Examples:
 *`open 1`*
 
 ![Result of toggling open a contact](images/openUI.png)
