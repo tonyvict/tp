@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.regex.Pattern;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -24,8 +26,28 @@ import seedu.address.model.person.Lesson;
  */
 public class ScheduleCommandParser implements Parser<ScheduleCommand> {
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final String MESSAGE_INVALID_START_TIME_FORMAT =
+            "Invalid start time format. Use HH:mm (e.g. 14:00).";
+    public static final String MESSAGE_INVALID_START_TIME_VALUE =
+            "Invalid start time. Hours must be 00-23 and minutes must be 00-59.";
+    public static final String MESSAGE_INVALID_END_TIME_FORMAT =
+            "Invalid end time format. Use HH:mm (e.g. 14:00).";
+    public static final String MESSAGE_INVALID_END_TIME_VALUE =
+            "Invalid end time. Hours must be 00-23 and minutes must be 00-59.";
+    public static final String MESSAGE_INVALID_DATE_FORMAT =
+            "Invalid date format. Use YYYY-MM-DD (e.g. 2025-09-20).";
+    public static final String MESSAGE_INVALID_DATE_VALUE =
+            "Invalid date. Ensure the day is valid for the given month and year.";
+    public static final String MESSAGE_END_TIME_BEFORE_START =
+            "End time must be after start time";
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+            .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+            .withResolverStyle(ResolverStyle.STRICT);
+
+    private static final Pattern TIME_PATTERN = Pattern.compile("^\\d{2}:\\d{2}$");
+    private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
     /**
      * Parses the given {@code String} of arguments in the context of the {@code ScheduleCommand}
@@ -59,32 +81,41 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
         String date = argMultimap.getValue(PREFIX_DATE).get().trim();
         String sub = argMultimap.getValue(PREFIX_SUB).get().trim();
 
-        // Validate time format for start time
+        // Validate start time format first, then value
+        if (!TIME_PATTERN.matcher(start).matches()) {
+            throw new ParseException(MESSAGE_INVALID_START_TIME_FORMAT);
+        }
+        LocalTime startTime;
         try {
-            LocalTime.parse(start, TIME_FORMATTER);
+            startTime = LocalTime.parse(start, TIME_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new ParseException("Invalid start time. Use hh:mm (e.g. 14:00).");
+            throw new ParseException(MESSAGE_INVALID_START_TIME_VALUE);
         }
 
-        // Validate time format for end time
+        // Validate end time format first, then value
+        if (!TIME_PATTERN.matcher(end).matches()) {
+            throw new ParseException(MESSAGE_INVALID_END_TIME_FORMAT);
+        }
+        LocalTime endTime;
         try {
-            LocalTime.parse(end, TIME_FORMATTER);
+            endTime = LocalTime.parse(end, TIME_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new ParseException("Invalid end time. Use hh:mm (e.g. 14:00).");
+            throw new ParseException(MESSAGE_INVALID_END_TIME_VALUE);
         }
 
-        // Validate date format
+        // Validate date format first, then value
+        if (!DATE_PATTERN.matcher(date).matches()) {
+            throw new ParseException(MESSAGE_INVALID_DATE_FORMAT);
+        }
         try {
             LocalDate.parse(date, DATE_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new ParseException("Invalid date. Use YYYY-MM-DD (e.g. 2025-09-20)");
+            throw new ParseException(MESSAGE_INVALID_DATE_VALUE);
         }
 
         // Validate that end time is after start time
-        LocalTime startTime = LocalTime.parse(start, TIME_FORMATTER);
-        LocalTime endTime = LocalTime.parse(end, TIME_FORMATTER);
         if (!endTime.isAfter(startTime)) {
-            throw new ParseException("End time must be after start time");
+            throw new ParseException(MESSAGE_END_TIME_BEFORE_START);
         }
 
         Lesson lesson = new Lesson(start, end, date, sub, false);

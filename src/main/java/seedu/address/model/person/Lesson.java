@@ -110,6 +110,18 @@ public class Lesson implements Comparable<Lesson> {
     }
 
     /**
+     * Returns true if this lesson overlaps in time with {@code other} on the same date.
+     * Lessons that end exactly when another begins are not considered overlapping.
+     */
+    public boolean overlapsWith(Lesson other) {
+        requireAllNonNull(other);
+        if (!date.equals(other.date)) {
+            return false;
+        }
+        return start.isBefore(other.end) && end.isAfter(other.start);
+    }
+
+    /**
      * Returns a string with the lesson's details, excluding attendance.
      */
     public String getLessonDetails() {

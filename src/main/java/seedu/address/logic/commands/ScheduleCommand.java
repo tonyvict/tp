@@ -22,9 +22,9 @@ public class ScheduleCommand extends Command {
     public static final String COMMAND_WORD = "schedule";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Edits the lesson list of the person identified "
+            + ": Adds a lesson to the person identified "
             + "by the index number used in the last person listing. "
-            + "Existing lesson list will have new lesson stated in input added.\n"
+            + "Existing student will have new lesson stated in input added.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "start/ [START TIME] end/ [END TIME} "
             + "date/ [DATE] sub/ [SUBJECT]\n"
@@ -34,6 +34,8 @@ public class ScheduleCommand extends Command {
 
     public static final String MESSAGE_DUPLICATE_LESSON = "The student already has the existing lesson!";
     public static final String MESSAGE_ADD_LESSON_SUCCESS = "Scheduled Lesson to Person: %1$s";
+    public static final String MESSAGE_OVERLAPPING_LESSON =
+            "The student already has a lesson that overlaps with the provided timeslot!";
 
     private static final Logger logger = LogsCenter.getLogger(ScheduleCommand.class);
 
@@ -70,6 +72,11 @@ public class ScheduleCommand extends Command {
         if (personToEdit.getLessonList().hasDuplicates(lesson)) {
             logger.fine("ScheduleCommand detected duplicate lesson; aborting.");
             throw new CommandException(MESSAGE_DUPLICATE_LESSON);
+        }
+
+        if (personToEdit.getLessonList().hasOverlappingLesson(lesson)) {
+            logger.fine("ScheduleCommand detected overlapping lesson; aborting.");
+            throw new CommandException(MESSAGE_OVERLAPPING_LESSON);
         }
 
         int originalLessonCount = personToEdit.getLessonList().size();
