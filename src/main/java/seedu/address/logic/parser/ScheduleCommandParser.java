@@ -26,14 +26,6 @@ import seedu.address.model.person.Lesson;
  */
 public class ScheduleCommandParser implements Parser<ScheduleCommand> {
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
-            .withResolverStyle(ResolverStyle.STRICT);
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
-            .withResolverStyle(ResolverStyle.STRICT);
-
-    private static final Pattern TIME_PATTERN = Pattern.compile("^\\d{2}:\\d{2}$");
-    private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
-
     public static final String MESSAGE_INVALID_START_TIME_FORMAT =
             "Invalid start time format. Use HH:mm (e.g. 14:00).";
     public static final String MESSAGE_INVALID_START_TIME_VALUE =
@@ -48,6 +40,14 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
             "Invalid date. Ensure the day is valid for the given month and year.";
     public static final String MESSAGE_END_TIME_BEFORE_START =
             "End time must be after start time";
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+            .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+            .withResolverStyle(ResolverStyle.STRICT);
+
+    private static final Pattern TIME_PATTERN = Pattern.compile("^\\d{2}:\\d{2}$");
+    private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
     /**
      * Parses the given {@code String} of arguments in the context of the {@code ScheduleCommand}
