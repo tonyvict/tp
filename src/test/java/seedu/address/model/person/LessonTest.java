@@ -54,4 +54,22 @@ public class LessonTest {
         String expectedPresentString = "Math class: 2023-01-01 from 10:00 to 11:00[Present]";
         assertEquals(expectedPresentString, presentLesson.toString());
     }
+
+    @Test
+    public void overlapsWith_sameDateOverlap_returnsTrue() {
+        Lesson existingLesson = new Lesson("10:00", "11:00", "2023-01-01", "Math", false);
+        Lesson overlappingLesson = new Lesson("10:30", "11:30", "2023-01-01", "Science", false);
+        assertTrue(existingLesson.overlapsWith(overlappingLesson));
+        assertTrue(overlappingLesson.overlapsWith(existingLesson));
+    }
+
+    @Test
+    public void overlapsWith_noOverlap_returnsFalse() {
+        Lesson existingLesson = new Lesson("10:00", "11:00", "2023-01-01", "Math", false);
+        Lesson adjacentLesson = new Lesson("11:00", "12:00", "2023-01-01", "Science", false);
+        Lesson differentDateLesson = new Lesson("10:30", "11:30", "2023-01-02", "Science", false);
+
+        assertFalse(existingLesson.overlapsWith(adjacentLesson));
+        assertFalse(existingLesson.overlapsWith(differentDateLesson));
+    }
 }

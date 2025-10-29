@@ -15,14 +15,13 @@ import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import seedu.address.commons.core.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.PersonContainsKeywordPredicate;
 
 /**
- * Contains integration tests (interaction with the Model) for {@code SearchCommand}.
+ * Integration tests for {@code SearchCommand}.
  */
 public class SearchCommandTest {
 
@@ -45,42 +44,34 @@ public class SearchCommandTest {
         SearchCommand firstCommand = new SearchCommand(firstPredicate);
         SearchCommand secondCommand = new SearchCommand(secondPredicate);
 
-        // same object -> true
+        // same object -> returns true
         assertEquals(firstCommand, firstCommand);
 
-        // same values -> true
+        // same values -> returns true
         SearchCommand firstCommandCopy = new SearchCommand(firstPredicate);
         assertEquals(firstCommand, firstCommandCopy);
 
-        // different predicate -> false
+        // different predicate -> returns false
         assertNotEquals(firstCommand, secondCommand);
     }
 
-    /**
-     * Note: The parser rejects empty args, but if a SearchCommand is constructed directly
-     * with an empty predicate, our predicate is defensive and returns all persons.
-     */
     @Test
-    public void execute_zeroKeywords_returnsAllPersons() {
-        int total = getTypicalAddressBook().getPersonList().size();
-        String expectedMessage = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, total);
-
-        PersonContainsKeywordPredicate predicate = new PersonContainsKeywordPredicate(Collections.emptyList());
+    public void execute_noMatchingKeywords_showsEmptyMessage() {
+        PersonContainsKeywordPredicate predicate =
+                new PersonContainsKeywordPredicate(Collections.singletonList("nonexistent"));
         SearchCommand command = new SearchCommand(predicate);
-
         expectedModel.updateFilteredPersonList(predicate);
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
 
-        // ensure we actually listed everyone
-        assertEquals(expectedModel.getFilteredPersonList(), model.getFilteredPersonList());
-        assertEquals(total, model.getFilteredPersonList().size());
+        String expectedMessage = SearchCommand.MESSAGE_SEARCH_EMPTY;
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(0, model.getFilteredPersonList().size());
     }
 
     @Test
-    public void execute_multipleKeywords_multiplePersonsFound() {
+    public void execute_matchingKeywords_multiplePersonsFound() {
         // "Kurz" -> CARL, "Meier" -> BENSON & DANIEL, "Elle" -> ELLE
-        // Order must follow underlying list order in TypicalPersons: BENSON, CARL, DANIEL, ELLE
-        String expectedMessage = String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 4);
+        String expectedMessage = String.format(SearchCommand.MESSAGE_SEARCH_SUCCESS, 4);
 
         PersonContainsKeywordPredicate predicate =
                 new PersonContainsKeywordPredicate(Arrays.asList("Kurz", "Meier", "Elle"));
