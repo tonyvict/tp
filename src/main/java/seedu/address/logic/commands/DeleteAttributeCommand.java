@@ -4,7 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -40,7 +42,10 @@ public class DeleteAttributeCommand extends Command {
         requireNonNull(index);
         requireNonNull(attributeKeysToDelete);
         this.index = index;
-        this.attributeKeysToDelete = attributeKeysToDelete;
+        this.attributeKeysToDelete = attributeKeysToDelete.stream()
+                .map(key -> key == null ? null : key.trim().toLowerCase())
+                .filter(key -> key != null && !key.isEmpty())
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -65,7 +70,7 @@ public class DeleteAttributeCommand extends Command {
 
         if (personToEdit.equals(editedPerson)) {
             // Nothing removed
-            return new CommandResult(String.format(MESSAGE_NO_ATTRIBUTES_REMOVED, personToEdit.getName()));
+            throw new CommandException(String.format(MESSAGE_NO_ATTRIBUTES_REMOVED, personToEdit.getName()));
         }
 
         model.setPerson(personToEdit, editedPerson);

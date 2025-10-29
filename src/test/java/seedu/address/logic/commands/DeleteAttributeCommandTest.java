@@ -55,6 +55,26 @@ public class DeleteAttributeCommandTest {
     }
 
     @Test
+    public void execute_keyCaseInsensitive_success() {
+        Person originalPerson = new PersonBuilder(model.getFilteredPersonList().get(0))
+                .withAttributes(new Attribute("subject", "Math"), new Attribute("age", "16"))
+                .build();
+        model.setPerson(model.getFilteredPersonList().get(0), originalPerson);
+
+        Set<String> keysToDelete = Set.of("SuBjEcT");
+        DeleteAttributeCommand command = new DeleteAttributeCommand(INDEX_FIRST_PERSON, keysToDelete);
+        Person expectedPerson = originalPerson.removeAttributesByKey(Set.of("subject"));
+
+        String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
+                expectedPerson.getName(), Set.of("subject"));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(originalPerson, expectedPerson);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void execute_multipleKeys_success() {
         Person originalPerson = new PersonBuilder(model.getFilteredPersonList().get(0))
                 .withAttributes(
@@ -89,10 +109,8 @@ public class DeleteAttributeCommandTest {
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_NO_ATTRIBUTES_REMOVED,
                 originalPerson.getName());
-        String actualMessage = command.execute(model).getFeedbackToUser();
 
-        assertEquals(expectedMessage, actualMessage);
-        assertEquals(originalPerson, model.getFilteredPersonList().get(0));
+        assertCommandFailure(command, model, expectedMessage);
     }
 
     @Test
