@@ -23,6 +23,7 @@ public class OpenCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_OPEN_PERSON_SUCCESS = "Opened details for Person: %1$s";
+    public static final String MESSAGE_CARD_ALREADY_OPEN = "Card is already open.";
 
     private final Index targetIndex;
 
@@ -40,6 +41,11 @@ public class OpenCommand extends Command {
         }
 
         Person personToOpen = lastShownList.get(targetIndex.getZeroBased());
+
+        if (personToOpen.isExpanded()) {
+            throw new CommandException(MESSAGE_CARD_ALREADY_OPEN);
+        }
+
         personToOpen.setExpanded(true);
 
         return new CommandResult(String.format(MESSAGE_OPEN_PERSON_SUCCESS, personToOpen.getName()));
