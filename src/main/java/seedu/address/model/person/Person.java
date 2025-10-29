@@ -1,7 +1,6 @@
 package seedu.address.model.person;
 
 
-import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
@@ -239,29 +238,4 @@ public class Person {
                 .toString();
     }
 
-    /**
-     * Returns a new {@code Person} with attributes whose keys match the given set removed.
-     * If none of the specified keys exist, returns the same {@code Person} instance.
-     *
-     * @param keysToDelete Set of attribute keys to be removed from this person.
-     * @return A new {@code Person} without the specified attributes,
-     *         or the same person if no attributes were removed.
-     */
-    public Person removeAttributesByKey(Set<String> keysToDelete) {
-        requireNonNull(keysToDelete);
-
-        Set<Attribute> updatedAttributes = new HashSet<>();
-        for (Attribute attr : this.attributes) {
-            if (!keysToDelete.contains(attr.getKey())) {
-                updatedAttributes.add(attr);
-            }
-        }
-
-        // No change -> return same person
-        if (updatedAttributes.equals(this.attributes)) {
-            return this;
-        }
-
-        return new Person(name, phone, email, address, remark, tags, updatedAttributes, lessonList, gradeList);
-    }
 }

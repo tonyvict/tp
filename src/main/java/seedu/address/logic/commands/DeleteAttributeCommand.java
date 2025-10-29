@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Person;
 
 /**
@@ -66,7 +67,7 @@ public class DeleteAttributeCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
-        Person editedPerson = personToEdit.removeAttributesByKey(attributeKeysToDelete);
+        Person editedPerson = createEditedPerson(personToEdit);
 
         if (personToEdit.equals(editedPerson)) {
             // Nothing removed
@@ -95,5 +96,27 @@ public class DeleteAttributeCommand extends Command {
                 || (other instanceof DeleteAttributeCommand
                 && index.equals(((DeleteAttributeCommand) other).index)
                 && attributeKeysToDelete.equals(((DeleteAttributeCommand) other).attributeKeysToDelete));
+    }
+
+    private Person createEditedPerson(Person personToEdit) {
+        Set<Attribute> filteredAttributes = personToEdit.getAttributes().stream()
+                .filter(attribute -> !attributeKeysToDelete.contains(attribute.getKey()))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        if (filteredAttributes.equals(personToEdit.getAttributes())) {
+            return personToEdit;
+        }
+
+        Person editedPerson = new Person(personToEdit.getName(),
+                personToEdit.getPhone(),
+                personToEdit.getEmail(),
+                personToEdit.getAddress(),
+                personToEdit.getRemark(),
+                new HashSet<>(personToEdit.getTags()),
+                filteredAttributes,
+                personToEdit.getLessonList(),
+                personToEdit.getGradeList());
+        editedPerson.setExpanded(personToEdit.isExpanded());
+        return editedPerson;
     }
 }
