@@ -39,7 +39,7 @@ public class GradeCommandParser implements Parser<GradeCommand> {
         // Parse each subject/assessment/score triplet
         for (String subString : argMultimap.getAllValues(PREFIX_SUB)) {
             String[] parts = subString.split("/", -1); // -1 to preserve trailing empty strings
-            
+
             // Provide specific error messages based on what's missing
             if (parts.length < 3) {
                 if (parts.length == 1) {
@@ -50,7 +50,7 @@ public class GradeCommandParser implements Parser<GradeCommand> {
                     throw new ParseException("Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
                 }
             }
-            
+
             // Handle too many parts
             if (parts.length > 3) {
                 throw new ParseException("Too many parts. Use sub/SUBJECT/ASSESSMENT/SCORE");

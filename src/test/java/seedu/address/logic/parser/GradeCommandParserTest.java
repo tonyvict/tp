@@ -78,13 +78,13 @@ public class GradeCommandParserTest {
         assertParseFailure(parser, "1 sub/MATH/WA1/89/EXTRA",
                 "Too many parts. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
-    
+
     @Test
     public void parse_missingScoreWithTrailingSlash_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH/WA1/",
                 "Score cannot be empty.");
     }
-    
+
     @Test
     public void parse_onlySubject_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH",
