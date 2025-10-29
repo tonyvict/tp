@@ -8,7 +8,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +48,7 @@ public class DeleteAttributeCommandTest {
         Person expectedPerson = originalPerson.removeAttributesByKey(keysToDelete);
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                expectedPerson.getName(), keysToDelete);
+                expectedPerson.getName(), formatKeysForMessage(keysToDelete));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(originalPerson, expectedPerson);
@@ -66,7 +68,7 @@ public class DeleteAttributeCommandTest {
         Person expectedPerson = originalPerson.removeAttributesByKey(Set.of("subject"));
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                expectedPerson.getName(), Set.of("subject"));
+                expectedPerson.getName(), formatKeysForMessage(Set.of("subject")));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(originalPerson, expectedPerson);
@@ -89,7 +91,7 @@ public class DeleteAttributeCommandTest {
         Person expectedPerson = originalPerson.removeAttributesByKey(keysToDelete);
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                expectedPerson.getName(), keysToDelete);
+                expectedPerson.getName(), formatKeysForMessage(keysToDelete));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(originalPerson, expectedPerson);
@@ -150,5 +152,14 @@ public class DeleteAttributeCommandTest {
 
         // different type -> false
         assertNotEquals(new Object(), firstCommand);
+    }
+
+    private String formatKeysForMessage(Set<String> keys) {
+        return keys.stream()
+                .filter(key -> key != null && !key.trim().isEmpty())
+                .map(key -> key.trim().toLowerCase())
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList())
+                .toString();
     }
 }

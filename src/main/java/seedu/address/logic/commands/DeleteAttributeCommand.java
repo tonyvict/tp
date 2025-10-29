@@ -74,8 +74,12 @@ public class DeleteAttributeCommand extends Command {
         }
 
         model.setPerson(personToEdit, editedPerson);
+        String formattedKeys = attributeKeysToDelete.stream()
+                .sorted()
+                .collect(Collectors.toList())
+                .toString();
         return new CommandResult(String.format(MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                editedPerson.getName(), attributeKeysToDelete));
+                editedPerson.getName(), formattedKeys));
     }
 
     /**

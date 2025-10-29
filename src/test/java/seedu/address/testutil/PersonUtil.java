@@ -1,16 +1,20 @@
 package seedu.address.testutil;
 
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -52,11 +56,29 @@ public class PersonUtil {
         if (descriptor.getTags().isPresent()) {
             Set<Tag> tags = descriptor.getTags().get();
             if (tags.isEmpty()) {
-                sb.append(PREFIX_TAG);
+                sb.append(PREFIX_TAG).append(" ");
             } else {
                 tags.forEach(s -> sb.append(PREFIX_TAG).append(s.tagName).append(" "));
             }
         }
+        if (descriptor.getAttributes().isPresent()) {
+            Set<Attribute> attributes = descriptor.getAttributes().get();
+            if (attributes.isEmpty()) {
+                sb.append(PREFIX_ATTRIBUTE).append(" ");
+            } else {
+                attributes.stream()
+                        .sorted(Comparator.comparing(Attribute::getKey))
+                        .map(PersonUtil::formatAttribute)
+                        .forEach(attr -> sb.append(PREFIX_ATTRIBUTE).append(attr).append(" "));
+            }
+        }
         return sb.toString();
+    }
+
+    private static String formatAttribute(Attribute attribute) {
+        String values = attribute.getValues().stream()
+                .sorted()
+                .collect(Collectors.joining(","));
+        return attribute.getKey() + "=" + values;
     }
 }
