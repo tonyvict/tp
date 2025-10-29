@@ -2,7 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import seedu.address.commons.core.index.Index;
@@ -20,21 +20,28 @@ public class UnmarkCommand extends Command {
     public static final String COMMAND_WORD = "unmark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Unmarks a student as absent for a lesson scheduled today.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+            + ": Unmarks a lesson for a student as not present.\n"
+            + "Parameters: INDEX (must be a positive integer) "
+            + "lesson/LESSON_INDEX (must be a positive integer)\n"
+            + "Example: " + COMMAND_WORD + " 1 l/3";
 
-    public static final String MESSAGE_UNMARK_ATTENDANCE_SUCCESS = "Attendance unmarked: %1$s -> Not Present.";
-    public static final String MESSAGE_NO_LESSON_TODAY_OR_ALREADY_UNMARKED = "No marked classes found for %1$s today!";
+    public static final String MESSAGE_UNMARK_ATTENDANCE_SUCCESS = "Attendance unmarked: %1$s, Lesson: %2$s ->"
+            + " Not Present";
+    public static final String MESSAGE_LESSON_ALREADY_UNMARKED = "This lesson is already marked as not present.";
 
-    private final Index targetIndex;
+    private final Index personIndex;
+    private final Index lessonIndex;
 
     /**
-     * Creates an UnmarkCommand to unmark attendance for the specified {@code Person}.
+     * Creates an UnmarkCommand to unmark attendance for the specified lesson of a person.
+     * @param personIndex of the person in the filtered person list.
+     * @param lessonIndex of the lesson in the person's lesson list.
      */
-    public UnmarkCommand(Index targetIndex) {
-        requireNonNull(targetIndex);
-        this.targetIndex = targetIndex;
+    public UnmarkCommand(Index personIndex, Index lessonIndex) {
+        requireNonNull(personIndex);
+        requireNonNull(lessonIndex);
+        this.personIndex = personIndex;
+        this.lessonIndex = lessonIndex;
     }
 
     @Override
@@ -42,29 +49,29 @@ public class UnmarkCommand extends Command {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
+        if (personIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
-        Person personToUnmark = lastShownList.get(targetIndex.getZeroBased());
-        LessonList updatedLessonList = new LessonList();
-        boolean lessonFoundAndMarked = false;
+        Person personToUnmark = lastShownList.get(personIndex.getZeroBased());
+        LessonList lessonList = personToUnmark.getLessonList();
 
-        for (Lesson lesson : personToUnmark.getLessonList().getLessons()) {
-            if (lesson.getDate().equals(LocalDate.now()) && lesson.isPresent()) { // Only unmark if it's present
-                Lesson unmarkedLesson = new Lesson(lesson.getStart(), lesson.getEnd(), lesson.getDate(),
-                        lesson.getSub(), false);
-                updatedLessonList = updatedLessonList.add(unmarkedLesson);
-                lessonFoundAndMarked = true;
-            } else {
-                updatedLessonList = updatedLessonList.add(lesson);
-            }
+        if (lessonIndex.getZeroBased() >= lessonList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX);
         }
 
-        if (!lessonFoundAndMarked) {
-            throw new CommandException(String.format(MESSAGE_NO_LESSON_TODAY_OR_ALREADY_UNMARKED,
-                    personToUnmark.getName().fullName));
+        Lesson lessonToUnmark = lessonList.get(lessonIndex.getZeroBased());
+
+        if (!lessonToUnmark.isPresent()) {
+            throw new CommandException(MESSAGE_LESSON_ALREADY_UNMARKED);
         }
+
+        Lesson unmarkedLesson = new Lesson(lessonToUnmark.getStart(), lessonToUnmark.getEnd(),
+                lessonToUnmark.getDate(), lessonToUnmark.getSub(), false);
+
+        ArrayList<Lesson> newLessons = new ArrayList<>(lessonList.getLessons());
+        newLessons.set(lessonIndex.getZeroBased(), unmarkedLesson);
+        LessonList updatedLessonList = new LessonList(newLessons);
 
         Person unmarkedPerson = new Person(
                 personToUnmark.getName(), personToUnmark.getPhone(), personToUnmark.getEmail(),
@@ -73,7 +80,8 @@ public class UnmarkCommand extends Command {
 
         model.setPerson(personToUnmark, unmarkedPerson);
 
-        return new CommandResult(String.format(MESSAGE_UNMARK_ATTENDANCE_SUCCESS, personToUnmark.getName().fullName));
+        return new CommandResult(String.format(MESSAGE_UNMARK_ATTENDANCE_SUCCESS, personToUnmark.getName().fullName,
+                unmarkedLesson.getLessonDetails()));
     }
 
     @Override
@@ -88,6 +96,7 @@ public class UnmarkCommand extends Command {
         }
 
         UnmarkCommand otherUnmarkCommand = (UnmarkCommand) other;
-        return targetIndex.equals(otherUnmarkCommand.targetIndex);
+        return personIndex.equals(otherUnmarkCommand.personIndex)
+                && lessonIndex.equals(otherUnmarkCommand.lessonIndex);
     }
 }

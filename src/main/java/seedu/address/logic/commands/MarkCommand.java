@@ -2,7 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,58 +22,63 @@ public class MarkCommand extends Command {
     public static final String COMMAND_WORD = "mark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Marks a student as present for a lesson scheduled today.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+            + ": Marks a lesson for a student as present.\n"
+            + "Parameters: INDEX (must be a positive integer) "
+            + "lesson/LESSON_INDEX (must be a positive integer)\n"
+            + "Example: " + COMMAND_WORD + " 1 l/3";
 
-    public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s -> Present.";
-    public static final String MESSAGE_NO_LESSON_TODAY = "No classes found for %1$s today!";
+    public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s, Lesson: %2$s -> Present";
+    public static final String MESSAGE_LESSON_ALREADY_MARKED = "This lesson is already marked as present.";
 
     private static final Logger logger = LogsCenter.getLogger(MarkCommand.class);
 
-    private final Index targetIndex;
+    private final Index personIndex;
+    private final Index lessonIndex;
 
     /**
-     * Creates a MarkCommand to mark attendance for the specified {@code Person}.
-     * @param targetIndex of the person in the filtered person list to mark attendance
+     * Creates a MarkCommand to mark attendance for the specified lesson of a person.
+     * @param personIndex of the person in the filtered person list.
+     * @param lessonIndex of the lesson in the person's lesson list.
      */
-    public MarkCommand(Index targetIndex) {
-        requireNonNull(targetIndex);
-        assert targetIndex != null : "targetIndex should not be null";
-        this.targetIndex = targetIndex;
+    public MarkCommand(Index personIndex, Index lessonIndex) {
+        requireNonNull(personIndex);
+        requireNonNull(lessonIndex);
+        this.personIndex = personIndex;
+        this.lessonIndex = lessonIndex;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        logger.info("Executing MarkCommand for index: " + targetIndex.getOneBased());
+        logger.info("Executing MarkCommand for person index: " + personIndex.getOneBased()
+                + ", lesson index: " + lessonIndex.getOneBased());
         assert model != null : "model should not be null";
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            logger.warning("Invalid person index provided: " + targetIndex.getOneBased());
+        if (personIndex.getZeroBased() >= lastShownList.size()) {
+            logger.warning("Invalid person index provided: " + personIndex.getOneBased());
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
-        Person personToMark = lastShownList.get(targetIndex.getZeroBased());
-        LessonList updatedLessonList = new LessonList();
-        boolean lessonFound = false;
+        Person personToMark = lastShownList.get(personIndex.getZeroBased());
+        LessonList lessonList = personToMark.getLessonList();
 
-        for (Lesson lesson : personToMark.getLessonList().getLessons()) {
-            if (lesson.getDate().equals(LocalDate.now()) && !lesson.isPresent()) {
-                Lesson markedLesson = new Lesson(lesson.getStart(), lesson.getEnd(),
-                        lesson.getDate(), lesson.getSub(), true);
-                updatedLessonList = updatedLessonList.add(markedLesson);
-                lessonFound = true;
-            } else {
-                updatedLessonList = updatedLessonList.add(lesson);
-            }
+        if (lessonIndex.getZeroBased() >= lessonList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX);
         }
 
-        if (!lessonFound) {
-            logger.info("No unmarked lesson found for today for person: " + personToMark.getName().fullName);
-            throw new CommandException(String.format(MESSAGE_NO_LESSON_TODAY, personToMark.getName().fullName));
+        Lesson lessonToMark = lessonList.get(lessonIndex.getZeroBased());
+
+        if (lessonToMark.isPresent()) {
+            throw new CommandException(MESSAGE_LESSON_ALREADY_MARKED);
         }
+
+        Lesson markedLesson = new Lesson(lessonToMark.getStart(), lessonToMark.getEnd(),
+                lessonToMark.getDate(), lessonToMark.getSub(), true);
+
+        ArrayList<Lesson> newLessons = new ArrayList<>(lessonList.getLessons());
+        newLessons.set(lessonIndex.getZeroBased(), markedLesson);
+        LessonList updatedLessonList = new LessonList(newLessons);
 
         Person markedPerson = new Person(
                 personToMark.getName(), personToMark.getPhone(), personToMark.getEmail(),
@@ -81,8 +86,10 @@ public class MarkCommand extends Command {
                 personToMark.getAttributes(), updatedLessonList, personToMark.getGradeList());
 
         model.setPerson(personToMark, markedPerson);
-        logger.info("Attendance marked for person: " + personToMark.getName().fullName);
-        return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName));
+        logger.info("Attendance marked for lesson " + lessonIndex.getOneBased() + " of person: "
+                + personToMark.getName().fullName);
+        return new CommandResult(String.format(MESSAGE_MARK_ATTENDANCE_SUCCESS, personToMark.getName().fullName,
+                markedLesson.getLessonDetails()));
     }
 
     @Override
@@ -97,6 +104,7 @@ public class MarkCommand extends Command {
         }
 
         MarkCommand otherMarkCommand = (MarkCommand) other;
-        return targetIndex.equals(otherMarkCommand.targetIndex);
+        return personIndex.equals(otherMarkCommand.personIndex)
+                && lessonIndex.equals(otherMarkCommand.lessonIndex);
     }
 }

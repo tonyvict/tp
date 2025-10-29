@@ -8,7 +8,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,78 +30,85 @@ public class MarkCommandTest {
     private final Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
-    public void execute_markPersonWithLessonToday_success() {
-        // Setup: Create a person with a lesson scheduled for today
-        Lesson lessonToday = new Lesson("15:00", "16:00", LocalDate.now().toString(), "Math", false);
-        LessonList lessonList = new LessonList().add(lessonToday);
-        Person personToMark = new PersonBuilder().withName("Markable Person").withLessonList(lessonList).build();
-        model.addPerson(personToMark);
+    public void execute_validIndexes_success() {
+        // Setup: Create a person with an unmarked lesson and add to model
+        Person personInModel = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson lessonToMark = new Lesson("10:00", "11:00", "2025-01-01", "Math", false);
+        Person personToMark = new PersonBuilder(personInModel).withLesson(lessonToMark).build();
+        model.setPerson(personInModel, personToMark);
 
-        // The new person is the last one in the list
-        Index lastPersonIndex = Index.fromOneBased(model.getFilteredPersonList().size());
-        MarkCommand markCommand = new MarkCommand(lastPersonIndex);
-
-        Lesson markedLesson = new Lesson(lessonToday.getStart(), lessonToday.getEnd(),
-                lessonToday.getDate(), lessonToday.getSub(), true);
-        LessonList updatedLessonList = new LessonList().add(markedLesson);
-        Person markedPerson = new PersonBuilder(personToMark).withLessonList(updatedLessonList).build();
+        Index lessonIndex = Index.fromOneBased(1);
+        MarkCommand markCommand = new MarkCommand(INDEX_FIRST_PERSON, lessonIndex);
 
         // Expected model after marking
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.setPerson(personToMark, markedPerson);
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        // Setup expected model in the same way
+        Person expectedPersonInModel = expectedModel.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person expectedPersonToMark = new PersonBuilder(expectedPersonInModel).withLesson(lessonToMark).build();
+        expectedModel.setPerson(expectedPersonInModel, expectedPersonToMark);
+
+        Lesson markedLesson = new Lesson(lessonToMark.getStart(), lessonToMark.getEnd(),
+                lessonToMark.getDate(), lessonToMark.getSub(), true);
+        ArrayList<Lesson> newLessons = new ArrayList<>(expectedPersonToMark.getLessonList().getLessons());
+        newLessons.set(lessonIndex.getZeroBased(), markedLesson);
+        Person markedPerson = new PersonBuilder(expectedPersonToMark)
+                .withLessonList(new LessonList(newLessons)).build();
+        expectedModel.setPerson(expectedPersonToMark, markedPerson);
 
         String expectedMessage = String.format(MarkCommand.MESSAGE_MARK_ATTENDANCE_SUCCESS,
-                                               markedPerson.getName().fullName);
-
+                                               markedPerson.getName().fullName,
+                                               markedLesson.getLessonDetails());
         assertCommandSuccess(markCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
-    public void execute_noLessonToday_throwsCommandException() {
-        // Person at this index (Benson) has no lessons scheduled
-        MarkCommand markCommand = new MarkCommand(INDEX_SECOND_PERSON);
-        Person personToMark = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-
-        String expectedMessage = String.format(MarkCommand.MESSAGE_NO_LESSON_TODAY, personToMark.getName().fullName);
-
-        assertCommandFailure(markCommand, model, expectedMessage);
-    }
-
-    @Test
-    public void execute_invalidPersonIndexUnfilteredList_failure() {
+    public void execute_invalidPersonIndex_throwsCommandException() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        MarkCommand markCommand = new MarkCommand(outOfBoundIndex);
+        MarkCommand markCommand = new MarkCommand(outOfBoundIndex, Index.fromOneBased(1));
 
         assertCommandFailure(markCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
-    public void execute_alreadyMarked_throwsCommandException() {
-        // Setup: Create a person with a lesson today that is already marked present
-        Lesson lessonToday = new Lesson("15:00", "16:00", LocalDate.now().toString(), "Math", true);
-        LessonList lessonList = new LessonList().add(lessonToday);
-        Person personToMark = new PersonBuilder().withName("Already Marked").withLessonList(lessonList).build();
-        model.addPerson(personToMark);
+    public void execute_invalidLessonIndex_throwsCommandException() {
+        Person personInList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Index outOfBoundIndex = Index.fromOneBased(personInList.getLessonList().size() + 1);
+        MarkCommand markCommand = new MarkCommand(INDEX_FIRST_PERSON, outOfBoundIndex);
 
-        Index lastPersonIndex = Index.fromOneBased(model.getFilteredPersonList().size());
-        MarkCommand markCommand = new MarkCommand(lastPersonIndex);
+        assertCommandFailure(markCommand, model, Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX);
+    }
 
-        String expectedMessage = String.format(MarkCommand.MESSAGE_NO_LESSON_TODAY, personToMark.getName().fullName);
+    @Test
+    public void execute_lessonAlreadyMarked_throwsCommandException() {
+        // Setup: mark the lesson first
+        Index lessonIndex = Index.fromOneBased(1);
+        Person personInModel = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson lessonToMark = new Lesson("10:00", "11:00", "2025-01-01", "Math", false);
+        Person personToMark = new PersonBuilder(personInModel).withLesson(lessonToMark).build();
+        Lesson markedLesson = new Lesson(lessonToMark.getStart(), lessonToMark.getEnd(),
+                lessonToMark.getDate(), lessonToMark.getSub(), true);
+        ArrayList<Lesson> newLessons = new ArrayList<>(personToMark.getLessonList().getLessons());
+        newLessons.set(lessonIndex.getZeroBased(), markedLesson);
+        Person markedPerson = new PersonBuilder(personToMark).withLessonList(new LessonList(newLessons)).build();
+        model.setPerson(personInModel, markedPerson);
 
-        // The command should fail because it only looks for lessons where isPresent is false
-        assertCommandFailure(markCommand, model, expectedMessage);
+        // Attempt to mark the already marked lesson
+        MarkCommand markCommand = new MarkCommand(INDEX_FIRST_PERSON, lessonIndex);
+        assertCommandFailure(markCommand, model, MarkCommand.MESSAGE_LESSON_ALREADY_MARKED);
     }
 
     @Test
     public void equals() {
-        MarkCommand markFirstCommand = new MarkCommand(INDEX_FIRST_PERSON);
-        MarkCommand markSecondCommand = new MarkCommand(INDEX_SECOND_PERSON);
+        Index firstLessonIndex = Index.fromOneBased(1);
+        MarkCommand markFirstCommand = new MarkCommand(INDEX_FIRST_PERSON, firstLessonIndex);
+        MarkCommand markSecondCommand = new MarkCommand(INDEX_SECOND_PERSON, firstLessonIndex);
+        MarkCommand markThirdCommand = new MarkCommand(INDEX_FIRST_PERSON, Index.fromOneBased(2));
 
         // same object -> returns true
         assertTrue(markFirstCommand.equals(markFirstCommand));
 
         // same values -> returns true
-        MarkCommand markFirstCommandCopy = new MarkCommand(INDEX_FIRST_PERSON);
+        MarkCommand markFirstCommandCopy = new MarkCommand(INDEX_FIRST_PERSON, firstLessonIndex);
         assertTrue(markFirstCommand.equals(markFirstCommandCopy));
 
         // different types -> returns false
@@ -110,7 +117,10 @@ public class MarkCommandTest {
         // null -> returns false
         assertFalse(markFirstCommand.equals(null));
 
-        // different person -> returns false
+        // different person index -> returns false
         assertFalse(markFirstCommand.equals(markSecondCommand));
+
+        // different lesson index -> returns false
+        assertFalse(markFirstCommand.equals(markThirdCommand));
     }
 }

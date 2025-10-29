@@ -31,9 +31,9 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 
    * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
 
-   * `delete 3` : Deletes the 3rd contact shown in the current list.
+   * `delete 3` : Deletes the 3rd student shown in the current list.
 
-   * `clear` : Deletes all contacts.
+   * `clear` : Deletes all students.
 
    * `exit` : Exits the app.
 
@@ -74,9 +74,32 @@ Format: `help`
 ![help_message](images/helpMessage.png)
 <p align="center"><em>Figure: Help message.</em></p>
 
+### Opening the contact card: `open`
+Allows you to toggle to view more details of the contact 
+
+Format: `open INDEX`
+
+Examples: 
+*`open 1`*
+
+![Result of toggling open a contact](images/openUI.png)
+<p align="center"><em>Figure: Result of toggling open a contact.</em></p>
+
+### Closing the contact card : `close`
+Allows you to untoggle to view lesser details of the contact
+
+Format: `close INDEX`
+
+Examples:
+*`close 1`*
+
+![Result of toggling close a contact](images/closeUI.png)
+<p align="center"><em>Figure: Result of toggling close a contact.</em></p>
+
+
 ### Adding a person: `add`
 
-Adds a person to the address book.
+Adds a student to your roster.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
@@ -94,7 +117,7 @@ Examples:
 
 ### Listing all persons : `list`
 
-Shows a list of all persons in the address book.
+Shows a list of all students in your roster.
 
 Format: `list`
 
@@ -103,7 +126,7 @@ Format: `list`
 
 ### Editing a person : `edit`
 
-Edits an existing person in the address book.
+Edits an existing student in your roster.
 
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 
@@ -144,7 +167,7 @@ Examples:
 
 ### Deleting a person : `delete`
 
-Deletes the specified person from the address book.
+Deletes the specified student from your roster.
 
 Format: `delete INDEX`
 
@@ -153,7 +176,7 @@ Format: `delete INDEX`
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
+* `list` followed by `delete 2` deletes the 2nd student in the roster.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
 ![Result of deleting a student](images/deleteUI.png)
@@ -202,17 +225,17 @@ Examples:
 
 ### Marking attendance : `mark`
 
-Marks a student as present for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
+Marks a student as present for a lesson. The student's attendance record in the UI will be updated automatically.
 
-Format: `mark INDEX`
+Format: `mark INDEX lesson/LESSON_INDEX`
 
-*   Marks attendance for the person at the specified `INDEX`.
-*   The index refers to the index number shown in the displayed person list.
-*   The index **must be a positive integer** 1, 2, 3, …​
-*   An error will be shown if the student has no lesson scheduled for today.
+*   Marks attendance for a Lesson at the specified `LESSON_INDEX`. of the Person at the specified `INDEX`.
+*   The `INDEX` refers to the index number shown in the displayed person list.
+*   The `LESSON_INDEX` refers to the index number shown in the displayed lesson list.
+*   The `INDEX` and `LESSON_INDEX` **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `mark 1` marks the 1st person in the current list as present for today's lesson.
+* `mark 1 lesson/1` marks the 1st person's 1 lesson in the current list as present.
 
 ![result for 'mark student at 1st index'](images/markUI.png)
 <p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
@@ -221,16 +244,16 @@ Examples:
 
 Unmarks a student's attendance for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
 
-Format: `unmark INDEX`
+Format: `unmark INDEX lesson/LESSON_INDEX`
 
-*   Unmarks attendance for the person at the specified `INDEX`.
-*   The index refers to the index number shown in the displayed person list.
-*   The index **must be a positive integer** 1, 2, 3, …
-*   An error will be shown if the student has no lessons scheduled for today or if all today's lessons are already unmarked.
+*   Unmarks attendance for a Lesson at the specified `LESSON_INDEX`. of the Person at the specified `INDEX`.
+*   The `INDEX` refers to the index number shown in the displayed person list.
+*   The `LESSON_INDEX` refers to the index number shown in the displayed lesson list.
+*   The `INDEX` and `LESSON_INDEX` **must be a positive integer** 1, 2, 3, …​
 *   Only lessons that are currently marked as present will be unmarked.
 
 Examples:
-* `unmark 1` unmarks the 1st person in the current list as absent for today's lesson.
+* `unmark 1 lesson/1` unmarks the 1st person in the current list as absent for today's lesson.
 
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
 <p align="center"><em>Figure: Result of unmarking attendance for the student at index 1.</em></p>
@@ -366,11 +389,11 @@ AddressBook data are saved in the hard disk automatically after any command that
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file make its format invalid, **ClassRosterPro** will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
 
