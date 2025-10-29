@@ -131,9 +131,10 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_mark() throws Exception {
-        MarkCommand command = (MarkCommand) parser.parseCommand(
-                MarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
-        assertEquals(new MarkCommand(INDEX_FIRST_PERSON), command);
+        String userInput = MarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
+                + " " + PREFIX_LESSON + "1";
+        MarkCommand command = (MarkCommand) parser.parseCommand(userInput);
+        assertEquals(new MarkCommand(INDEX_FIRST_PERSON, Index.fromOneBased(1)), command);
     }
 
     @Test
@@ -145,9 +146,10 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_unmark() throws Exception {
-        UnmarkCommand command = (UnmarkCommand) parser.parseCommand(
-                UnmarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
-        assertEquals(new UnmarkCommand(INDEX_FIRST_PERSON), command);
+        String userInput = UnmarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased()
+                + " " + PREFIX_LESSON + "1";
+        UnmarkCommand command = (UnmarkCommand) parser.parseCommand(userInput);
+        assertEquals(new UnmarkCommand(INDEX_FIRST_PERSON, Index.fromOneBased(1)), command);
     }
 
     @Test
@@ -175,4 +177,3 @@ public class AddressBookParserTest {
         assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("unknownCommand"));
     }
 }
-

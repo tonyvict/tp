@@ -74,6 +74,29 @@ Format: `help`
 ![help_message](images/helpMessage.png)
 <p align="center"><em>Figure: Help message.</em></p>
 
+### Opening the contact card: `open`
+Allows you to toggle to view more details of the contact 
+
+Format: `open INDEX`
+
+Examples: 
+*`open 1`*
+
+![Result of toggling open a contact](images/openUI.png)
+<p align="center"><em>Figure: Result of toggling open a contact.</em></p>
+
+### Closing the contact card : `close`
+Allows you to untoggle to view lesser details of the contact
+
+Format: `open INDEX`
+
+Examples:
+*`close 1`*
+
+![Result of toggling close a contact](images/closeUI.png)
+<p align="center"><em>Figure: Result of toggling close a contact.</em></p>
+
+
 ### Adding a person: `add`
 
 Adds a person to the address book.
