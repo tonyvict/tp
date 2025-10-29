@@ -28,7 +28,8 @@ public class UnscheduleCommandParserTest {
 
     @Test
     public void parse_missingLessonPrefix_failure() {
-        assertParseFailure(parser, "1 2", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "1 2",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnscheduleCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -39,5 +40,11 @@ public class UnscheduleCommandParserTest {
     @Test
     public void parse_invalidLessonIndex_failure() {
         assertParseFailure(parser, INDEX_SECOND_PERSON.getOneBased() + " lesson/a", MESSAGE_INVALID_LESSON_INDEX);
+    }
+
+    @Test
+    public void parse_missingLessonValue_failure() {
+        assertParseFailure(parser, "1 lesson/",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnscheduleCommand.MESSAGE_USAGE));
     }
 }

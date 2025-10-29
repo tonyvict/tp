@@ -25,9 +25,17 @@ public class GradeCommandParser implements Parser<GradeCommand> {
     public GradeCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUB);
+
+        String preamble = argMultimap.getPreamble().trim();
+        if (preamble.isEmpty()
+                || preamble.contains(" ")
+                || preamble.startsWith(PREFIX_SUB.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+        }
+
         Index index;
         try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            index = ParserUtil.parseIndex(preamble);
         } catch (ParseException pe) {
             if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
                 throw pe;

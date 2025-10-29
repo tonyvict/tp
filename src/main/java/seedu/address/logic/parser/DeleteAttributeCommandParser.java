@@ -24,8 +24,16 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
                     DeleteAttributeCommand.MESSAGE_USAGE));
         }
 
+        String preamble = argMultimap.getPreamble().trim();
+        if (preamble.isEmpty()
+                || preamble.contains(" ")
+                || preamble.startsWith(PREFIX_ATTRIBUTE.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    DeleteAttributeCommand.MESSAGE_USAGE));
+        }
+
         try {
-            Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            Index index = ParserUtil.parseIndex(preamble);
             Set<String> keys = argMultimap.getAllValues(PREFIX_ATTRIBUTE)
                     .stream()
                     .map(String::trim)

@@ -44,17 +44,26 @@ public class GradeCommandParserTest {
 
     @Test
     public void parse_missingIndex_throwsParseException() {
-        assertParseFailure(parser, "sub/MATH/WA1/89", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "sub/MATH/WA1/89",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_missingSubPrefix_throwsParseException() {
-        assertParseFailure(parser, "1 MATH/WA1/89", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "1 MATH/WA1/89",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_emptyArgs_throwsParseException() {
-        assertParseFailure(parser, "", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_indexWithWhitespace_throwsParseException() {
+        assertParseFailure(parser, "1 2 sub/MATH/WA1/89",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
     }
 
     @Test

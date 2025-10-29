@@ -33,10 +33,23 @@ public class RemarkCommandParserTest {
 
     @Test
     public void parse_missingCompulsoryField_failure() {
-        // no parameters
-        assertParseFailure(parser, "", MESSAGE_INVALID_INDEX);
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE);
 
-        // no index
-        assertParseFailure(parser, nonEmptyRemark, MESSAGE_INVALID_INDEX);
+        // no parameters
+        assertParseFailure(parser, "", expectedMessage);
+
+        // no index (just remark prefix)
+        assertParseFailure(parser, PREFIX_REMARK + nonEmptyRemark, expectedMessage);
+
+        // index provided but missing prefix
+        assertParseFailure(parser, "1", expectedMessage);
+
+        // whitespace separated preamble
+        assertParseFailure(parser, "1 1 " + PREFIX_REMARK + nonEmptyRemark, expectedMessage);
+    }
+
+    @Test
+    public void parse_invalidIndex_failure() {
+        assertParseFailure(parser, "0 " + PREFIX_REMARK + nonEmptyRemark, MESSAGE_INVALID_INDEX);
     }
 }

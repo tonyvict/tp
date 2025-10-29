@@ -22,9 +22,18 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_REMARK);
 
+        String preamble = argMultimap.getPreamble().trim();
+        if (preamble.isEmpty() || preamble.contains(" ")) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE));
+        }
+
+        if (!argMultimap.getValue(PREFIX_REMARK).isPresent()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE));
+        }
+
         Index index;
         try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            index = ParserUtil.parseIndex(preamble);
         } catch (ParseException pe) {
             if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
                 throw pe;
@@ -32,7 +41,7 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE), pe);
         }
 
-        String remark = argMultimap.getValue(PREFIX_REMARK).orElse("");
+        String remark = argMultimap.getValue(PREFIX_REMARK).get();
 
         return new RemarkCommand(index, new Remark(remark));
     }
