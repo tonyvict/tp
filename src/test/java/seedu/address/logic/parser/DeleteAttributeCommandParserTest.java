@@ -10,8 +10,12 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteAttributeCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.testutil.Assert;
 
 public class DeleteAttributeCommandParserTest {
+
+    private static final String MESSAGE_INVALID_FORMAT = String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+            DeleteAttributeCommand.MESSAGE_USAGE);
 
     private final DeleteAttributeCommandParser parser = new DeleteAttributeCommandParser();
 
@@ -28,32 +32,39 @@ public class DeleteAttributeCommandParserTest {
     }
 
     @Test
+    public void parse_caseInsensitiveKeys_returnsLowerCasedKeys() throws Exception {
+        DeleteAttributeCommand command = parser.parse("2 attr/Subject attr/CCA");
+        assertEquals(new DeleteAttributeCommand(Index.fromOneBased(2), Set.of("subject", "cca")), command);
+    }
+
+    @Test
+    public void parse_duplicateKeys_collapsesToSingleEntry() throws Exception {
+        DeleteAttributeCommand command = parser.parse("3 attr/subject attr/subject attr/Subject ");
+        assertEquals(new DeleteAttributeCommand(Index.fromOneBased(3), Set.of("subject")), command);
+    }
+
+    @Test
     public void parse_missingAttrPrefix_throwsParseException() {
-        try {
-            parser.parse("1 subject");
-        } catch (ParseException e) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                    e.getMessage());
-        }
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("1 subject"));
     }
 
     @Test
     public void parse_missingIndex_throwsParseException() {
-        try {
-            parser.parse("attr/subject");
-        } catch (ParseException e) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                    e.getMessage());
-        }
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("attr/subject"));
     }
 
     @Test
     public void parse_emptyArgs_throwsParseException() {
-        try {
-            parser.parse("");
-        } catch (ParseException e) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAttributeCommand.MESSAGE_USAGE),
-                    e.getMessage());
-        }
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse(""));
+    }
+
+    @Test
+    public void parse_attrPrefixWithoutKey_throwsParseException() {
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("4 attr/"));
+    }
+
+    @Test
+    public void parse_attrPrefixWithWhitespaceOnly_throwsParseException() {
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("5 attr/   "));
     }
 }

@@ -75,11 +75,11 @@ Format: `help`
 <p align="center"><em>Figure: Help message.</em></p>
 
 ### Opening the contact card: `open`
-Allows you to toggle to view more details of the contact 
+Allows you to toggle to view more details of the contact
 
 Format: `open INDEX`
 
-Examples: 
+Examples:
 *`open 1`*
 
 ![Result of toggling open a contact](images/openUI.png)
@@ -280,6 +280,33 @@ Examples:
 
 ![Result of tagging a student](images/tagUI.png)
 <p align="center"><em>Figure: Result of tagging student at index 2 with attributes.</em></p>
+
+### Deleting attributes from a student : `deltag`
+
+Removes one or more existing attributes from a specific student.
+Use this when a previously tagged attribute(s) is no longer relevant.
+
+Format:
+`deltag INDEX attr/KEY [attr/KEY2]…​`
+
+* Deletes the specified attribute(s) from the student at the specified INDEX.
+* The index refers to the index number shown in the displayed student list.
+* The index **must be a positive integer** 1, 2, 3, …
+* At least one `attr/` prefix must be provided.
+* Multiple attributes can be deleted at once by adding `attr/<attribute>`.
+* Only the specified attributes are deleted — other attributes remain unchanged.
+
+Examples:
+* `deltag 1 attr/subject`
+Deletes the attribute subject from the 1st student.
+
+* `deltag 2 attr/age attr/subject`
+Deletes multiple attributes (age, subject) from the 3rd student.
+
+![Result of deleting attributes](images/deltagUI.png)
+<p align="center"><em>Figure: Result of deleting attributes from the student at index 2.</em></p>
+
+
 
 ### Filtering students by attributes : `filter`
 

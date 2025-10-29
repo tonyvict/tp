@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -53,7 +54,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label attendance;
     @FXML
-    private FlowPane attributes;
+    private VBox attributes;
     @FXML
     private FlowPane grades;
 
@@ -89,8 +90,15 @@ public class PersonCard extends UiPart<Region> {
         person.getAttributes().stream()
                 .sorted(Comparator.comparing(Attribute::getKey))
                 .forEach(attr -> {
-                    String displayText = attr.getKey() + ": " + String.join(", ", attr.getValues() + " |");
-                    attributes.getChildren().add(new Label(displayText));
+                    String valueText = attr.getValues().stream()
+                            .sorted()
+                            .collect(Collectors.joining(","));
+                    String displayText = attr.getKey() + " = " + valueText;
+                    Label attributeLabel = new Label(displayText);
+                    attributeLabel.setWrapText(true);
+                    attributeLabel.setMinWidth(0);
+                    attributeLabel.setMaxWidth(Double.MAX_VALUE);
+                    attributes.getChildren().add(attributeLabel);
                 });
 
         // Display grades

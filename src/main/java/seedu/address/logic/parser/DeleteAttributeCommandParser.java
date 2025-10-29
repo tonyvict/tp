@@ -29,6 +29,7 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
             Set<String> keys = argMultimap.getAllValues(PREFIX_ATTRIBUTE)
                     .stream()
                     .map(String::trim)
+                    .map(s -> s.toLowerCase())
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toSet());
 

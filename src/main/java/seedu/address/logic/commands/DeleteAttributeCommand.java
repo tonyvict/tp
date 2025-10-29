@@ -4,11 +4,14 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Person;
 
 /**
@@ -40,7 +43,10 @@ public class DeleteAttributeCommand extends Command {
         requireNonNull(index);
         requireNonNull(attributeKeysToDelete);
         this.index = index;
-        this.attributeKeysToDelete = attributeKeysToDelete;
+        this.attributeKeysToDelete = attributeKeysToDelete.stream()
+                .map(key -> key == null ? null : key.trim().toLowerCase())
+                .filter(key -> key != null && !key.isEmpty())
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -61,16 +67,20 @@ public class DeleteAttributeCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
-        Person editedPerson = personToEdit.removeAttributesByKey(attributeKeysToDelete);
+        Person editedPerson = createEditedPerson(personToEdit);
 
         if (personToEdit.equals(editedPerson)) {
             // Nothing removed
-            return new CommandResult(String.format(MESSAGE_NO_ATTRIBUTES_REMOVED, personToEdit.getName()));
+            throw new CommandException(String.format(MESSAGE_NO_ATTRIBUTES_REMOVED, personToEdit.getName()));
         }
 
         model.setPerson(personToEdit, editedPerson);
+        String formattedKeys = attributeKeysToDelete.stream()
+                .sorted()
+                .collect(Collectors.toList())
+                .toString();
         return new CommandResult(String.format(MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                editedPerson.getName(), attributeKeysToDelete));
+                editedPerson.getName(), formattedKeys));
     }
 
     /**
@@ -86,5 +96,27 @@ public class DeleteAttributeCommand extends Command {
                 || (other instanceof DeleteAttributeCommand
                 && index.equals(((DeleteAttributeCommand) other).index)
                 && attributeKeysToDelete.equals(((DeleteAttributeCommand) other).attributeKeysToDelete));
+    }
+
+    private Person createEditedPerson(Person personToEdit) {
+        Set<Attribute> filteredAttributes = personToEdit.getAttributes().stream()
+                .filter(attribute -> !attributeKeysToDelete.contains(attribute.getKey()))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        if (filteredAttributes.equals(personToEdit.getAttributes())) {
+            return personToEdit;
+        }
+
+        Person editedPerson = new Person(personToEdit.getName(),
+                personToEdit.getPhone(),
+                personToEdit.getEmail(),
+                personToEdit.getAddress(),
+                personToEdit.getRemark(),
+                new HashSet<>(personToEdit.getTags()),
+                filteredAttributes,
+                personToEdit.getLessonList(),
+                personToEdit.getGradeList());
+        editedPerson.setExpanded(personToEdit.isExpanded());
+        return editedPerson;
     }
 }

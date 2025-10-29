@@ -209,7 +209,7 @@ public class EditCommand extends Command {
         }
 
         public void setAttributes(Set<Attribute> attributes) {
-            this.attributes = attributes != null ? new HashSet<>(attributes) : new HashSet<>();
+            this.attributes = attributes != null ? new HashSet<>(attributes) : null;
         }
 
         public Optional<Set<Attribute>> getAttributes() {
@@ -267,4 +267,3 @@ public class EditCommand extends Command {
     }
 
 }
-

@@ -8,7 +8,10 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,10 +46,30 @@ public class DeleteAttributeCommandTest {
 
         Set<String> keysToDelete = Set.of("subject");
         DeleteAttributeCommand command = new DeleteAttributeCommand(INDEX_FIRST_PERSON, keysToDelete);
-        Person expectedPerson = originalPerson.removeAttributesByKey(keysToDelete);
+        Person expectedPerson = removeAttributes(originalPerson, keysToDelete);
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                expectedPerson.getName(), keysToDelete);
+                expectedPerson.getName(), formatKeysForMessage(keysToDelete));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(originalPerson, expectedPerson);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_keyCaseInsensitive_success() {
+        Person originalPerson = new PersonBuilder(model.getFilteredPersonList().get(0))
+                .withAttributes(new Attribute("subject", "Math"), new Attribute("age", "16"))
+                .build();
+        model.setPerson(model.getFilteredPersonList().get(0), originalPerson);
+
+        Set<String> keysToDelete = Set.of("SuBjEcT");
+        DeleteAttributeCommand command = new DeleteAttributeCommand(INDEX_FIRST_PERSON, keysToDelete);
+        Person expectedPerson = removeAttributes(originalPerson, Set.of("subject"));
+
+        String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
+                expectedPerson.getName(), formatKeysForMessage(Set.of("subject")));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(originalPerson, expectedPerson);
@@ -66,10 +89,10 @@ public class DeleteAttributeCommandTest {
 
         Set<String> keysToDelete = Set.of("subject", "cca");
         DeleteAttributeCommand command = new DeleteAttributeCommand(INDEX_FIRST_PERSON, keysToDelete);
-        Person expectedPerson = originalPerson.removeAttributesByKey(keysToDelete);
+        Person expectedPerson = removeAttributes(originalPerson, keysToDelete);
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
-                expectedPerson.getName(), keysToDelete);
+                expectedPerson.getName(), formatKeysForMessage(keysToDelete));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(originalPerson, expectedPerson);
@@ -89,10 +112,8 @@ public class DeleteAttributeCommandTest {
 
         String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_NO_ATTRIBUTES_REMOVED,
                 originalPerson.getName());
-        String actualMessage = command.execute(model).getFeedbackToUser();
 
-        assertEquals(expectedMessage, actualMessage);
-        assertEquals(originalPerson, model.getFilteredPersonList().get(0));
+        assertCommandFailure(command, model, expectedMessage);
     }
 
     @Test
@@ -132,5 +153,41 @@ public class DeleteAttributeCommandTest {
 
         // different type -> false
         assertNotEquals(new Object(), firstCommand);
+    }
+
+    private String formatKeysForMessage(Set<String> keys) {
+        return keys.stream()
+                .filter(key -> key != null && !key.trim().isEmpty())
+                .map(key -> key.trim().toLowerCase())
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList())
+                .toString();
+    }
+
+    private Person removeAttributes(Person person, Set<String> keys) {
+        Set<String> normalizedKeys = keys.stream()
+                .filter(key -> key != null && !key.trim().isEmpty())
+                .map(key -> key.trim().toLowerCase())
+                .collect(Collectors.toSet());
+
+        Set<Attribute> filtered = person.getAttributes().stream()
+                .filter(attribute -> !normalizedKeys.contains(attribute.getKey()))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        if (filtered.equals(person.getAttributes())) {
+            return person;
+        }
+
+        Person updated = new Person(person.getName(),
+                person.getPhone(),
+                person.getEmail(),
+                person.getAddress(),
+                person.getRemark(),
+                new HashSet<>(person.getTags()),
+                filtered,
+                person.getLessonList(),
+                person.getGradeList());
+        updated.setExpanded(person.isExpanded());
+        return updated;
     }
 }
