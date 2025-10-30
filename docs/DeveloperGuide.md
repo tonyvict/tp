@@ -246,6 +246,42 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
+### **UC-11: Open a student's contact card**
+
+**Preconditions:** Student exists in the roster with Student card closed.
+
+**MSS:**
+
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters `open 1`.
+3. System validates the index.
+4. System expands the student card to show all details (lessons, grades, etc.).
+
+**Extensions:**
+
+* 2a. Index out of bounds → error "Invalid person index".
+* 3a. The student card is already open → error "Card is already open".
+
+---
+
+### **UC-12: Close a student's contact card**
+
+**Preconditions:** Student exists in the roster with Student card open.
+
+**MSS:**
+
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters `close 1`.
+3. System validates the index of the open card.
+4. System collapses the student card to its summary view.
+
+**Extensions:**
+
+* 1a. Index out of bounds → error "Invalid person index".
+* 2a. The student card is already closed → error "Card is already closed".
+
+---
+
 ## **4. Non-Functional Requirements (NFRs)**
 
 | Category               | Requirement                                                                                                      |
