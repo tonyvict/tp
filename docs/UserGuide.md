@@ -288,6 +288,7 @@ Use this command when you want to add additional classifications to a student wi
 Using the same tag multiple times - duplicate tags will be ignored.
 </div>
 
+
 ![Result of tagging a student](images/tagUI.png)
 <p align="center"><em>Bernice is tagged with 2 attributes.</em></p>
 
@@ -425,24 +426,35 @@ Using this command on a student who doesn't have any scheduled lessons - the com
 
 ### Marking attendance : `mark`
 
-Marks a student as present for a lesson. The student's attendance record in the UI will be updated automatically.
+Marks a student as present for a scheduled lesson.
 
 Format: `mark INDEX lesson/LESSON_INDEX`
 
-*   Marks attendance for a Lesson at the specified `LESSON_INDEX`. of the Person at the specified `INDEX`.
+*   Marks attendance for a lesson at the specified `LESSON_INDEX` of the student at the specified `INDEX`.
 *   The `INDEX` refers to the index number shown in the displayed person list.
 *   The `LESSON_INDEX` refers to the index number shown in the displayed lesson list.
 *   The `INDEX` and `LESSON_INDEX` **must be a positive integer** 1, 2, 3, …​
+*   Only lessons scheduled on the current date can be marked.
 
 Examples:
-* `mark 1 lesson/1` marks the 1st person's 1 lesson in the current list as present.
+* `mark 1 lesson/1` 
+
+_Marks the 1st person's 1 lesson in the current list as present_
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Combine with the schedule command to maintain a complete teaching schedule.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using this command on a student who doesn't have any scheduled lessons.
+</div>
 
 ![result for 'mark student at 1st index'](images/markUI.png)
-<p align="center"><em>Figure: Result of marking attendance for the student at index 1.</em></p>
+<p align="center"><em>Alex's attendance successfully marked as present.</em></p>
 
 ### Unmarking attendance : `unmark`
 
-Unmarks a student's attendance for all the lessons that are scheduled on the current day. The student's attendance total record in the UI will be updated automatically.
+Unmarks a student's attendance for all the lessons that are scheduled on the current day.
 
 Format: `unmark INDEX lesson/LESSON_INDEX`
 
@@ -455,8 +467,16 @@ Format: `unmark INDEX lesson/LESSON_INDEX`
 Examples:
 * `unmark 1 lesson/1` unmarks the 1st person in the current list as absent for today's lesson.
 
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this command to correct accidental marks or handle last-minute cancellations.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using this command on a student who doesn't have any completed lessons to unmark.
+</div>
+
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
-<p align="center"><em>Figure: Result of unmarking attendance for the student at index 1.</em></p>
+<p align="center"><em>Bernice's attendance successfully unmarked as not present.</em></p>
 
 
 ### Quick Search : `search`
@@ -500,10 +520,9 @@ Examples:
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the address book.
+Clears all entries from ClassRosterPro.
 
 Format: `clear`
-
 
 ### Exiting the program : `exit`
 
@@ -511,19 +530,22 @@ Exits the program.
 
 Format: `exit`
 
-
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
-
+ClassRosterPro data is saved in the hard disk automatically after any command that changes the data. 
+There is no need to save manually.
 
 ### Editing the data file
 
-**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`. Advanced users are welcome to update data directly by editing that data file.
+**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`. 
+Advanced users are welcome to update data directly by editing that data file.
 
-<div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
-If your changes to the data file make its format invalid, **ClassRosterPro** will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+<div markdown="span" class="alert alert-warning">:exclamation: Caution:
+If your changes to the data file make its format invalid, ClassRosterPro will discard all data and start with an empty data file at the next run. 
+Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected ways 
+(e.g., if a value entered is outside of the acceptable range). 
+Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
 
@@ -533,6 +555,21 @@ Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected 
 
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+
+**Q**: Is there an undo command?
+**A**: Currently, ClassRosterPro does not support an undo function. Please use commands with care, especially delete and clear.
+
+**Q**: What happens if I forget to include a compulsory field when adding a student?
+**A**: ClassRosterPro will show an error message explaining which field is missing and the correct format for the add command.
+
+**Q**: Can I use the same tag for multiple students?
+**A**: Yes! That's the main purpose of tags. You can use the filter command to find all students with a specific tag.
+
+**Q**: Can I see my teaching schedule for the week?
+**A**: Currently, you need to check each student individually using the open command. Future versions may include a calendar view.
+
+**Q**: Why can't I see all the details for a student?
+**A**: Student cards start in a collapsed state to save space. Use the open INDEX command to expand a student's card and view all their details.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -569,7 +606,6 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
 **Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
