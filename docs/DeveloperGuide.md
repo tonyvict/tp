@@ -120,7 +120,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 * 2a. Student index invalid → error "Invalid person index".
 * 2b. Lesson index invalid → error "Invalid lesson index".
-* 2c. Lesson already marked → update confirmation message.
+* 2c. Lesson already marked → error "This lesson has already been marked".
 
 ---
 
