@@ -4,7 +4,6 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
-import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_LESSON_INDEX;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_END_TIME_BEFORE_START;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_FORMAT;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_VALUE;

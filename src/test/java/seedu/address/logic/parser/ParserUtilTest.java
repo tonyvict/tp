@@ -60,12 +60,12 @@ public class ParserUtilTest {
     @Test
     public void requireSingleIndex_invalidInput_throwsParseException() {
         assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"),
-                () -> ParserUtil.requireSingleIndex("", "usage"));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"), () ->
+                        ParserUtil.requireSingleIndex("", "usage"));
 
         assertThrows(ParseException.class,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"),
-                () -> ParserUtil.requireSingleIndex("1 2", "usage"));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"), () ->
+                        ParserUtil.requireSingleIndex("1 2", "usage"));
     }
 
     @Test
