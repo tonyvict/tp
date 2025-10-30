@@ -120,7 +120,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 * 2a. Student index invalid → error "Invalid person index".
 * 2b. Lesson index invalid → error "Invalid lesson index".
-* 2c. Lesson already marked → update confirmation message.
+* 2c. Lesson already marked → error "This lesson has already been marked".
 
 ---
 
@@ -225,6 +225,60 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 * 2a. Index out of bounds → error "Invalid person index".
 * 2b. Index not a positive integer → error message.
+
+---
+### **UC-10: Unrecords attendance for a specific lesson**
+
+**Preconditions:** Student exists with at least one scheduled lesson.
+
+**MSS:**
+
+1. Tutor filters/finds the student if needed.
+2. Tutor enters `unmark 1 lesson/1`.
+3. System validates both indices and marks the lesson as not attended.
+4. System updates attendance count and confirms.
+
+**Extensions:**
+
+* 2a. Student index invalid → error "Invalid person index".
+* 2b. Lesson index invalid → error "Invalid lesson index".
+* 2c. Lesson already marked as not present → error "This lesson is already marked as not present".
+
+---
+
+### **UC-11: Open a student's contact card**
+
+**Preconditions:** Student exists in the roster with Student card closed.
+
+**MSS:**
+
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters `open 1`.
+3. System validates the index.
+4. System expands the student card to show all details (lessons, grades, etc.).
+
+**Extensions:**
+
+* 2a. Index out of bounds → error "Invalid person index".
+* 3a. The student card is already open → error "Card is already open".
+
+---
+
+### **UC-12: Close a student's contact card**
+
+**Preconditions:** Student exists in the roster with Student card open.
+
+**MSS:**
+
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters `close 1`.
+3. System validates the index of the open card.
+4. System collapses the student card to its summary view.
+
+**Extensions:**
+
+* 1a. Index out of bounds → error "Invalid person index".
+* 2a. The student card is already closed → error "Card is already closed".
 
 ---
 
