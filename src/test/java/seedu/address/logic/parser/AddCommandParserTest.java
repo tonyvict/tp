@@ -198,8 +198,10 @@ public class AddCommandParserTest {
     public void parse_pSlashOParentOfPhone_failure() {
         // It should error with a special parent-of tip
         String input = " n/Tason p/o Tony p/98765432 e/tason@example.com a/123 Ave t/friend";
-        String expectedMessage = "Multiple values specified for the following single-valued field(s): p/\n"
-                + "Note: If you meant 'parent of', please spell it out as 'parent of' rather than using 'p/o', to avoid confusion with the phone number field.";
+        String expectedMessage =
+                "Multiple values specified for the following single-valued field(s): p/\n"
+                + "Note: If you meant 'parent of', please spell it out as 'parent of' "
+                + "rather than using 'p/o', to avoid confusion with the phone number field.";
         assertParseFailure(parser, input, expectedMessage);
     }
 }

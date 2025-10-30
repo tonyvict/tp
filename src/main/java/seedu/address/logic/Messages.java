@@ -3,8 +3,7 @@ package seedu.address.logic;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.List;
-import seedu.address.logic.parser.ArgumentMultimap;
+
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
 
@@ -23,7 +22,6 @@ public class Messages {
 
     /**
      * Returns an error message indicating the duplicate prefixes.
-     * Optionally, pass an ArgumentMultimap with full arguments if context is needed.
      */
     public static String getErrorMessageForDuplicatePrefixes(Prefix... duplicatePrefixes) {
         assert duplicatePrefixes.length > 0;
@@ -33,9 +31,9 @@ public class Messages {
         boolean hasPhonePrefix = duplicateFields.contains("p/");
         StringBuilder sb = new StringBuilder();
         sb.append(MESSAGE_DUPLICATE_FIELDS).append(String.join(" ", duplicateFields));
-        // We can't check values in this static method, so we just add a generic note if p/ is duplicated
         if (hasPhonePrefix) {
-            sb.append("\nNote: If you meant 'parent of', please spell it out as 'parent of' rather than using 'p/o', to avoid confusion with the phone number field.");
+            sb.append("\nNote: If you meant 'parent of', please spell it out as 'parent of' "
+                    + "rather than using 'p/o', to avoid confusion with the phone number field.");
         }
         return sb.toString();
     }
