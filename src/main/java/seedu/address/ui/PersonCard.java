@@ -46,7 +46,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private VBox detailsPane;
     @FXML
-    private FlowPane tags;
+    private Label tags;
     @FXML
     private Label remark;
     @FXML
@@ -71,9 +71,11 @@ public class PersonCard extends UiPart<Region> {
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         remark.setText(person.getRemark().value);
-        person.getTags().stream()
+        String tagsText = person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+                .map(tag -> tag.tagName)
+                .collect(Collectors.joining(", ")); // Join tags with a comma and space
+        tags.setText(tagsText);
         //making lessons into numbered list
         StringBuilder lessonSb = new StringBuilder();
         int lessonNumber = 1;

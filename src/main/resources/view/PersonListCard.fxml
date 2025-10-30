@@ -31,7 +31,7 @@
       <Label fx:id="address" styleClass="cell_small_label" text="\$address" wrapText="true"/>
       <Label fx:id="email" styleClass="cell_small_label" text="\$email" wrapText="true"/>
       <Label text="Tags:" styleClass="cell_small_label_bold" wrapText="true"/>
-        <FlowPane fx:id="tags" hgap="5" vgap="3" />
+        <Label fx:id="tags" styleClass="cell_small_label" wrapText="true" />
       <!-- This VBox contains the details that will be shown/hidden -->
       <VBox fx:id="detailsPane" managed="false" visible="false" spacing="3">
         <padding>
