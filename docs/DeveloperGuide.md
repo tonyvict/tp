@@ -13,7 +13,9 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+* This project is adapted from SE-EDU's AddressBook-Level3 (AB3). We reused its architecture, code structure, and portions of documentation with modifications to suit our domain. See: AB3 repository (`https://github.com/se-edu/addressbook-level3`), UG, and DG.
+* The command-parsing pattern and some utility classes are reused from AB3 with changes. Parser overview diagram concept adapted from AB3 `ParserClasses`.
+* PlantUML is used for UML diagrams. Graphviz is used for rendering.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -158,6 +160,52 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
+
+### Add Student Command
+
+Overview
+
+The `add` command adds a new student with fields `Name`, `Phone`, `Email`, `Address`, and optional `Tag`s. The flow follows the standard style used in this project: a parser constructs a concrete `Command`, which is then executed against the `Model` by `LogicManager`.
+
+Feature details
+
+1. The user executes the `add` command, e.g. `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/primary t/focused`.
+2. `LogicManager` delegates to `AddressBookParser`, which instantiates `AddCommandParser` to parse the arguments.
+3. `AddCommandParser` tokenizes by prefixes, verifies required prefixes (`n/`, `p/`, `e/`, `a/`), rejects duplicate prefixes, and parses values via `ParserUtil`.
+4. A `Person` is created with an empty `Remark`, empty `LessonList`, empty `GradeList`, and any provided `Tag`s, and wrapped in a new `AddCommand`.
+5. `AddCommand#execute(Model)` checks `Model#hasPerson` to prevent duplicates. If present, it throws `AddCommand.MESSAGE_DUPLICATE_PERSON`.
+6. Otherwise, `Model#addPerson` is called and a success message is returned.
+
+Parsing and execution (files of interest)
+
+- `src/main/java/seedu/address/logic/parser/AddCommandParser.java`
+- `src/main/java/seedu/address/logic/commands/AddCommand.java`
+- `src/main/java/seedu/address/logic/parser/AddressBookParser.java`
+
+Sequence of the add command
+
+1. User inputs `add ...`.
+2. `AddressBookParser#parseCommand` matches `add` and creates `AddCommandParser`.
+3. `AddCommandParser#parse`:
+   - tokenizes arguments with `n/`, `p/`, `e/`, `a/`, `t/`
+   - ensures all required prefixes exist and preamble is empty
+   - validates duplicate prefixes, parses domain objects via `ParserUtil`
+   - creates `Person` and returns `new AddCommand(person)`
+4. `AddCommand#execute`:
+   - if `model.hasPerson(toAdd)` → error "This person already exists in the address book"
+   - else `model.addPerson(toAdd)` → success `CommandResult`
+
+Diagrams
+
+- Parser flow (PlantUML): `docs/diagrams/AddCommandParserSequence.puml`
+- Execution flow (PlantUML): `docs/diagrams/AddCommandExecuteSequence.puml`
+- Parser relationships overview: `docs/images/ParserClasses.png`
+
+Constraints and validation
+
+- Required prefixes: `n/`, `p/`, `e/`, `a/` must be present exactly once.
+- `ParserUtil` and domain types perform format checks for name, phone, email, and address.
+- `Tag`s are optional; duplicates are naturally de-duplicated by set semantics.
 
 ### \[Proposed\] Undo/redo feature
 
@@ -616,3 +664,125 @@ Each major layer has a distinct responsibility:
 - **Commons**: Contains shared utilities such as `Messages`, `LogsCenter`, and custom exceptions.
 
 This modular structure supports easy feature addition (e.g., new commands) with minimal changes to existing code.
+
+---
+
+## **Appendix: Instructions for Manual Testing**
+
+This section provides guidance to manually verify the new or modified features of ClassRosterPro. Each subsection gives a test path and copy‑pasteable inputs. Refer to the User Guide for full syntax. Ensure sample data in `data/addressbook.json` is loaded before testing.
+
+### 1. Quick Search
+
+Purpose: Instantly locate students by typing into the search box.
+
+Steps to test:
+1. Launch the app and ensure several students are listed.
+2. Click into the Quick Search box (above the contact list).
+3. Type:
+   - `alex`
+
+Expected: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
+
+Clear the search box. Expected: The full list reappears.
+
+Edge case: Type a non‑existent string such as `zzz`. The list should show no students and no error message.
+
+### 2. Tag and Filter
+
+Purpose: Add attributes to students and filter by them.
+
+Steps to test:
+1. Tag a student with attributes:
+   - `tag 1 attr/subject=Math attr/age=16`
+2. Verify tags appear under the student's details.
+3. Filter students by multiple attributes:
+   - `filter attr/subject=Math attr/age=16`
+
+Expected: Only students with both `subject=Math` and `age=16` are displayed.
+
+Reset view:
+- `list`
+
+### 3. Schedule and Unschedule Lessons
+
+Purpose: Create and remove scheduled lessons.
+
+Steps to test:
+1. Schedule a lesson for the first student:
+   - `schedule 1 start/14:00 end/15:00 date/2025-11-01 sub/Science`
+
+Expected: A lesson entry appears in the expanded student card.
+
+Try scheduling an overlapping lesson (same date/time). Expected: Error about overlapping lesson.
+
+Remove the lesson:
+- `unschedule 1 lesson/1`
+
+### 4. Attendance Tracking
+
+Purpose: Mark and unmark lesson attendance.
+
+Steps to test:
+1. Ensure a student has a scheduled lesson (see previous test).
+2. Mark attendance:
+   - `mark 1 lesson/1`
+
+Expected: Lesson marked as "Attended".
+
+Unmark attendance:
+- `unmark 1 lesson/1`
+
+Expected: Lesson reverted to "Not attended".
+
+### 5. Grade Recording
+
+Purpose: Record grades for multiple subjects/assessments.
+
+Steps to test:
+1. Add grades to a student:
+   - `grade 1 sub/MATH/WA1/85 sub/SCIENCE/Quiz1/92`
+
+Expected: Grades appear under the student's card.
+
+2. Add another grade for the same subject/assessment to test overwrite behavior:
+   - `grade 1 sub/MATH/WA1/90`
+
+Expected: The score updates to 90.
+
+### 6. Open and Close Student Cards
+
+Purpose: Expand or collapse individual contact cards to view details.
+
+Steps to test:
+1. Open:
+   - `open 1`
+   - Expected: The first student's card expands to show all details (lessons, grades, tags).
+2. Close:
+   - `close 1`
+   - Expected: The same card collapses back to summary view.
+3. Try opening multiple cards:
+   - `open 2`
+   - Expected: Both card 1 and 2 can stay open simultaneously.
+
+### 7. Delete Attributes
+
+Purpose: Remove specific attributes (tags) from a student.
+
+Steps to test:
+1. Add attributes first (if not present):
+   - `tag 1 attr/subject=Math attr/level=Sec3`
+2. Delete an attribute:
+   - `deltag 1 attr/level`
+
+Expected: Only the `level` attribute is removed; `subject=Math` remains.
+
+### 8. Data Persistence Verification
+
+Purpose: Confirm that data modifications are saved correctly.
+
+Steps to test:
+1. Modify data using any commands above (e.g., add tags, schedule a lesson, add grades).
+2. Exit the app.
+3. Reopen the app.
+
+Expected: All changes persist (e.g., added tags, scheduled lessons, grades).

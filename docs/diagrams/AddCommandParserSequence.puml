@@ -1,0 +1,43 @@
+@startuml
+' Add command parsing sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/parser/AddressBookParser.java
+' - src/main/java/seedu/address/logic/parser/AddCommandParser.java
+' - src/main/java/seedu/address/logic/parser/ParserUtil.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+actor User as U
+participant "Logic\\n(AddressBookParser)" as ABP
+participant "AddCommandParser" as ACP
+participant "ParserUtil" as PU
+participant "AddCommand" as AC <<command>>
+
+U -> ABP : input "add n/.. p/.. e/.. a/.. t/..."
+ABP -> ACP : new AddCommandParser()
+ABP -> ACP : parse(arguments)
+
+activate ACP
+ACP -> ACP : tokenize args by prefixes
+ACP -> ACP : verify required prefixes present
+ACP -> ACP : verify no duplicate prefixes
+
+ACP -> PU : parseName(value of n/)
+PU --> ACP : Name
+ACP -> PU : parsePhone(value of p/)
+PU --> ACP : Phone
+ACP -> PU : parseEmail(value of e/)
+PU --> ACP : Email
+ACP -> PU : parseAddress(value of a/)
+PU --> ACP : Address
+ACP -> PU : parseTags(all t/)
+PU --> ACP : Set<Tag>
+
+ACP -> AC : new AddCommand(new Person(...))
+AC --> ABP : AddCommand
+
+return command
+@enduml
