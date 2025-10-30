@@ -36,6 +36,18 @@ public class EditCommandParser implements Parser<EditCommand> {
                 PREFIX_ADDRESS, PREFIX_TAG, PREFIX_ATTRIBUTE);
 
         String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), EditCommand.MESSAGE_USAGE);
+
+        boolean hasAnyField = argMultimap.getValue(PREFIX_NAME).isPresent()
+                || argMultimap.getValue(PREFIX_PHONE).isPresent()
+                || argMultimap.getValue(PREFIX_EMAIL).isPresent()
+                || argMultimap.getValue(PREFIX_ADDRESS).isPresent()
+                || !argMultimap.getAllValues(PREFIX_TAG).isEmpty()
+                || !argMultimap.getAllValues(PREFIX_ATTRIBUTE).isEmpty();
+
+        if (!hasAnyField) {
+            throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
+        }
+
         Index index = ParserUtil.parseIndex(preamble);
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
