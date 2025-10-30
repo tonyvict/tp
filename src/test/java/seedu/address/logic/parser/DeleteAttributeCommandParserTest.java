@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 
 import java.util.Set;
 
@@ -51,6 +52,17 @@ public class DeleteAttributeCommandParserTest {
     @Test
     public void parse_missingIndex_throwsParseException() {
         Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("attr/subject"));
+    }
+
+    @Test
+    public void parse_invalidIndex_throwsParseException() {
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () -> parser.parse("0 attr/subject"));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () -> parser.parse("a attr/subject"));
+    }
+
+    @Test
+    public void parse_indexWithWhitespace_throwsParseException() {
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("1 2 attr/subject"));
     }
 
     @Test

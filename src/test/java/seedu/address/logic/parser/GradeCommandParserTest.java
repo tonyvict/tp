@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.HashSet;
@@ -38,8 +39,8 @@ public class GradeCommandParserTest {
 
     @Test
     public void parse_invalidIndex_throwsParseException() {
-        assertParseFailure(parser, "0 sub/MATH/WA1/89",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "0 sub/MATH/WA1/89", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "a sub/MATH/WA1/89", MESSAGE_INVALID_INDEX);
     }
 
     @Test
@@ -61,21 +62,40 @@ public class GradeCommandParserTest {
     }
 
     @Test
+    public void parse_indexWithWhitespace_throwsParseException() {
+        assertParseFailure(parser, "1 2 sub/MATH/WA1/89",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+    }
+
+    @Test
     public void parse_invalidFormat_throwsParseException() {
+        // Using = instead of / results in only 1 part after split
         assertParseFailure(parser, "1 sub/MATH=WA1=89",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Assessment and Score are missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test
     public void parse_tooFewParts_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH/WA1",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Score is missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test
     public void parse_tooManyParts_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH/WA1/89/EXTRA",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Too many parts. Use sub/SUBJECT/ASSESSMENT/SCORE");
+    }
+
+    @Test
+    public void parse_missingScoreWithTrailingSlash_throwsParseException() {
+        assertParseFailure(parser, "1 sub/MATH/WA1/",
+                "Score cannot be empty.");
+    }
+
+    @Test
+    public void parse_onlySubject_throwsParseException() {
+        assertParseFailure(parser, "1 sub/MATH",
+                "Assessment and Score are missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test

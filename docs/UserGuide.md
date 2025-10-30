@@ -484,7 +484,6 @@ Using this command on a student who doesn't have any completed lessons to unmark
 Allows users to instantly search for contacts by name, email or phone number.
 
 <div markdown="span" class="alert alert-primary"> :bulb: **Tip**
-You can still use the `find` command for more specific or multi-keyword searches.
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
@@ -517,6 +516,24 @@ Examples:
 
 ![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
+
+
+### Recording student grades : `remark`
+Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
+
+* Adds or updates the remark of the student at the specified INDEX.
+* The index refers to the index number shown in the displayed student list.
+* The index must be a positive integer 1, 2, 3, …
+* If the remark field is left empty after `r/`, the existing remark will be cleared.
+
+Examples:
+
+* `remark 2 r/Excellent progress this term` — Adds the remark “Excellent progress this term” to the 2nd student.
+* `remark 1 r/` — Clears the existing remark of the 1st student.
+
+![Result of adding remark](images/remarkUI.png)
+<p align="center"><em>Figure: Result of adding a remark for a student.</em></p>
+
 
 ### Clearing all entries : `clear`
 
@@ -613,5 +630,7 @@ Action | Format, Examples
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
 **Unmark Attendance** | `unmark INDEX`<br> e.g., `unmark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
+**Delete Attributes** | `deltag INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `deltag 2 attr/age attr/subject`
+**Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
 **List** | `list`
 **Help** | `help`

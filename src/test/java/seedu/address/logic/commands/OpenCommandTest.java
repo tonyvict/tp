@@ -45,6 +45,18 @@ public class OpenCommandTest {
     }
 
     @Test
+    public void execute_cardAlreadyOpen_throwsCommandException() {
+        // Get the first person and manually set their card to be open
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        firstPerson.setExpanded(true);
+
+        // Attempt to open the same card again
+        OpenCommand openCommand = new OpenCommand(INDEX_FIRST_PERSON);
+
+        assertCommandFailure(openCommand, model, OpenCommand.MESSAGE_CARD_ALREADY_OPEN);
+    }
+
+    @Test
     public void equals() {
         OpenCommand openFirstCommand = new OpenCommand(INDEX_FIRST_PERSON);
         OpenCommand openSecondCommand = new OpenCommand(INDEX_SECOND_PERSON);

@@ -37,6 +37,10 @@ public class ScheduleCommandTest {
     private static final String ANOTHER_DATE = "2025-09-21";
     private static final String ANOTHER_SUBJECT = "Science";
 
+    private static final String OVERLAPPING_START_TIME = "14:30";
+    private static final String OVERLAPPING_END_TIME = "15:30";
+    private static final String OVERLAPPING_SUBJECT = "English";
+
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
@@ -121,6 +125,21 @@ public class ScheduleCommandTest {
         ScheduleCommand scheduleCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lessonToAdd);
 
         assertCommandFailure(scheduleCommand, model, ScheduleCommand.MESSAGE_DUPLICATE_LESSON);
+    }
+
+    @Test
+    public void execute_overlappingLesson_failure() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson existingLesson = new Lesson(VALID_START_TIME, VALID_END_TIME, VALID_DATE, VALID_SUBJECT);
+
+        Person personWithLesson = new PersonBuilder(firstPerson).withLesson(existingLesson).build();
+        model.setPerson(firstPerson, personWithLesson);
+
+        Lesson overlappingLesson =
+                new Lesson(OVERLAPPING_START_TIME, OVERLAPPING_END_TIME, VALID_DATE, OVERLAPPING_SUBJECT);
+        ScheduleCommand scheduleCommand = new ScheduleCommand(INDEX_FIRST_PERSON, overlappingLesson);
+
+        assertCommandFailure(scheduleCommand, model, ScheduleCommand.MESSAGE_OVERLAPPING_LESSON);
     }
 
     @Test

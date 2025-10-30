@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -36,13 +35,20 @@ public class EditCommandParser implements Parser<EditCommand> {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL,
                 PREFIX_ADDRESS, PREFIX_TAG, PREFIX_ATTRIBUTE);
 
-        Index index;
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), EditCommand.MESSAGE_USAGE);
 
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
+        boolean hasAnyField = argMultimap.getValue(PREFIX_NAME).isPresent()
+                || argMultimap.getValue(PREFIX_PHONE).isPresent()
+                || argMultimap.getValue(PREFIX_EMAIL).isPresent()
+                || argMultimap.getValue(PREFIX_ADDRESS).isPresent()
+                || !argMultimap.getAllValues(PREFIX_TAG).isEmpty()
+                || !argMultimap.getAllValues(PREFIX_ATTRIBUTE).isEmpty();
+
+        if (!hasAnyField) {
+            throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
+
+        Index index = ParserUtil.parseIndex(preamble);
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
 

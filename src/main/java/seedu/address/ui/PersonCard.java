@@ -106,7 +106,11 @@ public class PersonCard extends UiPart<Region> {
                 .sorted(Comparator.comparing(grade -> grade.getSubject() + "/" + grade.getAssessment()))
                 .forEach(grade -> {
                     String displayText = grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore();
-                    grades.getChildren().add(new Label(displayText));
+                    Label gradeLabel = new Label(displayText);
+                    gradeLabel.setWrapText(true);
+                    gradeLabel.setMinWidth(0);
+                    gradeLabel.setMaxWidth(Double.MAX_VALUE);
+                    grades.getChildren().add(gradeLabel);
                 });
         detailsPane.visibleProperty().bind(person.expandedProperty());
         detailsPane.managedProperty().bind(person.expandedProperty());

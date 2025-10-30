@@ -37,9 +37,13 @@ public class RemarkCommandTest {
     @Test
     public void execute_addRemarkUnfilteredList_success() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(firstPerson).withRemark(REMARK_STUB).build();
+        String existingRemark = firstPerson.getRemark().value;
+        String combinedRemark = existingRemark.trim().isEmpty()
+                ? REMARK_STUB
+                : existingRemark + ", " + REMARK_STUB;
+        Person editedPerson = new PersonBuilder(firstPerson).withRemark(combinedRemark).build();
 
-        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(editedPerson.getRemark().value));
+        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(REMARK_STUB));
 
         String expectedMessage = String.format(RemarkCommand.MESSAGE_ADD_REMARK_SUCCESS, format(editedPerson));
 
@@ -72,10 +76,13 @@ public class RemarkCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Person editedPerson = new PersonBuilder(model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()))
-                .withRemark(REMARK_STUB).build();
+        String existingRemark = firstPerson.getRemark().value;
+        String combinedRemark = existingRemark.trim().isEmpty()
+                ? REMARK_STUB
+                : existingRemark + ", " + REMARK_STUB;
+        Person editedPerson = new PersonBuilder(firstPerson).withRemark(combinedRemark).build();
 
-        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(editedPerson.getRemark().value));
+        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(REMARK_STUB));
 
         String expectedMessage = String.format(RemarkCommand.MESSAGE_ADD_REMARK_SUCCESS, format(editedPerson));
 
@@ -140,4 +147,3 @@ public class RemarkCommandTest {
                 new Remark(VALID_REMARK_BOB))));
     }
 }
-

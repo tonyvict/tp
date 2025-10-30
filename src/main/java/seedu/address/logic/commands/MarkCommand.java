@@ -25,7 +25,7 @@ public class MarkCommand extends Command {
             + ": Marks a lesson for a student as present.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "lesson/LESSON_INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1 l/3";
+            + "Example: " + COMMAND_WORD + " 1 lesson/3";
 
     public static final String MESSAGE_MARK_ATTENDANCE_SUCCESS = "Attendance marked: %1$s, Lesson: %2$s -> Present";
     public static final String MESSAGE_LESSON_ALREADY_MARKED = "This lesson is already marked as present.";

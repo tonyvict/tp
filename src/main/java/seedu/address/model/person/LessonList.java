@@ -40,6 +40,18 @@ public class LessonList {
     }
 
     /**
+     * Returns true if {@code lesson} overlaps in time with any lesson already inside the list.
+     */
+    public boolean hasOverlappingLesson(Lesson lesson) {
+        for (Lesson existing : list) {
+            if (existing.overlapsWith(lesson)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns a new LessonList with the lesson added in chronological order.
      * Does not modify the original LessonList.
      */

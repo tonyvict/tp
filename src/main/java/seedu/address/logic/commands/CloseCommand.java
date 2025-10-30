@@ -23,6 +23,7 @@ public class CloseCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_CLOSE_PERSON_SUCCESS = "Closed details for Person: %1$s";
+    public static final String MESSAGE_CARD_ALREADY_CLOSED = "Card is already closed.";
 
     private final Index targetIndex;
 
@@ -40,6 +41,10 @@ public class CloseCommand extends Command {
         }
 
         Person personToClose = lastShownList.get(targetIndex.getZeroBased());
+        if (!personToClose.isExpanded()) {
+            throw new CommandException(MESSAGE_CARD_ALREADY_CLOSED);
+        }
+
         personToClose.setExpanded(false);
 
         return new CommandResult(String.format(MESSAGE_CLOSE_PERSON_SUCCESS, personToClose.getName()));
