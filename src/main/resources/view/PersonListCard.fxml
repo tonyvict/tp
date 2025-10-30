@@ -25,13 +25,13 @@
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
-        <Label fx:id="name" text="\$first" styleClass="cell_big_label" />
+        <Label fx:id="name" text="\$first" styleClass="cell_big_label" wrapText="true"/>
       </HBox>
-      <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
-      <Label fx:id="address" styleClass="cell_small_label" text="\$address" />
-      <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
-      <Label text="Tags:" styleClass="cell_small_label_bold" />
-        <FlowPane fx:id="tags" hgap="5" vgap="3" />
+      <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" wrapText="true"/>
+      <Label fx:id="address" styleClass="cell_small_label" text="\$address" wrapText="true"/>
+      <Label fx:id="email" styleClass="cell_small_label" text="\$email" wrapText="true"/>
+      <Label text="Tags:" styleClass="cell_small_label_bold" wrapText="true"/>
+        <Label fx:id="tags" styleClass="cell_small_label" wrapText="true" />
       <!-- This VBox contains the details that will be shown/hidden -->
       <VBox fx:id="detailsPane" managed="false" visible="false" spacing="3">
         <padding>
@@ -41,11 +41,11 @@
         <Label fx:id="remark" styleClass="cell_small_label" text="\$remark" wrapText="true" />
         <Label text="Attributes:" styleClass="cell_small_label_bold" />
         <VBox fx:id="attributes" spacing="3" />
-        <Label text="Grades:" styleClass="cell_small_label_bold" />
-        <FlowPane fx:id="grades" hgap="5" vgap="3" />
-        <Label text="Lessons:" styleClass="cell_small_label_bold" />
+        <Label text="Grades:" styleClass="cell_small_label_bold" wrapText="true" />
+        <Label fx:id="grades" styleClass="cell_small_label" wrapText="true" />
+        <Label text="Lessons:" styleClass="cell_small_label_bold" wrapText="true"/>
         <Label fx:id="lessonList" styleClass="cell_small_label" text="\$lessonList" wrapText="true" />
-        <Label fx:id="attendance" styleClass="cell_small_label" text="\$attendance" />
+        <Label fx:id="attendance" styleClass="cell_small_label" text="\$attendance" wrapText="true"/>
       </VBox>
     </VBox>
   </GridPane>
