@@ -197,7 +197,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC-8: Quick search a student**
+### **UC-8: Search a student**
 
 **MSS:**
 
@@ -295,3 +295,17 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 ### **Index Values**
 - Must be positive integers (1, 2, 3, ...)
 - Must be within bounds of current displayed list
+
+---
+
+## **7. Architecture Overview**
+
+ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
+Each major layer has a distinct responsibility:
+- **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`, `QuickSearchBox`).
+- **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
+- **Model**: Manages in-memory data such as `Person`, `Lesson`, `Grade`, and `Tag`.
+- **Storage**: Reads and writes persistent data to local JSON files.
+- **Commons**: Contains shared utilities such as `Messages`, `LogsCenter`, and custom exceptions.
+
+This modular structure supports easy feature addition (e.g., new commands) with minimal changes to existing code.
