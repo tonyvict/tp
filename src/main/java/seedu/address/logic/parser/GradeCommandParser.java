@@ -26,23 +26,6 @@ public class GradeCommandParser implements Parser<GradeCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUB);
 
-        String preamble = argMultimap.getPreamble().trim();
-        if (preamble.isEmpty()
-                || preamble.contains(" ")
-                || preamble.startsWith(PREFIX_SUB.getPrefix())) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
-        }
-
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(preamble);
-        } catch (ParseException pe) {
-            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
-                throw pe;
-            }
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE), pe);
-        }
-
         Set<Grade> gradesToAdd = new HashSet<>();
 
         // Parse each subject/assessment/score triplet
@@ -87,6 +70,13 @@ public class GradeCommandParser implements Parser<GradeCommand> {
         if (gradesToAdd.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
         }
+
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), GradeCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_SUB.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+        }
+
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new GradeCommand(index, gradesToAdd);
     }

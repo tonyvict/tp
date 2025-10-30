@@ -17,16 +17,9 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public DeleteCommand parse(String args) throws ParseException {
-        try {
-            Index index = ParserUtil.parseIndex(args);
-            return new DeleteCommand(index);
-        } catch (ParseException pe) {
-            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
-                throw pe;
-            }
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE), pe);
-        }
+        String indexToken = ParserUtil.requireSingleIndex(args, DeleteCommand.MESSAGE_USAGE);
+        Index index = ParserUtil.parseIndex(indexToken);
+        return new DeleteCommand(index);
     }
 
 }

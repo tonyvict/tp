@@ -40,6 +40,7 @@ public class GradeCommandParserTest {
     @Test
     public void parse_invalidIndex_throwsParseException() {
         assertParseFailure(parser, "0 sub/MATH/WA1/89", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "a sub/MATH/WA1/89", MESSAGE_INVALID_INDEX);
     }
 
     @Test

@@ -4,6 +4,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_LESSON_INDEX;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_END_TIME_BEFORE_START;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_FORMAT;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_VALUE;
@@ -37,6 +38,12 @@ public class ScheduleCommandParserTest {
     }
 
     @Test
+    public void parse_missingIndex_failure() {
+        assertParseFailure(parser, VALID_ARGUMENTS,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
     public void parse_missingLessonPrefix_failure() {
         String userInput = INDEX_FIRST_PERSON.getOneBased() + " start/10:00 end/12:00 date/2025-10-20";
         assertParseFailure(parser, userInput,
@@ -47,6 +54,58 @@ public class ScheduleCommandParserTest {
     public void parse_invalidPersonIndex_failure() {
         String userInput = "a" + VALID_ARGUMENTS;
         assertParseFailure(parser, userInput, MESSAGE_INVALID_INDEX);
+    }
+
+    @Test
+    public void parse_negativePersonIndex_failure() {
+        String userInput = "-1" + VALID_ARGUMENTS;
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_INDEX);
+    }
+
+    @Test
+    public void parse_negativePersonIndexWithMissingFields_failure() {
+        String userInput = "-1 start/";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_emptySubject_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/11:00 end/12:00 date/2025-09-20 sub/";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_negativeIndexAndEmptySubject_failure() {
+        String userInput = "-1 start/11:00 end/12:00 date/2025-09-20 sub/";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_emptyStart_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/ end/12:00 date/2025-09-20 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_emptyEnd_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/11:00 end/ date/2025-09-20 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_emptyDate_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/11:00 end/12:00 date/ sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
     }
 
     @Test

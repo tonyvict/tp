@@ -57,6 +57,7 @@ public class DeleteAttributeCommandParserTest {
     @Test
     public void parse_invalidIndex_throwsParseException() {
         Assert.assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () -> parser.parse("0 attr/subject"));
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () -> parser.parse("a attr/subject"));
     }
 
     @Test

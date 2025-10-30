@@ -27,16 +27,6 @@ public class TagCommandParser implements Parser<TagCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_ATTRIBUTE);
 
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
-                throw pe;
-            }
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE), pe);
-        }
-
         Set<Attribute> attributesToAdd = new HashSet<>();
 
         // For each attr/ prefix segment (e.g. attr/subject=math,science)
@@ -70,6 +60,12 @@ public class TagCommandParser implements Parser<TagCommand> {
         if (attributesToAdd.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
         }
+
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), TagCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_ATTRIBUTE.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
+        }
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new TagCommand(index, attributesToAdd);
     }

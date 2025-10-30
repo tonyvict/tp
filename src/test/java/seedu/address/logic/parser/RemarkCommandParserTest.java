@@ -25,7 +25,7 @@ public class RemarkCommandParserTest {
         RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(nonEmptyRemark));
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // no remark
+        // empty remark allowed
         userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK;
         expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(""));
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -51,5 +51,6 @@ public class RemarkCommandParserTest {
     @Test
     public void parse_invalidIndex_failure() {
         assertParseFailure(parser, "0 " + PREFIX_REMARK + nonEmptyRemark, MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "a " + PREFIX_REMARK + nonEmptyRemark, MESSAGE_INVALID_INDEX);
     }
 }

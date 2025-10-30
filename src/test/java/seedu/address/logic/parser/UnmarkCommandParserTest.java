@@ -32,9 +32,18 @@ public class UnmarkCommandParserTest {
         // no lesson prefix
         assertParseFailure(parser, "1 1",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnmarkCommand.MESSAGE_USAGE));
+        // no lesson index
+        assertParseFailure(parser, "1 " + PREFIX_LESSON,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnmarkCommand.MESSAGE_USAGE));
+        // invalid free-form arg
+        assertParseFailure(parser, "a",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnmarkCommand.MESSAGE_USAGE));
         // invalid person index
         assertParseFailure(parser, "0 " + PREFIX_LESSON + "1", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "-1 " + PREFIX_LESSON + "1", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "a " + PREFIX_LESSON + "1", MESSAGE_INVALID_INDEX);
         // invalid lesson index
         assertParseFailure(parser, "1 " + PREFIX_LESSON + "0", MESSAGE_INVALID_LESSON_INDEX);
+        assertParseFailure(parser, "1 " + PREFIX_LESSON + "a", MESSAGE_INVALID_LESSON_INDEX);
     }
 }

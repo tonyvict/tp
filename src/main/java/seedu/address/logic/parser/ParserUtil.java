@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +39,21 @@ public class ParserUtil {
         }
         return Index.fromOneBased(Integer.parseInt(trimmedIndex));
     }
+
+    /**
+     * Validates that the provided {@code rawValue} is a single, non-empty token suitable to be parsed as an index.
+     * Leading and trailing whitespaces are trimmed before validation.
+     *
+     * @throws ParseException if the value is empty or contains whitespace.
+     */
+    public static String requireSingleIndex(String rawValue, String usageMessage) throws ParseException {
+        String trimmedValue = rawValue == null ? "" : rawValue.trim();
+        if (trimmedValue.isEmpty() || trimmedValue.contains(" ")) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, usageMessage));
+        }
+        return trimmedValue;
+    }
+
 
     /**
      * Parses a {@code String name} into a {@code Name}.

@@ -28,17 +28,11 @@ public class MarkCommandParser implements Parser<MarkCommand> {
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_LESSON);
 
-        Index personIndex;
-        try {
-            personIndex = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
-                throw pe;
-            }
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MarkCommand.MESSAGE_USAGE), pe);
-        }
+        String personToken = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), MarkCommand.MESSAGE_USAGE);
+        Index personIndex = ParserUtil.parseIndex(personToken);
 
-        String lessonIndexString = argMultimap.getValue(PREFIX_LESSON).get();
+        String lessonIndexString = ParserUtil.requireSingleIndex(argMultimap.getValue(PREFIX_LESSON).get(),
+                MarkCommand.MESSAGE_USAGE);
         Index lessonIndex;
         try {
             lessonIndex = ParserUtil.parseIndex(lessonIndexString);
