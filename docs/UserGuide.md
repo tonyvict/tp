@@ -221,7 +221,7 @@ Edits the name of the 2nd student to be Betsy Crower and clears all existing tag
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip: 
 You can remove all of a student's tags by using t/ without specifying any tags after it.
-</div>.
+</div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
 Assuming the index is based on the original list. Remember, it is based on the current list (e.g., after a list or filter command).
@@ -251,7 +251,7 @@ _Deletes the 1st student in the results of the filter command._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip: 
 Double-check the index before deleting, as this action cannot be undone.
-</div>.
+</div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
 Using an index that doesn't exist in the current view.
@@ -282,7 +282,7 @@ _Adds attributes `subject` and `age=16` to the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip: 
 Use this command when you want to add additional classifications to a student without affecting their existing tags.
-</div>.
+</div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
 Using the same tag multiple times - duplicate tags will be ignored.
@@ -314,55 +314,89 @@ _Deletes the attribute subject from the 1st student._
   
 _Deletes multiple attributes (age, subject) from the 3rd student._
 
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Misspelling the tag name - the removal is case-sensitive.
+</div>
+
 ![Result of deleting attributes](images/deltagUI.png)
 <p align="center"><em>Bernice's tags has been removed.</em></p>
 
 
 ### Filtering students by attributes : `filter`
 
-Filters and displays students whose attributes match the specified criteria, helping you quickly find students with specific characteristics.
+Filters and displays students whose tags contains any of the specified attributes.
 
 Format: `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
 
-* Filters students based on their tagged attributes.
-* The search is case-insensitive for both attribute keys and values.
-* All specified attribute filters must match for a student to be included (AND logic).
-* Multiple values for the same attribute are separated by commas (OR logic within the same attribute).
+* The filter is case-insensitive for both attribute keys and values.
+* The order of the keywords does not matter. e.g. `Math Grade10` will return the same students as `Grade10 Math`.
+* All specified attribute filters must match for a student to be included 
+(i.e. A student that does not have ALL of the specified attributes will not be displayed).
+* Multiple values for the same attribute are separated by commas.
 * At least one `attr/` prefix must be provided.
 * For age attributes, values must be valid integers.
 
 Examples:
-* `filter attr/subject=math` - Shows students tagged with "math" as their subject
-* `filter attr/subject=math,science attr/age=16` - Shows students who have either "math" or "science" as subject AND are age 16
-* `filter attr/age=15,16,17` - Shows students who are 15, 16, or 17 years old
+* `filter attr/subject=math` 
+
+_Shows students tagged with "math" as their subject_
+
+* `filter attr/subject=math,science attr/age=16` 
+
+_Shows students who have either "math" or "science" as subject AND are age 16_
+
+* `filter attr/age=15,16,17` 
+
+_Shows students who are 15, 16, or 17 years old_
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this to quickly find all students in a particular subject or with a specific status flag.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Searching for partial words - the filter only matches complete tag words.
+</div>
 
 ![Result of filtering students](images/filterUI.png)
-<p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
+<p align="center"><em>Students with the attribute `Math` are displayed.</em></p>
 
 ### Scheduling a lesson : `schedule`
 
-Adds an upcoming lesson for a student so you can track classes and avoid clashes.
+Schedule a lesson foe a student with date, time and duration.
 
 Format:
 `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`
 
-* Schedules a lesson for the student at the specified `INDEX` (positive integer from the current list).
+* Schedules a lesson for the student at the specified `INDEX`.
+* The index **must be a positive integer** 1, 2, 3, …
 * Times use 24-hour `HH:mm` (e.g., `09:30`, `14:00`) and dates use `YYYY-MM-DD` (e.g., `2025-09-20`).
-* `END_TIME` must be strictly after `START_TIME`.
-* Parameters can be in any order.
+* `END_TIME` must be strictly later than `START_TIME`.
 * Overlapping lessons for the same student on the same date are rejected.
 * Exact duplicates (same student, date, start, end, subject) are not added.
 
 Examples:
 * `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths`
-    schedules specified lesson for the 2nd person in the current list
+    
+_Schedules specified lesson for the 2nd person in the current list_
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use consistent date and time formats to avoid confusion.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using 12-hour time format instead of 24-hour format or incorrect date format (must be YYYY-MM-DD).
+</div>
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
-<p align="center"><em>Figure: Result of scheduling lesson for the student at index 2.</em></p>
+<p align="center"><em>Math lesson successfully scheduled for Bernice.</em></p>
 
 ### Unscheduling a lesson : `unschedule`
 
-Removes a scheduled lesson from a student's timetable.
+Removes a scheduled lesson from a student.
 
 Format:
 `unschedule INDEX lesson/LESSON_INDEX`
@@ -375,10 +409,19 @@ Format:
 
 Examples:
 * `unschedule 1 lesson/1`
-  removes the 1st lesson from the 1st person in the current list
+
+_Removes the 1st lesson from the 1st person in the current list._
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this when a lesson is cancelled or completed and you want to clear the schedule for that student.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using this command on a student who doesn't have any scheduled lessons - the command will have no effect.
+</div>
 
 ![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
-<p align="center"><em>Figure: Result of unscheduling the 1st lesson from the student at index 1.</em></p>
+<p align="center"><em>Alex's Science lesson successfully removed</em></p>
 
 ### Marking attendance : `mark`
 
