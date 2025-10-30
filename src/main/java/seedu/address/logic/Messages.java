@@ -28,8 +28,14 @@ public class Messages {
 
         Set<String> duplicateFields =
                 Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
-
-        return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
+        boolean hasPhonePrefix = duplicateFields.contains("p/");
+        StringBuilder sb = new StringBuilder();
+        sb.append(MESSAGE_DUPLICATE_FIELDS).append(String.join(" ", duplicateFields));
+        if (hasPhonePrefix) {
+            sb.append("\nNote: If you meant 'parent of', please spell it out as 'parent of' "
+                    + "rather than using 'p/o', to avoid confusion with the phone number field.");
+        }
+        return sb.toString();
     }
 
     /**
@@ -48,5 +54,4 @@ public class Messages {
         person.getTags().forEach(builder::append);
         return builder.toString();
     }
-
 }
