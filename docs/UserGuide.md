@@ -111,6 +111,9 @@ Adds a new student to your ClassRosterPro.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
+* The student's NAME, PHONE_NUMBER, EMAIL and ADDRESS must be provided. 
+* Tags [t/TAG] are optional. You can use them to group students by subject, level, or status.
+
 Examples:
 * `add n/Betsy Crowe p/91234567 e/betsyc@example.com a/123 Bishan Street t/Physics t/ALevels t/NeedsHomeworkCheck`
 
@@ -120,64 +123,111 @@ _Adds a student named "Betsy Crowe" for A-Level Physics and flags her as needing
 _Adds a student named "John Doe" with only the compulsory fields. Useful for a quick add after a trial lesson._
 
 
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
 A student can have none or multiple tags.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: **Common Mistakes:**
+<div markdown="span" class="alert alert-primary">:warning: Common Mistakes: 
+
 * Forgetting to include one of the compulsory prefixes (n/, p/, e/, a/).
+
 * Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
 </div>
 
 ![Result of adding a student](images/addUI.png)
-<p align="center"><em>Figure: Result of adding a new student.</em></p>
+<p align="center"><em>Success message displayed and new student added.</em></p>
 
-### Opening the contact card: `open`
-Allows you to toggle to view more details of the contact
-
-Format: `open INDEX`
-
-Examples:
-*`open 1`*
-
-![Result of toggling open a contact](images/openUI.png)
-<p align="center"><em>Figure: Result of toggling open a contact.</em></p>
-
-### Closing the contact card : `close`
-Allows you to untoggle to view lesser details of the contact
-
-Format: `close INDEX`
-
-Examples:
-*`close 1`*
-
-![Result of toggling close a contact](images/closeUI.png)
-<p align="center"><em>Figure: Result of toggling close a contact.</em></p>
 ### Listing all persons : `list`
 
 Shows a list of all students in your roster.
 
 Format: `list`
 
-![Result of list command](images/listUI.png)
-<p align="center"><em>Figure: Result of list command.</em></p>
+![Result of list command](images/listUI.png) 
+<p align="center"><em>All students are displayed</em></p>
+
+### Viewing full student details: `open`
+Expands a student's card to view all their details, including additional attributes and scheduled lessons.
+
+Format: `open INDEX`
+
+* Expands the student card at the specified INDEX. 
+* The index refers to the position number shown in the currently displayed student list. 
+* The index must be a positive integer 1, 2, 3, …​
+
+Examples:
+* `open 1`
+
+_Opens the card of the 1st student in the current list. If you have just filtered the list, 
+this will be the first student in the filtered results._
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this command to quickly check a student's lesson schedule or the notes you've added to their profile before a session.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using an index that is out of range (e.g., open 0 or open 10 when there are only 5 students displayed).
+</div>
+
+![Result of toggling open a contact](images/openUI.png)
+<p align="center"><em>Alex's contact card expanded.</em></p>
+
+### Collapsing a student card : `close`
+Collapses an expanded student card back to the compact view.
+
+Format: `close INDEX`
+
+* Collapses the student card at the specified INDEX. 
+* The index refers to the position number shown in the currently displayed student list. 
+* The index must be a positive integer 1, 2, 3, …​
+
+Examples:
+* `close 1`
+
+_Collapses the card of the 1st student in the current list._
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Collapsing cards you aren't currently viewing helps declutter the interface and makes it easier to scroll through your student list.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Trying to close a card that is already collapsed. The command will have no visible effect.
+</div>
+
+![Result of toggling close a contact](images/closeUI.png)
+<p align="center"><em>Alex's contact card collapsed.</em></p>
+
 
 ### Editing a person : `edit`
 
-Edits an existing student in your roster.
+Edits the details of an existing student in your list.
 
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
+* Edits the student at the specified `INDEX`. 
+* The index refers to the index number shown in the displayed contact list. 
+* The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
+* When editing tags, the existing tags of the student will be removed i.e adding of tags is not cumulative.
+* You can remove all the person’s tags by typing `t/` without specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `edit 1 p/91234567 e/johndoe@example.com`
+
+_Edits the phone number and email address of the 1st student to be 91234567 and johndoe@example.com respectively. 
+The student's name, address, and tags remain unchanged._
+
+* `edit 2 n/Betsy Crower t/`
+Edits the name of the 2nd student to be Betsy Crower and clears all existing tags.
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+You can remove all of a student's tags by using t/ without specifying any tags after it.
+</div>.
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Assuming the index is based on the original list. Remember, it is based on the current list (e.g., after a list or filter command).
+</div>
 
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Figure: Result of editing a student.</em></p>
