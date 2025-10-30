@@ -5,7 +5,7 @@ title: ClassRosterPro
 
 [![Java CI](https://github.com/AY2526S1-CS2103T-W13-4/tp/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/AY2526S1-CS2103T-W13-4/tp/actions/workflows/gradle.yml)
 
-![Ui](images/Ui.png)
+![Ui](images/UI.png)
 
 # ClassRosterPro
 
