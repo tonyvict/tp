@@ -1,6 +1,10 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUB;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
@@ -15,6 +19,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.model.person.Lesson;
 
@@ -154,5 +159,37 @@ public class ScheduleCommandParserTest {
         String userInput = INDEX_FIRST_PERSON.getOneBased()
                 + " start/10:00 end/12:00 date/2025-11-31 sub/Mathematics";
         assertParseFailure(parser, userInput, MESSAGE_INVALID_DATE_VALUE);
+    }
+
+    @Test
+    public void parse_duplicateStartPrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 start/11:00 end/12:00 date/2025-10-20 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_START));
+    }
+
+    @Test
+    public void parse_duplicateEndPrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 end/13:00 date/2025-10-20 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_END));
+    }
+
+    @Test
+    public void parse_duplicateDatePrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-20 date/2025-10-21 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
+    }
+
+    @Test
+    public void parse_duplicateSubjectPrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-20 sub/Mathematics sub/Physics";
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_SUB));
     }
 }
