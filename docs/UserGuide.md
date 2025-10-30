@@ -27,7 +27,7 @@ Use Cases:
 * Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
 all in one expanded view.
 
-Table of Contents
+* Table of Contents
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
@@ -491,7 +491,7 @@ Examples:
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
-![quick search](images/quicksearch.png)
+![quick search](images/searchUI.png)
 <p align="center"><em>Figure: Result of searching a student's name.</em></p>
 
 
