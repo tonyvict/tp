@@ -31,6 +31,30 @@ public class RemarkCommandParserTest {
     }
 
     @Test
+    public void parse_multipleRemarkPrefixes_concatenatesRemarks() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " "
+                + PREFIX_REMARK + "First" + " "
+                + PREFIX_REMARK + "Second" + " "
+                + PREFIX_REMARK + " Third ";
+
+        RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark("First, Second, Third"));
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_multipleRemarkPrefixes_withEmptySegments_ignoresEmpty() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " "
+                + PREFIX_REMARK + "" + " "
+                + PREFIX_REMARK + "  " + " "
+                + PREFIX_REMARK + "Valid";
+
+        RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark("Valid"));
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
     public void parse_missingCompulsoryField_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE);
 
