@@ -41,8 +41,8 @@
         <Label fx:id="remark" styleClass="cell_small_label" text="\$remark" wrapText="true" />
         <Label text="Attributes:" styleClass="cell_small_label_bold" />
         <VBox fx:id="attributes" spacing="3" />
-        <Label text="Grades:" styleClass="cell_small_label_bold" />
-        <FlowPane fx:id="grades" hgap="5" vgap="3" />
+        <Label text="Grades:" styleClass="cell_small_label_bold" wrapText="true" />
+        <Label fx:id="grades" styleClass="cell_small_label" wrapText="true" />
         <Label text="Lessons:" styleClass="cell_small_label_bold" wrapText="true"/>
         <Label fx:id="lessonList" styleClass="cell_small_label" text="\$lessonList" wrapText="true" />
         <Label fx:id="attendance" styleClass="cell_small_label" text="\$attendance" wrapText="true"/>
