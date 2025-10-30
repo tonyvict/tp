@@ -4,6 +4,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class RemarkCommandParserTest {
         RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(nonEmptyRemark));
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // no remark
+        // empty remark allowed
         userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK;
         expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(""));
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -59,9 +60,21 @@ public class RemarkCommandParserTest {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE);
 
         // no parameters
-        assertParseFailure(parser, RemarkCommand.COMMAND_WORD, expectedMessage);
+        assertParseFailure(parser, "", expectedMessage);
 
-        // no index
-        assertParseFailure(parser, RemarkCommand.COMMAND_WORD + " " + nonEmptyRemark, expectedMessage);
+        // no index (just remark prefix)
+        assertParseFailure(parser, PREFIX_REMARK + nonEmptyRemark, expectedMessage);
+
+        // index provided but missing prefix
+        assertParseFailure(parser, "1", expectedMessage);
+
+        // whitespace separated preamble
+        assertParseFailure(parser, "1 1 " + PREFIX_REMARK + nonEmptyRemark, expectedMessage);
+    }
+
+    @Test
+    public void parse_invalidIndex_failure() {
+        assertParseFailure(parser, "0 " + PREFIX_REMARK + nonEmptyRemark, MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "a " + PREFIX_REMARK + nonEmptyRemark, MESSAGE_INVALID_INDEX);
     }
 }

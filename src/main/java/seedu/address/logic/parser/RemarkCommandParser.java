@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Remark;
@@ -26,13 +25,18 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_REMARK);
 
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE), ive);
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(),
+                RemarkCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_REMARK.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE));
         }
 
+        // Check if PREFIX_REMARK is present
+        if (argMultimap.getValue(PREFIX_REMARK).isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE));
+        }
+
+        // Get all remark values and join them with commas
         List<String> remarkSegments = argMultimap.getAllValues(PREFIX_REMARK);
         List<String> cleanedSegments = remarkSegments.stream()
                 .map(String::trim)
@@ -40,6 +44,8 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
                 .collect(Collectors.toList());
 
         String remark = cleanedSegments.isEmpty() ? "" : String.join(", ", cleanedSegments);
+
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new RemarkCommand(index, new Remark(remark));
     }

@@ -15,7 +15,6 @@ import java.time.format.ResolverStyle;
 import java.util.regex.Pattern;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.ScheduleCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Lesson;
@@ -59,13 +58,7 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args,
                 PREFIX_START, PREFIX_END, PREFIX_DATE, PREFIX_SUB);
 
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    ScheduleCommand.MESSAGE_USAGE), ive);
-        }
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), ScheduleCommand.MESSAGE_USAGE);
 
         // Check for missing arguments
         if (!argMultimap.getValue(PREFIX_START).isPresent()
@@ -80,6 +73,12 @@ public class ScheduleCommandParser implements Parser<ScheduleCommand> {
         String end = argMultimap.getValue(PREFIX_END).get().trim();
         String date = argMultimap.getValue(PREFIX_DATE).get().trim();
         String sub = argMultimap.getValue(PREFIX_SUB).get().trim();
+        if (start.isEmpty() || end.isEmpty() || date.isEmpty() || sub.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    ScheduleCommand.MESSAGE_USAGE));
+        }
+
+        Index index = ParserUtil.parseIndex(preamble);
 
         // Validate start time format first, then value
         if (!TIME_PATTERN.matcher(start).matches()) {
