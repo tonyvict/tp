@@ -491,7 +491,7 @@ Examples:
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
-![quick search](images/quicksearch.png)
+![quick search](images/searchUI.png)
 <p align="center"><em>Figure: Result of searching a student's name.</em></p>
 
 
