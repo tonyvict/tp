@@ -43,7 +43,7 @@ public class RemarkCommandParserTest {
     }
 
     @Test
-    public void parse_multipleRemarkPrefixes_withEmptySegments_ignoresEmpty() {
+    public void parse_multipleRemarkPrefixes_ignoresEmpty() {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = targetIndex.getOneBased() + " "
                 + PREFIX_REMARK + "" + " "
