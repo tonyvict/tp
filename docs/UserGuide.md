@@ -37,19 +37,19 @@ Table of Contents
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `ClassRosterPro.jar` file from [here](https://github.com/AY2526S1-CS2103T-W13-4/tp/releases).
+2. Download the latest `ClassRosterPro.jar` file from [here](https://github.com/AY2526S1-CS2103T-W13-4/tp/releases).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your ClassRosterPro.
+3. Copy the file to the folder you want to use as the _home folder_ for your ClassRosterPro.
 
-1. In the home folder, right click and select `Open in Terminal`
+4. In the home folder, right click and select `Open in Terminal`
 
-3. Use the `java -jar classrosterpro.jar` command to run the application.<br>
+5. Use the `java -jar classrosterpro.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/Ui.png)
+   ![Ui](images/UI.png)
 
-1. Type the command in the command box and press Enter to execute it. 
+6. Type the command in the command box and press Enter to execute it. 
 For example, typing **`help`** and pressing Enter will open the help window.<br>
-2. Try adding your first student using the command: 
+7. Try adding your first student using the command: 
    
    `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Math t/Grade10`
 
@@ -128,10 +128,7 @@ A student can have none or multiple tags.
 </div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistakes: 
-
-* Forgetting to include one of the compulsory prefixes (n/, p/, e/, a/).
-
-* Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
+Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
 </div>
 
 ![Result of adding a student](images/addUI.png)
@@ -169,7 +166,8 @@ Use this command to quickly check a student's lesson schedule or the notes you'v
 Using an index that is out of range (e.g., open 0 or open 10 when there are only 5 students displayed).
 </div>
 
-![Result of toggling open a contact](images/openUI.png)
+
+![Result of toggling open a contact](images/OpenUI.png)
 <p align="center"><em>Alex's contact card expanded.</em></p>
 
 ### Collapsing a student card : `close`
@@ -232,27 +230,6 @@ Assuming the index is based on the original list. Remember, it is based on the c
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Figure: Result of editing a student.</em></p>
 
-### Locating persons by name: `find`
-
-Finds persons whose names contain any of the given keywords.
-
-Format: `find KEYWORD [MORE_KEYWORDS]`
-
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
-
-Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-
-![result for 'find alex david'](images/findAlexDavidResult.png)
-<p align="center"><em>Figure: Result of find alex david command.</em></p>
-
-
 ### Deleting a person : `delete`
 
 Deletes the specified student from your roster.
@@ -264,11 +241,103 @@ Format: `delete INDEX`
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd student in the roster.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `list` followed by `delete 2` 
+
+_Deletes the 2nd student in the roster._
+
+* `filter Math` followed by `delete 1`
+
+_Deletes the 1st student in the results of the filter command._
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Double-check the index before deleting, as this action cannot be undone.
+</div>.
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using an index that doesn't exist in the current view.
+</div>
 
 ![Result of deleting a student](images/deleteUI.png)
-<p align="center"><em>Figure: Result of deleting a student.</em></p>
+<p align="center"><em>John Doe has been removed from the roster.</em></p>
+
+### Tagging a student with attributes : `tag`
+
+Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.
+
+Format:
+`tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
+
+* Adds or updates the attributes of a student at the specified `INDEX`.
+* The index refers to the index number shown in the current list.
+* The index **must be a positive integer** 1, 2, 3, …​
+* If the same attribute key already exists (e.g., `subject`), it will be replaced by the new values.
+* Attributes can have one or multiple comma-separated values.
+* If you use the same key multiple times, only the **last occurrence** is applied.
+* At least one `attr/` prefix must be provided.
+
+Examples:
+* `tag 2 attr/subject=math,science attr/age=16`
+  
+_Adds attributes `subject` and `age=16` to the 2nd student._
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+Use this command when you want to add additional classifications to a student without affecting their existing tags.
+</div>.
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+Using the same tag multiple times - duplicate tags will be ignored.
+</div>
+
+![Result of tagging a student](images/tagUI.png)
+<p align="center"><em>Bernice is tagged with 2 attributes.</em></p>
+
+### Removing tags from a student : `deltag`
+
+Removes one or more specific tags from an existing student.
+
+Format:
+`deltag INDEX attr/KEY [attr/KEY2]…​`
+
+* Deletes the specified attribute(s) from the student at the specified INDEX.
+* The index refers to the index number shown in the displayed student list.
+* The index **must be a positive integer** 1, 2, 3, …
+* At least one `attr/` prefix must be provided.
+* Multiple attributes can be deleted at once by adding `attr/<attribute>`.
+* Only the specified attributes are deleted — other attributes remain unchanged.
+
+Examples:
+* `deltag 1 attr/subject`
+  
+_Deletes the attribute subject from the 1st student._
+
+* `deltag 2 attr/age attr/subject`
+  
+_Deletes multiple attributes (age, subject) from the 3rd student._
+
+![Result of deleting attributes](images/deltagUI.png)
+<p align="center"><em>Bernice's tags has been removed.</em></p>
+
+
+### Filtering students by attributes : `filter`
+
+Filters and displays students whose attributes match the specified criteria, helping you quickly find students with specific characteristics.
+
+Format: `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
+
+* Filters students based on their tagged attributes.
+* The search is case-insensitive for both attribute keys and values.
+* All specified attribute filters must match for a student to be included (AND logic).
+* Multiple values for the same attribute are separated by commas (OR logic within the same attribute).
+* At least one `attr/` prefix must be provided.
+* For age attributes, values must be valid integers.
+
+Examples:
+* `filter attr/subject=math` - Shows students tagged with "math" as their subject
+* `filter attr/subject=math,science attr/age=16` - Shows students who have either "math" or "science" as subject AND are age 16
+* `filter attr/age=15,16,17` - Shows students who are 15, 16, or 17 years old
+
+![Result of filtering students](images/filterUI.png)
+<p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
 
 ### Scheduling a lesson : `schedule`
 
@@ -346,76 +415,6 @@ Examples:
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
 <p align="center"><em>Figure: Result of unmarking attendance for the student at index 1.</em></p>
 
-### Tagging a student with attributes : `tag`
-
-Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.
-This helps you categorize and filter students more efficiently.
-
-Format:
-`tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
-
-* Adds or updates the given attributes for the student at the specified `INDEX`.
-* The index refers to the index number shown in the displayed student list.
-* The index **must be a positive integer** 1, 2, 3, …​
-* If the same attribute key already exists (e.g., `subject`), it will be **overridden** with the new values.
-* Attributes can have one or multiple comma-separated values.
-* If you use the same key multiple times, only the **last occurrence** is applied.
-* At least one `attr/` prefix must be provided.
-
-Examples:
-* `tag 2 attr/subject=math,science attr/age=16`
-  Adds a multi-valued attribute for `subject` and `age=16` to the 2nd student.
-
-![Result of tagging a student](images/tagUI.png)
-<p align="center"><em>Figure: Result of tagging student at index 2 with attributes.</em></p>
-
-### Deleting attributes from a student : `deltag`
-
-Removes one or more existing attributes from a specific student.
-Use this when a previously tagged attribute(s) is no longer relevant.
-
-Format:
-`deltag INDEX attr/KEY [attr/KEY2]…​`
-
-* Deletes the specified attribute(s) from the student at the specified INDEX.
-* The index refers to the index number shown in the displayed student list.
-* The index **must be a positive integer** 1, 2, 3, …
-* At least one `attr/` prefix must be provided.
-* Multiple attributes can be deleted at once by adding `attr/<attribute>`.
-* Only the specified attributes are deleted — other attributes remain unchanged.
-
-Examples:
-* `deltag 1 attr/subject`
-Deletes the attribute subject from the 1st student.
-
-* `deltag 2 attr/age attr/subject`
-Deletes multiple attributes (age, subject) from the 3rd student.
-
-![Result of deleting attributes](images/deltagUI.png)
-<p align="center"><em>Figure: Result of deleting attributes from the student at index 2.</em></p>
-
-
-
-### Filtering students by attributes : `filter`
-
-Filters and displays students whose attributes match the specified criteria, helping you quickly find students with specific characteristics.
-
-Format: `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
-
-* Filters students based on their tagged attributes.
-* The search is case-insensitive for both attribute keys and values.
-* All specified attribute filters must match for a student to be included (AND logic).
-* Multiple values for the same attribute are separated by commas (OR logic within the same attribute).
-* At least one `attr/` prefix must be provided.
-* For age attributes, values must be valid integers.
-
-Examples:
-* `filter attr/subject=math` - Shows students tagged with "math" as their subject
-* `filter attr/subject=math,science attr/age=16` - Shows students who have either "math" or "science" as subject AND are age 16
-* `filter attr/age=15,16,17` - Shows students who are 15, 16, or 17 years old
-
-![Result of filtering students](images/filterUI.png)
-<p align="center"><em>Figure: Result of filtering students by subject and age.</em></p>
 
 ### Quick Search : `search`
 
