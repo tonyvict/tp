@@ -26,7 +26,7 @@ public class HelpCommand extends Command {
             " - add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...",
             " - edit <INDEX> [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...",
             " - delete <INDEX>",
-            " - find <KEYWORD> [MORE_KEYWORDS]",
+            " - search <KEYWORD> [MORE_KEYWORDS]",
             "",
             "ATTRIBUTE COMMANDS:",
             " - tag <INDEX> attr/<KEY>=<VALUE>[,<VALUE2>]... [attr/<KEY2>=<VALUE2>]...",
