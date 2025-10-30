@@ -2,7 +2,7 @@ package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.testutil.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,8 @@ public class NameTest {
     @Test
     public void constructor_invalidName_throwsIllegalArgumentException() {
         String invalidName = "John s/o Test Doe";
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new Name(invalidName));
+        IllegalArgumentException exception =
+            assertThrows(IllegalArgumentException.class, () -> new Name(invalidName));
         assertTrue(exception.getMessage().contains("spell it out as 'son of'"));
     }
 
