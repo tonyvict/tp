@@ -159,6 +159,52 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Add Student Command
+
+Overview
+
+The `add` command adds a new student with fields `Name`, `Phone`, `Email`, `Address`, and optional `Tag`s. The flow follows the standard style used in this project: a parser constructs a concrete `Command`, which is then executed against the `Model` by `LogicManager`.
+
+Feature details
+
+1. The user executes the `add` command, e.g. `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/primary t/focused`.
+2. `LogicManager` delegates to `AddressBookParser`, which instantiates `AddCommandParser` to parse the arguments.
+3. `AddCommandParser` tokenizes by prefixes, verifies required prefixes (`n/`, `p/`, `e/`, `a/`), rejects duplicate prefixes, and parses values via `ParserUtil`.
+4. A `Person` is created with an empty `Remark`, empty `LessonList`, empty `GradeList`, and any provided `Tag`s, and wrapped in a new `AddCommand`.
+5. `AddCommand#execute(Model)` checks `Model#hasPerson` to prevent duplicates. If present, it throws `AddCommand.MESSAGE_DUPLICATE_PERSON`.
+6. Otherwise, `Model#addPerson` is called and a success message is returned.
+
+Parsing and execution (files of interest)
+
+- `src/main/java/seedu/address/logic/parser/AddCommandParser.java`
+- `src/main/java/seedu/address/logic/commands/AddCommand.java`
+- `src/main/java/seedu/address/logic/parser/AddressBookParser.java`
+
+Sequence of the add command
+
+1. User inputs `add ...`.
+2. `AddressBookParser#parseCommand` matches `add` and creates `AddCommandParser`.
+3. `AddCommandParser#parse`:
+   - tokenizes arguments with `n/`, `p/`, `e/`, `a/`, `t/`
+   - ensures all required prefixes exist and preamble is empty
+   - validates duplicate prefixes, parses domain objects via `ParserUtil`
+   - creates `Person` and returns `new AddCommand(person)`
+4. `AddCommand#execute`:
+   - if `model.hasPerson(toAdd)` → error "This person already exists in the address book"
+   - else `model.addPerson(toAdd)` → success `CommandResult`
+
+Diagrams
+
+- Parser flow (PlantUML): `docs/diagrams/AddCommandParserSequence.puml`
+- Execution flow (PlantUML): `docs/diagrams/AddCommandExecuteSequence.puml`
+- Parser relationships overview: `docs/images/ParserClasses.png`
+
+Constraints and validation
+
+- Required prefixes: `n/`, `p/`, `e/`, `a/` must be present exactly once.
+- `ParserUtil` and domain types perform format checks for name, phone, email, and address.
+- `Tag`s are optional; duplicates are naturally de-duplicated by set semantics.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
