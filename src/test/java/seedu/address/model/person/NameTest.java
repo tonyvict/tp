@@ -15,8 +15,9 @@ public class NameTest {
 
     @Test
     public void constructor_invalidName_throwsIllegalArgumentException() {
-        String invalidName = "";
-        assertThrows(IllegalArgumentException.class, () -> new Name(invalidName));
+        String invalidName = "John s/o Test Doe";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new Name(invalidName));
+        assertTrue(exception.getMessage().contains("spell it out as 'son of'"));
     }
 
     @Test
@@ -29,6 +30,8 @@ public class NameTest {
         assertFalse(Name.isValidName(" ")); // spaces only
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
+        assertFalse(Name.isValidName("John s/o Test Doe")); // slash not allowed
+        assertFalse(Name.isValidName("Alex Yeoh s/o Foo Yeoh")); // slash not allowed
 
         // valid name
         assertTrue(Name.isValidName("peter jack")); // alphabets only

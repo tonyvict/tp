@@ -2,29 +2,29 @@
 layout: page
 title: User Guide
 ---
-# ClassRosterPro User Guide 
+# ClassRosterPro User Guide
 ## About This Guide
-Welcome to the ClassRosterPro User Guide! 
+Welcome to the ClassRosterPro User Guide!
 This guide is designed to help you, a private tutor, efficiently manage all your student information in one place.
-* If you are a new user, we highly recommend starting with the "Quick Start" 
+* If you are a new user, we highly recommend starting with the "Quick Start"
 section to get set up and run your first command in just 5 minutes
 * If you are an experienced user, jump directly to the "Features" section for a complete list of commands.
 * Look out for Tips and Common Mistakes icons to help you use ClassRosterPro more effectively.
 
 ## Introduction
-Juggling student contacts, lesson schedules, and notes across different notebooks and apps? 
-**ClassRosterPro** is a powerful desktop application built for private tutors 
+Juggling student contacts, lesson schedules, and notes across different notebooks and apps?
+**ClassRosterPro** is a powerful desktop application built for private tutors
 to **centralize and manage all their student details.**
 
-While it has a clean Graphical User Interface (GUI), it is optimized for use via a Command Line Interface (CLI). 
-If you can type fast, you can manage your student **roster—finding, 
+While it has a clean Graphical User Interface (GUI), it is optimized for use via a Command Line Interface (CLI).
+If you can type fast, you can manage your student **roster—finding,
 updating, and organizing** much faster than with a mouse.
 
 Use Cases:
 * Quickly add a new student after a trial lesson with their contact details and subject tag.
 * Use tags to mark students so you can filter and view them as a group.
 * Instantly update a student's phone number when they get a new one.
-* Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule, 
+* Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
 all in one expanded view.
 
 Table of Contents
@@ -47,10 +47,10 @@ Table of Contents
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/UI.png)
 
-6. Type the command in the command box and press Enter to execute it. 
+6. Type the command in the command box and press Enter to execute it.
 For example, typing **`help`** and pressing Enter will open the help window.<br>
-7. Try adding your first student using the command: 
-   
+7. Try adding your first student using the command:
+
    `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Math t/Grade10`
 
    _This command adds a student named "John Doe" with his phone, email, address, and two tags indicating he's a Grade 10 Math student._
@@ -84,7 +84,7 @@ Refer to the [Features](#features) below for details of each command.
   e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used zero or multiple times.<br>
-  e.g. `[t/TAG]…​` can be used as `t/friend` or `t/friend t/family` 
+  e.g. `[t/TAG]…​` can be used as `t/friend` or `t/friend t/family`
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER` then `p/PHONE_NUMBER n/NAME` is also acceptable.
@@ -92,7 +92,7 @@ Refer to the [Features](#features) below for details of each command.
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span 
+* If you are using a PDF version of this document, be careful when copying and pasting commands that span
 multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
 
@@ -111,7 +111,7 @@ Adds a new student to your ClassRosterPro.
 
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
-* The student's NAME, PHONE_NUMBER, EMAIL and ADDRESS must be provided. 
+* The student's NAME, PHONE_NUMBER, EMAIL and ADDRESS must be provided.
 * Tags [t/TAG] are optional. You can use them to group students by subject, level, or status.
 
 Examples:
@@ -123,11 +123,11 @@ _Adds a student named "Betsy Crowe" for A-Level Physics and flags her as needing
 _Adds a student named "John Doe" with only the compulsory fields. Useful for a quick add after a trial lesson._
 
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 A student can have none or multiple tags.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistakes: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistakes:
 Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
 </div>
 
@@ -140,7 +140,7 @@ Shows a list of all students in your roster.
 
 Format: `list`
 
-![Result of list command](images/listUI.png) 
+![Result of list command](images/listUI.png)
 <p align="center"><em>All students are displayed</em></p>
 
 ### Viewing full student details: `open`
@@ -148,21 +148,21 @@ Expands a student's card to view all their details, including additional attribu
 
 Format: `open INDEX`
 
-* Expands the student card at the specified INDEX. 
-* The index refers to the position number shown in the currently displayed student list. 
+* Expands the student card at the specified INDEX.
+* The index refers to the position number shown in the currently displayed student list.
 * The index must be a positive integer 1, 2, 3, …​
 
 Examples:
 * `open 1`
 
-_Opens the card of the 1st student in the current list. If you have just filtered the list, 
+_Opens the card of the 1st student in the current list. If you have just filtered the list,
 this will be the first student in the filtered results._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this command to quickly check a student's lesson schedule or the notes you've added to their profile before a session.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using an index that is out of range (e.g., open 0 or open 10 when there are only 5 students displayed).
 </div>
 
@@ -175,8 +175,8 @@ Collapses an expanded student card back to the compact view.
 
 Format: `close INDEX`
 
-* Collapses the student card at the specified INDEX. 
-* The index refers to the position number shown in the currently displayed student list. 
+* Collapses the student card at the specified INDEX.
+* The index refers to the position number shown in the currently displayed student list.
 * The index must be a positive integer 1, 2, 3, …​
 
 Examples:
@@ -184,11 +184,11 @@ Examples:
 
 _Collapses the card of the 1st student in the current list._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Collapsing cards you aren't currently viewing helps declutter the interface and makes it easier to scroll through your student list.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Trying to close a card that is already collapsed. The command will have no visible effect.
 </div>
 
@@ -202,8 +202,8 @@ Edits the details of an existing student in your list.
 
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 
-* Edits the student at the specified `INDEX`. 
-* The index refers to the index number shown in the displayed contact list. 
+* Edits the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed contact list.
 * The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
@@ -213,17 +213,17 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 Examples:
 * `edit 1 p/91234567 e/johndoe@example.com`
 
-_Edits the phone number and email address of the 1st student to be 91234567 and johndoe@example.com respectively. 
+_Edits the phone number and email address of the 1st student to be 91234567 and johndoe@example.com respectively.
 The student's name, address, and tags remain unchanged._
 
 * `edit 2 n/Betsy Crower t/`
 Edits the name of the 2nd student to be Betsy Crower and clears all existing tags.
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 You can remove all of a student's tags by using t/ without specifying any tags after it.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Assuming the index is based on the original list. Remember, it is based on the current list (e.g., after a list or filter command).
 </div>
 
@@ -241,7 +241,7 @@ Format: `delete INDEX`
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` 
+* `list` followed by `delete 2`
 
 _Deletes the 2nd student in the roster._
 
@@ -249,11 +249,11 @@ _Deletes the 2nd student in the roster._
 
 _Deletes the 1st student in the results of the filter command._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Double-check the index before deleting, as this action cannot be undone.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using an index that doesn't exist in the current view.
 </div>
 
@@ -277,14 +277,14 @@ Format:
 
 Examples:
 * `tag 2 attr/subject=math,science attr/age=16`
-  
+
 _Adds attributes `subject` and `age=16` to the 2nd student._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this command when you want to add additional classifications to a student without affecting their existing tags.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using the same tag multiple times - duplicate tags will be ignored.
 </div>
 
@@ -308,18 +308,18 @@ Format:
 
 Examples:
 * `deltag 1 attr/subject`
-  
+
 _Deletes the attribute subject from the 1st student._
 
 * `deltag 2 attr/age attr/subject`
-  
+
 _Deletes multiple attributes (age, subject) from the 3rd student._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Misspelling the tag name - the removal is case-sensitive.
 </div>
 
@@ -335,30 +335,30 @@ Format: `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
 
 * The filter is case-insensitive for both attribute keys and values.
 * The order of the keywords does not matter. e.g. `Math Grade10` will return the same students as `Grade10 Math`.
-* All specified attribute filters must match for a student to be included 
+* All specified attribute filters must match for a student to be included
 (i.e. A student that does not have ALL of the specified attributes will not be displayed).
 * Multiple values for the same attribute are separated by commas.
 * At least one `attr/` prefix must be provided.
 * For age attributes, values must be valid integers.
 
 Examples:
-* `filter attr/subject=math` 
+* `filter attr/subject=math`
 
 _Shows students tagged with "math" as their subject_
 
-* `filter attr/subject=math,science attr/age=16` 
+* `filter attr/subject=math,science attr/age=16`
 
 _Shows students who have either "math" or "science" as subject AND are age 16_
 
-* `filter attr/age=15,16,17` 
+* `filter attr/age=15,16,17`
 
 _Shows students who are 15, 16, or 17 years old_
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this to quickly find all students in a particular subject or with a specific status flag.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Searching for partial words - the filter only matches complete tag words.
 </div>
 
@@ -381,14 +381,14 @@ Format:
 
 Examples:
 * `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths`
-    
+
 _Schedules specified lesson for the 2nd person in the current list_
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use consistent date and time formats to avoid confusion.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using 12-hour time format instead of 24-hour format or incorrect date format (must be YYYY-MM-DD).
 </div>
 
@@ -413,11 +413,11 @@ Examples:
 
 _Removes the 1st lesson from the 1st person in the current list._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a lesson is cancelled or completed and you want to clear the schedule for that student.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using this command on a student who doesn't have any scheduled lessons - the command will have no effect.
 </div>
 
@@ -437,15 +437,15 @@ Format: `mark INDEX lesson/LESSON_INDEX`
 *   Only lessons scheduled on the current date can be marked.
 
 Examples:
-* `mark 1 lesson/1` 
+* `mark 1 lesson/1`
 
 _Marks the 1st person's 1 lesson in the current list as present_
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Combine with the schedule command to maintain a complete teaching schedule.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using this command on a student who doesn't have any scheduled lessons.
 </div>
 
@@ -467,11 +467,11 @@ Format: `unmark INDEX lesson/LESSON_INDEX`
 Examples:
 * `unmark 1 lesson/1` unmarks the 1st person in the current list as absent for today's lesson.
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip: 
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this command to correct accidental marks or handle last-minute cancellations.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake: 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using this command on a student who doesn't have any completed lessons to unmark.
 </div>
 
@@ -549,19 +549,19 @@ Format: `exit`
 
 ### Saving the data
 
-ClassRosterPro data is saved in the hard disk automatically after any command that changes the data. 
+ClassRosterPro data is saved in the hard disk automatically after any command that changes the data.
 There is no need to save manually.
 
 ### Editing the data file
 
-**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`. 
+**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`.
 Advanced users are welcome to update data directly by editing that data file.
 
 <div markdown="span" class="alert alert-warning">:exclamation: Caution:
-If your changes to the data file make its format invalid, ClassRosterPro will discard all data and start with an empty data file at the next run. 
+If your changes to the data file make its format invalid, ClassRosterPro will discard all data and start with an empty data file at the next run.
 Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected ways 
-(e.g., if a value entered is outside of the acceptable range). 
+Furthermore, certain edits can cause **ClassRosterPro** to behave in unexpected ways
+(e.g., if a value entered is outside of the acceptable range).
 Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
