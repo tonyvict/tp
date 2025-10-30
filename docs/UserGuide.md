@@ -443,5 +443,6 @@ Action | Format, Examples
 **Unmark Attendance** | `unmark INDEX`<br> e.g., `unmark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
 **Delete Attributes** | `deltag INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `deltag 2 attr/age attr/subject`
+**Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
 **List** | `list`
 **Help** | `help`
