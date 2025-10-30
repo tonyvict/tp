@@ -23,7 +23,7 @@ public class UnmarkCommand extends Command {
             + ": Unmarks a lesson for a student as not present.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "lesson/LESSON_INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1 l/3";
+            + "Example: " + COMMAND_WORD + " 1 lesson/3";
 
     public static final String MESSAGE_UNMARK_ATTENDANCE_SUCCESS = "Attendance unmarked: %1$s, Lesson: %2$s ->"
             + " Not Present";
