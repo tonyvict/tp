@@ -69,20 +69,33 @@ public class GradeCommandParserTest {
 
     @Test
     public void parse_invalidFormat_throwsParseException() {
+        // Using = instead of / results in only 1 part after split
         assertParseFailure(parser, "1 sub/MATH=WA1=89",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Assessment and Score are missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test
     public void parse_tooFewParts_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH/WA1",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Score is missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test
     public void parse_tooManyParts_throwsParseException() {
         assertParseFailure(parser, "1 sub/MATH/WA1/89/EXTRA",
-                "Incorrect format. Use sub/SUBJECT/ASSESSMENT/SCORE");
+                "Too many parts. Use sub/SUBJECT/ASSESSMENT/SCORE");
+    }
+
+    @Test
+    public void parse_missingScoreWithTrailingSlash_throwsParseException() {
+        assertParseFailure(parser, "1 sub/MATH/WA1/",
+                "Score cannot be empty.");
+    }
+
+    @Test
+    public void parse_onlySubject_throwsParseException() {
+        assertParseFailure(parser, "1 sub/MATH",
+                "Assessment and Score are missing. Use sub/SUBJECT/ASSESSMENT/SCORE");
     }
 
     @Test
