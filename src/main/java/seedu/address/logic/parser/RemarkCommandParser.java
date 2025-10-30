@@ -35,7 +35,7 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
 
         List<String> remarkSegments = argMultimap.getAllValues(PREFIX_REMARK);
         List<String> cleanedSegments = remarkSegments.stream()
-                .map(segment -> segment == null ? "" : segment.trim())
+                .map(String::trim)
                 .filter(segment -> !segment.isEmpty())
                 .collect(Collectors.toList());
 

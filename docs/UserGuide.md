@@ -368,6 +368,24 @@ Examples:
 ![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
 
+
+### Recording student grades : `remark`
+Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
+
+* Adds or updates the remark of the student at the specified INDEX.
+* The index refers to the index number shown in the displayed student list.
+* The index must be a positive integer 1, 2, 3, …
+* If the remark field is left empty after `r/`, the existing remark will be cleared.
+
+Examples:
+
+* `remark 2 r/Excellent progress this term` — Adds the remark “Excellent progress this term” to the 2nd student.
+* `remark 1 r/` — Clears the existing remark of the 1st student.
+
+![Result of adding remark](images/remarkUI.png)
+<p align="center"><em>Figure: Result of adding a remark for a student.</em></p>
+
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
