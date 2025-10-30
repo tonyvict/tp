@@ -144,26 +144,6 @@ Examples:
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Figure: Result of editing a student.</em></p>
 
-### Locating persons by name: `find`
-
-Finds persons whose names contain any of the given keywords.
-
-Format: `find KEYWORD [MORE_KEYWORDS]`
-
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
-
-Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-
-![result for 'find alex david'](images/findAlexDavidResult.png)
-<p align="center"><em>Figure: Result of find alex david command.</em></p>
-
 
 ### Deleting a person : `delete`
 
@@ -176,8 +156,7 @@ Format: `delete INDEX`
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd student in the roster.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `delete 2` deletes the 2nd student in the roster.
 
 ![Result of deleting a student](images/deleteUI.png)
 <p align="center"><em>Figure: Result of deleting a student.</em></p>
@@ -334,7 +313,6 @@ Examples:
 Allows users to instantly search for contacts by name, email or phone number.
 
 <div markdown="span" class="alert alert-primary"> :bulb: **Tip**
-You can still use the `find` command for more specific or multi-keyword searches.
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
 
@@ -367,6 +345,24 @@ Examples:
 
 ![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
+
+
+### Recording student grades : `remark`
+Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
+
+* Adds or updates the remark of the student at the specified INDEX.
+* The index refers to the index number shown in the displayed student list.
+* The index must be a positive integer 1, 2, 3, …
+* If the remark field is left empty after `r/`, the existing remark will be cleared.
+
+Examples:
+
+* `remark 2 r/Excellent progress this term` — Adds the remark “Excellent progress this term” to the 2nd student.
+* `remark 1 r/` — Clears the existing remark of the 1st student.
+
+![Result of adding remark](images/remarkUI.png)
+<p align="center"><em>Figure: Result of adding a remark for a student.</em></p>
+
 
 ### Clearing all entries : `clear`
 
@@ -439,7 +435,6 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
 **Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
@@ -447,5 +442,7 @@ Action | Format, Examples
 **Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
 **Unmark Attendance** | `unmark INDEX`<br> e.g., `unmark 1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
+**Delete Attributes** | `deltag INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `deltag 2 attr/age attr/subject`
+**Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
 **List** | `list`
 **Help** | `help`
