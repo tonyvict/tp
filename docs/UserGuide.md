@@ -1,8 +1,7 @@
 ---
 layout: page
-title: User Guide
+title: Class Roster Pro User Guide
 ---
-# ClassRosterPro User Guide
 ## About This Guide
 Welcome to the ClassRosterPro User Guide!
 This guide is designed to help you, a private tutor, efficiently manage all your student information in one place.
@@ -20,12 +19,12 @@ While it has a clean Graphical User Interface (GUI), it is optimized for use via
 If you can type fast, you can manage your student **roster—finding,
 updating, and organizing** much faster than with a mouse.
 
-Use Cases:
+### Use Cases:
 * Quickly add a new student after a trial lesson with their contact details and subject tag.
 * Use tags to mark students so you can filter and view them as a group.
 * Instantly update a student's phone number when they get a new one.
 * Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
-all in one expanded view.
+all in one expanded view
 
 * Table of Contents
 {:toc}
