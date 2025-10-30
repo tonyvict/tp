@@ -81,7 +81,7 @@ Refer to the [Features](#features) below for details of each command.
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/Grade10` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used zero or multiple times.<br>
   e.g. `[t/TAG]…​` can be used as `t/friend` or `t/friend t/family`
@@ -125,10 +125,6 @@ _Adds a student named "John Doe" with only the compulsory fields. Useful for a q
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 A student can have none or multiple tags.
-</div>
-
-<div markdown="span" class="alert alert-primary">:warning: Common Mistakes:
-Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
 </div>
 
 ![Result of adding a student](images/addUI.png)
@@ -249,16 +245,12 @@ _Deletes the 2nd student in the roster._
 
 _Deletes the 1st student in the results of the filter command._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip:
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Double-check the index before deleting, as this action cannot be undone.
 </div>
 
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Using an index that doesn't exist in the current view.
-</div>
-
 ![Result of deleting a student](images/deleteUI.png)
-<p align="center"><em>John Doe has been removed from the roster.</em></p>
+<p align="center"><em>Betsy Crowe has been removed from the roster.</em></p>
 
 ### Tagging a student with attributes : `tag`
 
@@ -281,7 +273,7 @@ Examples:
 _Adds attributes `subject` and `age=16` to the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
-Use this command when you want to add additional classifications to a student without affecting their existing tags.
+Use this command when you want to add additional attributes to a student without affecting their existing tags.
 </div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
@@ -317,10 +309,6 @@ _Deletes multiple attributes (age, subject) from the 3rd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
-</div>
-
-<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Misspelling the tag name - the removal is case-sensitive.
 </div>
 
 ![Result of deleting attributes](images/deltagUI.png)
@@ -383,10 +371,6 @@ Examples:
 * `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths`
 
 _Schedules specified lesson for the 2nd person in the current list_
-
-<div markdown="span" class="alert alert-primary">:bulb: Tip:
-Use consistent date and time formats to avoid confusion.
-</div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using 12-hour time format instead of 24-hour format or incorrect date format (must be YYYY-MM-DD).
@@ -465,7 +449,9 @@ Format: `unmark INDEX lesson/LESSON_INDEX`
 *   Only lessons that are currently marked as present will be unmarked.
 
 Examples:
-* `unmark 1 lesson/1` unmarks the 1st person in the current list as absent for today's lesson.
+* `unmark 1 lesson/1`
+
+ Unmarks the 1st person in the current list as absent for today's lesson.
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this command to correct accidental marks or handle last-minute cancellations.
@@ -483,14 +469,27 @@ Using this command on a student who doesn't have any completed lessons to unmark
 
 Allows users to instantly search for contacts by name, email or phone number.
 
+Format: `search [KEYWORD]`
+
+*   Shows all contacts with their name, email, or phone number having a partial match with `KEYWORD`
+*   The `KEYWORD` is case-insensitive 
+
+Examples:
+* `search alex`
+
+ Displays contacts such as `Alex Yeoh`
+
+* `search 9876` 
+
+ Display contacts with phone number such as 9876123
+
+* `search john12` 
+
+ Displays contacts with email `john123@yahoo.com`
+
 <div markdown="span" class="alert alert-primary"> :bulb: **Tip**
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
 </div>
-
-Examples:
-* Typing `search alex` will display contacts such as `Alex Yeoh`
-* Typing `search 9876` will display contacts with phone number such as 9876123
-* Typing `search john12` will display contacts with email `john123@yahoo.com`
 
 ![quick search](images/quicksearch.png)
 <p align="center"><em>Figure: Result of searching a student's name.</em></p>
@@ -511,8 +510,13 @@ Format: `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCOR
 * Subject, assessment, and score values cannot be empty.
 
 Examples:
-* `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95` - Records Math WA1 score as 89 and Science Quiz1 score as 95 for the 2nd student
-* `grade 5 sub/ENGLISH/Final/88 sub/HISTORY/Midterm/92` - Records English Final score as 88 and History Midterm score as 92 for the 5th student
+* `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
+
+ Records Math WA1 score as 89 and Science Quiz1 score as 95 for the 2nd student
+
+* `grade 5 sub/ENGLISH/Final/88 sub/HISTORY/Midterm/92`
+
+Records English Final score as 88 and History Midterm score as 92 for the 5th student
 
 ![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
@@ -521,15 +525,20 @@ Examples:
 ### Recording student grades : `remark`
 Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
 
-* Adds or updates the remark of the student at the specified INDEX.
+* Adds on to the remarks of the student at the specified INDEX.
 * The index refers to the index number shown in the displayed student list.
 * The index must be a positive integer 1, 2, 3, …
-* If the remark field is left empty after `r/`, the existing remark will be cleared.
+* If the remark field is left empty after `r/`, the existing remarks will be cleared.
 
 Examples:
 
-* `remark 2 r/Excellent progress this term` — Adds the remark “Excellent progress this term” to the 2nd student.
-* `remark 1 r/` — Clears the existing remark of the 1st student.
+* `remark 2 r/Excellent progress this term`
+
+Adds the remark “Excellent progress this term” to the 2nd student
+
+* `remark 1 r/` 
+
+Clears the existing remark of the 1st student
 
 ![Result of adding remark](images/remarkUI.png)
 <p align="center"><em>Figure: Result of adding a remark for a student.</em></p>
@@ -579,7 +588,7 @@ Therefore, edit the data file only if you are confident that you can update it c
 **Q**: What happens if I forget to include a compulsory field when adding a student?
 **A**: ClassRosterPro will show an error message explaining which field is missing and the correct format for the add command.
 
-**Q**: Can I use the same tag for multiple students?
+**Q**: Can I use the same attribute tags for multiple students?
 **A**: Yes! That's the main purpose of tags. You can use the filter command to find all students with a specific tag.
 
 **Q**: Can I see my teaching schedule for the week?
@@ -599,19 +608,19 @@ Therefore, edit the data file only if you are confident that you can update it c
 
 ## Glossary
 
-| Term         | Definition                                                                                                                               |
-|--------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **CLI**      | Command Line Interface. The text-based area where you type commands.                                                                     |
-| **GUI**      | Graphical User Interface. The visual part of the application with windows, buttons, and lists.                                           |
-| **Command**  | An instruction you type to tell the app what to do (e.g., `add`, `list`).                                                                  |
+| Term         | Definition                                                                                                                                  |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| **CLI**      | Command Line Interface. The text-based area where you type commands.                                                                        |
+| **GUI**      | Graphical User Interface. The visual part of the application with windows, buttons, and lists.                                              |
+| **Command**  | An instruction you type to tell the app what to do (e.g., `add`, `list`).                                                                   |
 | **Index**    | The number (starting from 1) next to a student's name in the displayed list. It's used to identify which student a command should apply to. |
-| **Prefix**   | A short code (e.g., `n/`, `p/`, `attr/`) used to specify which parameter you are providing.                                                |
-| **Parameter**| The information you provide to a command (e.g., `John Doe` in `add n/John Doe`).                                                           |
-| **Keyword**  | A word used for searching, especially with the `find` command.                                                                           |
-| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`). Used for tagging and filtering.         |
-| **Remark**   | A short, free-text note you can add to a student's profile to remember important details.                                                  |
-| **Lesson**   | A scheduled class for a student, which includes a date, start time, end time, and subject.                                                 |
-| **Attendance**| A record showing whether a student was present or not for a scheduled lesson.                                                            |
+| **Prefix**   | A short code (e.g., `n/`, `p/`, `attr/`) used to specify which parameter you are providing.                                                 |
+| **Parameter**| The information you provide to a command (e.g., `John Doe` in `add n/John Doe`).                                                            |
+| **Keyword**  | A word used for searching, especially with the `search` command.                                                                            |
+| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`). Used for tagging and filtering.          |
+| **Remark**   | A short, free-text note you can add to a student's profile to remember important details.                                                   |
+| **Lesson**   | A scheduled class for a student, which includes a date, start time, end time, and subject.                                                  |
+| **Attendance**| A record showing whether a student was present or not for a scheduled lesson.                                                               |
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -627,8 +636,8 @@ Action | Format, Examples
 **Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
 **Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
 **Unschedule Lesson** | `unschedule INDEX lesson/LESSON_INDEX`<br> e.g., `unschedule 1 lesson/1`
-**Mark Attendance** | `mark INDEX`<br> e.g., `mark 1`
-**Unmark Attendance** | `unmark INDEX`<br> e.g., `unmark 1`
+**Mark Attendance** | `mark INDEX lesson/LESSON_INDEX`<br> e.g., `mark 1 lesson/1`
+**Unmark Attendance** | `unmark INDEX lesson/LESSON_INDEX`<br> e.g., `unmark 1 lesson/1`
 **Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
 **Delete Attributes** | `deltag INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `deltag 2 attr/age attr/subject`
 **Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
