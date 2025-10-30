@@ -671,21 +671,21 @@ This modular structure supports easy feature addition (e.g., new commands) with 
 
 This section provides guidance to manually verify the new or modified features of ClassRosterPro. Each subsection gives a test path and copy‑pasteable inputs. Refer to the User Guide for full syntax. Ensure sample data in `data/addressbook.json` is loaded before testing.
 
-### 1. Quick Search
+### 1. Search
 
 Purpose: Instantly locate students by typing into the search box.
 
 Steps to test:
 1. Launch the app and ensure several students are listed.
-2. Click into the Quick Search box (above the contact list).
-3. Type:
-   - `alex`
+2. Enter:
+   - `search alex`
 
 Expected: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
 
-Clear the search box. Expected: The full list reappears.
+1. Enter
+   - `search zzz`.
 
-Edge case: Type a non‑existent string such as `zzz`. The list should show no students and no error message.
+Expected: The list clears and an error message is shown.
 
 ### 2. Tag and Filter
 
