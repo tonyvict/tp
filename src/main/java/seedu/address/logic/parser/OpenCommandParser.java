@@ -1,7 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.OpenCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -17,12 +15,8 @@ public class OpenCommandParser implements Parser<OpenCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public OpenCommand parse(String args) throws ParseException {
-        try {
-            Index index = ParserUtil.parseIndex(args);
-            return new OpenCommand(index);
-        } catch (ParseException pe) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, OpenCommand.MESSAGE_USAGE), pe);
-        }
+        String indexToken = ParserUtil.requireSingleIndex(args, OpenCommand.MESSAGE_USAGE);
+        Index index = ParserUtil.parseIndex(indexToken);
+        return new OpenCommand(index);
     }
 }

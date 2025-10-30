@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.GradeCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Grade;
@@ -26,13 +25,6 @@ public class GradeCommandParser implements Parser<GradeCommand> {
     public GradeCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUB);
-
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE), ive);
-        }
 
         Set<Grade> gradesToAdd = new HashSet<>();
 
@@ -91,6 +83,13 @@ public class GradeCommandParser implements Parser<GradeCommand> {
         if (gradesToAdd.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
         }
+
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), GradeCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_SUB.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, GradeCommand.MESSAGE_USAGE));
+        }
+
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new GradeCommand(index, gradesToAdd);
     }

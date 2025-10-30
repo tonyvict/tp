@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -54,6 +55,23 @@ public class ParserUtilTest {
 
         // Leading and trailing whitespaces
         assertEquals(INDEX_FIRST_PERSON, ParserUtil.parseIndex("  1  "));
+    }
+
+    @Test
+    public void requireSingleIndex_invalidInput_throwsParseException() {
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"), () ->
+                        ParserUtil.requireSingleIndex("", "usage"));
+
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, "usage"), () ->
+                        ParserUtil.requireSingleIndex("1 2", "usage"));
+    }
+
+    @Test
+    public void requireSingleIndex_validInput_success() throws Exception {
+        assertEquals("1", ParserUtil.requireSingleIndex("1", "usage"));
+        assertEquals("1", ParserUtil.requireSingleIndex(" 1 ", "usage"));
     }
 
     @Test
