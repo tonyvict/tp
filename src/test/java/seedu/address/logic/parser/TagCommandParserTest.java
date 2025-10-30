@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class TagCommandParserTest {
 
     @Test
     public void parse_invalidIndex_failure() {
-        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () ->
+        Assert.assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
                 parser.parse("zero " + PREFIX_ATTRIBUTE + "subject=math"));
     }
 

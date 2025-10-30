@@ -19,29 +19,27 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
     public DeleteAttributeCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_ATTRIBUTE);
 
-        if (argMultimap.getValue(PREFIX_ATTRIBUTE).isEmpty()) {
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(),
+                DeleteAttributeCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_ATTRIBUTE.getPrefix())) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     DeleteAttributeCommand.MESSAGE_USAGE));
         }
 
-        try {
-            Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
-            Set<String> keys = argMultimap.getAllValues(PREFIX_ATTRIBUTE)
-                    .stream()
-                    .map(String::trim)
-                    .map(s -> s.toLowerCase())
-                    .filter(s -> !s.isEmpty())
-                    .collect(Collectors.toSet());
+        Set<String> keys = argMultimap.getAllValues(PREFIX_ATTRIBUTE)
+                .stream()
+                .map(String::trim)
+                .map(s -> s.toLowerCase())
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toSet());
 
-            if (keys.isEmpty()) {
-                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                        DeleteAttributeCommand.MESSAGE_USAGE));
-            }
-
-            return new DeleteAttributeCommand(index, keys);
-        } catch (ParseException pe) {
+        if (keys.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    DeleteAttributeCommand.MESSAGE_USAGE), pe);
+                    DeleteAttributeCommand.MESSAGE_USAGE));
         }
+
+        Index index = ParserUtil.parseIndex(preamble);
+
+        return new DeleteAttributeCommand(index, keys);
     }
 }

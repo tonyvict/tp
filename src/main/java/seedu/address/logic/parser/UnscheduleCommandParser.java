@@ -23,26 +23,28 @@ public class UnscheduleCommandParser implements Parser<UnscheduleCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_LESSON);
 
-        Index personIndex;
-        try {
-            personIndex = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    UnscheduleCommand.MESSAGE_USAGE), pe);
-        }
-
         if (!argMultimap.getValue(PREFIX_LESSON).isPresent()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UnscheduleCommand.MESSAGE_USAGE));
         }
 
+        String lessonIndexString = ParserUtil.requireSingleIndex(
+                argMultimap.getValue(PREFIX_LESSON).get(), UnscheduleCommand.MESSAGE_USAGE);
+
         Index lessonIndex;
         try {
-            lessonIndex = ParserUtil.parseIndex(argMultimap.getValue(PREFIX_LESSON).get());
+            lessonIndex = ParserUtil.parseIndex(lessonIndexString);
         } catch (ParseException pe) {
+            if (ParserUtil.MESSAGE_INVALID_INDEX.equals(pe.getMessage())) {
+                throw new ParseException(ParserUtil.MESSAGE_INVALID_LESSON_INDEX);
+            }
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UnscheduleCommand.MESSAGE_USAGE), pe);
         }
+
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(),
+                UnscheduleCommand.MESSAGE_USAGE);
+        Index personIndex = ParserUtil.parseIndex(preamble);
 
         return new UnscheduleCommand(personIndex, lessonIndex);
     }

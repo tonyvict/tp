@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.TagCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Attribute;
@@ -27,13 +26,6 @@ public class TagCommandParser implements Parser<TagCommand> {
     public TagCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_ATTRIBUTE);
-
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (IllegalValueException ive) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE), ive);
-        }
 
         Set<Attribute> attributesToAdd = new HashSet<>();
 
@@ -68,6 +60,12 @@ public class TagCommandParser implements Parser<TagCommand> {
         if (attributesToAdd.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
         }
+
+        String preamble = ParserUtil.requireSingleIndex(argMultimap.getPreamble(), TagCommand.MESSAGE_USAGE);
+        if (preamble.startsWith(PREFIX_ATTRIBUTE.getPrefix())) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
+        }
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new TagCommand(index, attributesToAdd);
     }
