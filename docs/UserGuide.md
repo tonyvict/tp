@@ -2,11 +2,32 @@
 layout: page
 title: User Guide
 ---
-As a private tutor, managing student contacts, schedules and attendance can be overwhelming.
-**ClassRosterPro is a desktop app designed specifically for you**, streamlining these tasks to reduce your workload
-and free up more time to focus on what truly matters: teaching and preparing quality lessons.
+# ClassRosterPro User Guide 
+## About This Guide
+Welcome to the ClassRosterPro User Guide! 
+This guide is designed to help you, a private tutor, efficiently manage all your student information in one place.
+* If you are a new user, we highly recommend starting with the "Quick Start" 
+section to get set up and run your first command in just 5 minutes
+* If you are an experienced user, jump directly to the "Features" section for a complete list of commands.
+* Look out for Tips and Common Mistakes icons to help you use ClassRosterPro more effectively.
 
-* Table of Contents
+## Introduction
+Juggling student contacts, lesson schedules, and notes across different notebooks and apps? 
+**ClassRosterPro** is a powerful desktop application built for private tutors 
+to **centralize and manage all their student details.**
+
+While it has a clean Graphical User Interface (GUI), it is optimized for use via a Command Line Interface (CLI). 
+If you can type fast, you can manage your student **roster—finding, 
+updating, and organizing** much faster than with a mouse.
+
+Use Cases:
+* Quickly add a new student after a trial lesson with their contact details and subject tag.
+* Use tags to mark students so you can filter and view them as a group.
+* Instantly update a student's phone number when they get a new one.
+* Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule, 
+all in one expanded view.
+
+Table of Contents
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
@@ -16,20 +37,29 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/AY2526S1-CS2103T-W13-4/tp/releases).
+1. Download the latest `ClassRosterPro.jar` file from [here](https://github.com/AY2526S1-CS2103T-W13-4/tp/releases).
 
 1. Copy the file to the folder you want to use as the _home folder_ for your ClassRosterPro.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar classrosterpro.jar` command to run the application.<br>
+1. In the home folder, right click and select `Open in Terminal`
+
+3. Use the `java -jar classrosterpro.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
-   Some example commands you can try:
+1. Type the command in the command box and press Enter to execute it. 
+For example, typing **`help`** and pressing Enter will open the help window.<br>
+2. Try adding your first student using the command: 
+   
+   `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Math t/Grade10`
 
-   * `list` : Lists all contacts.
+   _This command adds a student named "John Doe" with his phone, email, address, and two tags indicating he's a Grade 10 Math student._
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+Some example commands you can try:
+
+   * `list` : Lists all students.
+
+   * `open 1` : Expands the student's contact card for the first student in the current list.
 
    * `delete 3` : Deletes the 3rd student shown in the current list.
 
@@ -37,7 +67,7 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 
    * `exit` : Exits the app.
 
-1. Refer to the [Features](#features) below for details of each command.
+Refer to the [Features](#features) below for details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -53,16 +83,17 @@ and free up more time to focus on what truly matters: teaching and preparing qua
 * Items in square brackets are optional.<br>
   e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items with `…`​ after them can be used zero or multiple times.<br>
+  e.g. `[t/TAG]…​` can be used as `t/friend` or `t/friend t/family` 
 
 * Parameters can be in any order.<br>
-  e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+  e.g. if the command specifies `n/NAME p/PHONE_NUMBER` then `p/PHONE_NUMBER n/NAME` is also acceptable.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
+* If you are using a PDF version of this document, be careful when copying and pasting commands that span 
+multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
 
 ### Viewing help : `help`
@@ -72,7 +103,34 @@ Displays a pop-up window containing a complete list of all available commands, g
 Format: `help`
 
 ![help_message](images/helpMessage.png)
-<p align="center"><em>Figure: Help message.</em></p>
+<p align="center"><em>Pop-up window after entering the `help` command </em></p>
+
+### Adding a student: `add`
+
+Adds a new student to your ClassRosterPro.
+
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+
+Examples:
+* `add n/Betsy Crowe p/91234567 e/betsyc@example.com a/123 Bishan Street t/Physics t/ALevels t/NeedsHomeworkCheck`
+
+_Adds a student named "Betsy Crowe" for A-Level Physics and flags her as needing a homework check._
+* `add n/John Doe p/98765432 e/johnd@example.com a/Home Studio`
+
+_Adds a student named "John Doe" with only the compulsory fields. Useful for a quick add after a trial lesson._
+
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+A student can have none or multiple tags.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: **Common Mistakes:**
+* Forgetting to include one of the compulsory prefixes (n/, p/, e/, a/).
+* Adding spaces between the prefix and the value (e.g., n/ John Doe is incorrect; use n/John Doe).
+</div>
+
+![Result of adding a student](images/addUI.png)
+<p align="center"><em>Figure: Result of adding a new student.</em></p>
 
 ### Opening the contact card: `open`
 Allows you to toggle to view more details of the contact
@@ -95,26 +153,6 @@ Examples:
 
 ![Result of toggling close a contact](images/closeUI.png)
 <p align="center"><em>Figure: Result of toggling close a contact.</em></p>
-
-
-### Adding a person: `add`
-
-Adds a student to your roster.
-
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
-
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-A person can have any number of tags (including 0)
-</div>
-
-Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
-
-![Result of adding a student](images/addUI.png)
-<p align="center"><em>Figure: Result of adding a new student.</em></p>
-
-
 ### Listing all persons : `list`
 
 Shows a list of all students in your roster.
