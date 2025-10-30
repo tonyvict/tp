@@ -102,7 +102,7 @@ Displays a pop-up window containing a complete list of all available commands, g
 
 Format: `help`
 
-![help_message](images/helpMessage.png)
+![help_window](images/helpWindow.png)
 <p align="center"><em>Pop-up window after entering the `help` command </em></p>
 
 ### Adding a student: `add`
