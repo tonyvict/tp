@@ -56,15 +56,35 @@ public class RemarkCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
+
+        Remark updatedRemark = getRemark(personToEdit);
+
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
-                personToEdit.getAddress(), remark, personToEdit.getTags(), personToEdit.getAttributes(),
+                personToEdit.getAddress(), updatedRemark, personToEdit.getTags(), personToEdit.getAttributes(),
                 personToEdit.getLessonList(), personToEdit.getGradeList());
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         return new CommandResult(generateSuccessMessage(editedPerson));
+    }
+
+    private Remark getRemark(Person personToEdit) {
+        String existingRemarkValue = personToEdit.getRemark().value;
+        String newRemarkValue = remark.value;
+
+        String combinedRemarkValue;
+        if (newRemarkValue.isEmpty()) {
+            combinedRemarkValue = "";
+        } else if (existingRemarkValue.trim().isEmpty()) {
+            combinedRemarkValue = newRemarkValue;
+        } else {
+            combinedRemarkValue = existingRemarkValue + ", " + newRemarkValue;
+        }
+
+        Remark updatedRemark = new Remark(combinedRemarkValue);
+        return updatedRemark;
     }
 
     /**
