@@ -227,6 +227,24 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 2b. Index not a positive integer → error message.
 
 ---
+### **UC-10: Unrecords attendance for a specific lesson**
+
+**Preconditions:** Student exists with at least one scheduled lesson.
+
+**MSS:**
+
+1. Tutor filters/finds the student if needed.
+2. Tutor enters `unmark 1 lesson/1`.
+3. System validates both indices and marks the lesson as not attended.
+4. System updates attendance count and confirms.
+
+**Extensions:**
+
+* 2a. Student index invalid → error "Invalid person index".
+* 2b. Lesson index invalid → error "Invalid lesson index".
+* 2c. Lesson already marked as not present → error "This lesson is already marked as not present".
+
+---
 
 ## **4. Non-Functional Requirements (NFRs)**
 
