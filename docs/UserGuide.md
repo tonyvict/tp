@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Class Roster Pro User Guide
+title: ClassRosterPro User Guide
 ---
 ## About This Guide
 Welcome to the ClassRosterPro User Guide!
