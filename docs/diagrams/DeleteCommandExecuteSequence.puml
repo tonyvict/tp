@@ -1,0 +1,32 @@
+@startuml
+' Delete command execution sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/LogicManager.java
+' - src/main/java/seedu/address/logic/commands/DeleteCommand.java
+' - src/main/java/seedu/address/model/Model.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+participant "Logic\\n(LogicManager)" as LM
+participant "DeleteCommand" as DC <<command>>
+participant Model as M
+participant Messages as MSG
+
+LM -> DC : execute(model)
+activate DC
+DC -> M : getFilteredPersonList()
+M --> DC : List<Person>
+DC -> DC : validate index bounds
+alt invalid index
+  DC --> LM : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else valid index
+  DC -> DC : personToDelete = list.get(index)
+  DC -> M : deletePerson(personToDelete)
+  DC -> MSG : format(personToDelete)
+  MSG --> DC : formatted string
+  DC --> LM : CommandResult("Deleted Person: %1$s")
+end
+@enduml

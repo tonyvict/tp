@@ -1,0 +1,32 @@
+@startuml
+' Delete command parsing sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/parser/AddressBookParser.java
+' - src/main/java/seedu/address/logic/parser/DeleteCommandParser.java
+' - src/main/java/seedu/address/logic/parser/ParserUtil.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+actor User as U
+participant "Logic\\n(AddressBookParser)" as ABP
+participant "DeleteCommandParser" as DCP
+participant "ParserUtil" as PU
+participant "DeleteCommand" as DC <<command>>
+
+U -> ABP : input "delete 3"
+ABP -> DCP : new DeleteCommandParser()
+ABP -> DCP : parse(arguments)
+
+activate DCP
+DCP -> PU : requireSingleIndex(args, usage)
+PU --> DCP : index token
+DCP -> PU : parseIndex(index token)
+PU --> DCP : Index
+DCP -> DC : new DeleteCommand(index)
+DC --> ABP : DeleteCommand
+
+return command
+@enduml

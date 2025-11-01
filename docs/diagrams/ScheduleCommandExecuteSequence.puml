@@ -1,0 +1,61 @@
+@startuml
+' Schedule command execution sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/LogicManager.java
+' - src/main/java/seedu/address/logic/commands/ScheduleCommand.java
+' - src/main/java/seedu/address/model/Model.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+participant "Logic\\n(LogicManager)" as LM
+participant "ScheduleCommand" as SC <<command>>
+participant Model as M
+participant Person as P
+participant "LessonList" as LL
+participant Messages as MSG
+
+LM -> SC : execute(model)
+activate SC
+SC -> SC : requireAllNonNull(model, index, lesson)
+SC -> M : getFilteredPersonList()
+M --> SC : List<Person>
+SC -> SC : validate index bounds
+alt invalid index
+  SC --> LM : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else duplicate lesson
+  SC -> SC : personToEdit = list.get(index)
+  SC -> P : getLessonList()
+  P --> SC : LessonList
+  SC -> LL : hasDuplicates(lesson)
+  LL --> SC : true
+  SC --> LM : throw CommandException(MESSAGE_DUPLICATE_LESSON)
+else overlapping lesson
+  SC -> SC : personToEdit = list.get(index)
+  SC -> P : getLessonList()
+  P --> SC : LessonList
+  SC -> LL : hasDuplicates(lesson)
+  LL --> SC : false
+  SC -> LL : hasOverlappingLesson(lesson)
+  LL --> SC : true
+  SC --> LM : throw CommandException(MESSAGE_OVERLAPPING_LESSON)
+else schedule allowed
+  SC -> SC : personToEdit = list.get(index)
+  SC -> P : getLessonList()
+  P --> SC : LessonList
+  SC -> LL : hasDuplicates(lesson)
+  LL --> SC : false
+  SC -> LL : hasOverlappingLesson(lesson)
+  LL --> SC : false
+  SC -> LL : add(lesson)
+  LL --> SC : updated LessonList
+  SC -> SC : editedPerson = new Person(..., updatedLessonList, ...)
+  SC -> M : setPerson(personToEdit, editedPerson)
+  SC -> M : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+  SC -> MSG : format(editedPerson)
+  MSG --> SC : formatted string
+  SC --> LM : CommandResult("Scheduled Lesson to Person: %1$s")
+end
+@enduml

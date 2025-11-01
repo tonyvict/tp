@@ -1,0 +1,28 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters "edit" command;
+:Logic parses index and optional fields;
+if (Any field provided?) then (no)
+  :Display error about missing fields;
+  stop
+else (yes)
+  :Create and execute EditCommand;
+endif
+if (Valid person index?) then (no)
+  :Display invalid index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+if (Duplicate identity after edits?) then (yes)
+  :Display duplicate person error;
+  stop
+else (no)
+  :Apply edits and refresh list;
+  :Display success to user;
+  stop
+endif
+@enduml

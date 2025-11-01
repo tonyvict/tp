@@ -4,11 +4,10 @@ title: Developer Guide
 ---
 ---
 layout: page
-title: Developer Guide
+title: ClassRosterPro Developer Guide
 ---
 * Table of Contents
-  {:toc}
-
+{:toc}
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
@@ -27,11 +26,6 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 ## **Design**
 
-<div markdown="span" class="alert alert-primary">
-
-:bulb: **Tip:** The `.puml` files used to create diagrams are in this document `docs/diagrams` folder. Refer to the [_PlantUML Tutorial_ at se-edu/guides](https://se-education.org/guides/tutorials/plantUml.html) to learn how to create and edit diagrams.
-</div>
-
 ### Architecture
 
 <img src="images/ArchitectureDiagram.png" width="280" />
@@ -42,7 +36,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -74,7 +68,7 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
 ![Structure of the UI Component](images/UiClassDiagram.png)
 
@@ -91,7 +85,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -121,7 +115,7 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
 <img src="images/ModelClassDiagram.png" width="450" />
 
@@ -133,8 +127,6 @@ The `Model` component,
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
-
 <img src="images/BetterModelClassDiagram.png" width="450" />
 
 </div>
@@ -142,7 +134,7 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-W13-4/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 <img src="images/StorageClassDiagram.png" width="550" />
 
@@ -161,140 +153,277 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Help Command
+
+#### What it does
+
+Shows the in-app help window with a curated command summary so tutors can quickly recall syntax without leaving the application.
+
+#### Execution walkthrough
+
+When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The command returns a `CommandResult` that sets the `showHelp` flag to `true`, instructing the UI to open (or refocus) the help window. The textual summary displayed comes from `HelpCommand.SHOWING_HELP_MESSAGE`.
+
+#### Design considerations
+
+- Keep help content in code to guarantee the window works even when offline.
+- The window opens idempotently—the same command simply refocuses the existing help stage instead of spawning duplicates.
+- The `CommandResult` flagging approach keeps UI behaviour configurable without introducing UI dependencies into the logic layer.
+
+### Add Command
+
+#### What it does
+
+Creates a new student entry with core contact information and optional tags. This is the primary way tutors build the roster.
+
+#### Execution walkthrough
+
+`AddressBookParser` delegates `add` commands to `AddCommandParser`, which tokenises by CLI prefixes, validates each mandatory field, and constructs a `Person`. `AddCommand#execute(Model)` then checks for duplicates via `model.hasPerson`; if none are found, `model.addPerson` is called and a success message is returned.
+
+#### Design considerations
+
+- Input validation happens during parsing so users see errors before the model is mutated.
+- Duplicate detection relies on `Person#isSamePerson`, ensuring identity rules stay centralised in the model.
+- For a detailed diagrammatic breakdown, see the subsequent **Add Student Command** section.
+
+### List Command
+
+#### What it does
+
+Resets the student list back to the full roster after filters, searches, or attribute-based queries.
+
+#### Execution walkthrough
+
+`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
+
+#### Design considerations
+
+- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
+- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
+- Returning an explicit acknowledgement helps the user confirm that the reset completed.
+
+### Open Command
+
+#### What it does
+
+Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
+
+#### Execution walkthrough
+
+`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
+
+#### Design considerations
+
+- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
+- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
+- Operations stay synchronous; no additional events or asynchronous callbacks are required.
+
+### Close Command
+
+#### What it does
+
+Collapses an expanded student card to restore the compact list view.
+
+#### Execution walkthrough
+
+Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
+
+#### Design considerations
+
+- Mirroring the open logic keeps the commands complementary and predictable.
+- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
+- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
+
+### Clear Command
+
+#### What it does
+
+Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
+
+#### Execution walkthrough
+
+`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
+
+#### Design considerations
+
+- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
+- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
+- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
+
+### Exit Command
+
+#### What it does
+
+Terminates the application gracefully after acknowledging the user's request.
+
+#### Execution walkthrough
+
+`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
+
+#### Design considerations
+
+- The command never throws; exiting is always considered successful.
+- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
+- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
+
 ### Add Student Command
 
-Overview
+#### What it does
 
-The `add` command adds a new student with fields `Name`, `Phone`, `Email`, `Address`, and optional `Tag`s. The flow follows the standard style used in this project: a parser constructs a concrete `Command`, which is then executed against the `Model` by `LogicManager`.
+Registers a new student in the roster. The created `Person` initially has empty remark, grade, and lesson lists; tags may be provided to group students immediately.
 
-Feature details
+#### Parameters
 
-1. The user executes the `add` command, e.g. `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/primary t/focused`.
-2. `LogicManager` delegates to `AddressBookParser`, which instantiates `AddCommandParser` to parse the arguments.
-3. `AddCommandParser` tokenizes by prefixes, verifies required prefixes (`n/`, `p/`, `e/`, `a/`), rejects duplicate prefixes, and parses values via `ParserUtil`.
-4. A `Person` is created with an empty `Remark`, empty `LessonList`, empty `GradeList`, and any provided `Tag`s, and wrapped in a new `AddCommand`.
-5. `AddCommand#execute(Model)` checks `Model#hasPerson` to prevent duplicates. If present, it throws `AddCommand.MESSAGE_DUPLICATE_PERSON`.
-6. Otherwise, `Model#addPerson` is called and a success message is returned.
+`add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...`
 
-Parsing and execution (files of interest)
+- `n/` — required. Full student name; validated by `Name#isValidName`.
+- `p/` — required. Contact number; must satisfy `Phone#isValidPhone`.
+- `e/` — required. Email address; checked by `Email#isValidEmail`.
+- `a/` — required. Free-form postal address.
+- `t/` — optional, repeatable. Adds tags; each value must satisfy `Tag#isValidTagName`.
 
-- `src/main/java/seedu/address/logic/parser/AddCommandParser.java`
-- `src/main/java/seedu/address/logic/commands/AddCommand.java`
-- `src/main/java/seedu/address/logic/parser/AddressBookParser.java`
+The command rejects missing mandatory prefixes, duplicate occurrences of the same mandatory prefix, and malformed values.
 
-Sequence of the add command
+#### Overview
 
-1. User inputs `add ...`.
-2. `AddressBookParser#parseCommand` matches `add` and creates `AddCommandParser`.
-3. `AddCommandParser#parse`:
-   - tokenizes arguments with `n/`, `p/`, `e/`, `a/`, `t/`
-   - ensures all required prefixes exist and preamble is empty
-   - validates duplicate prefixes, parses domain objects via `ParserUtil`
-   - creates `Person` and returns `new AddCommand(person)`
-4. `AddCommand#execute`:
-   - if `model.hasPerson(toAdd)` → error "This person already exists in the address book"
-   - else `model.addPerson(toAdd)` → success `CommandResult`
+The `add` command follows the standard command pattern of *parse → construct command → execute on the model*.
 
-Diagrams
+#### High-level flow
 
-- Parser flow (PlantUML): `docs/diagrams/AddCommandParserSequence.puml`
-- Execution flow (PlantUML): `docs/diagrams/AddCommandExecuteSequence.puml`
-- Parser relationships overview: `docs/images/ParserClasses.png`
+![Add command activity](images/AddCommandActivityDiagram.png)
 
-Constraints and validation
+The activity diagram captures the user journey: the tutor submits the command, the system validates the input, and either reports a duplicate or persists the new student before confirming success.
 
-- Required prefixes: `n/`, `p/`, `e/`, `a/` must be present exactly once.
-- `ParserUtil` and domain types perform format checks for name, phone, email, and address.
-- `Tag`s are optional; duplicates are naturally de-duplicated by set semantics.
+#### Parsing pipeline
 
-### \[Proposed\] Undo/redo feature
+![Add command parser sequence](images/AddCommandParserSequence.png)
 
-#### Proposed Implementation
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `AddCommandParser`. The parser:
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+1. Tokenises the raw arguments by prefixes (`n/`, `p/`, `e/`, `a/`, `t/`).
+2. Ensures the preamble is empty and every mandatory prefix appears exactly once.
+3. Delegates to `ParserUtil` to construct domain objects (`Name`, `Phone`, `Email`, `Address`, `Tag`).
+4. Builds a `Person` with default `Remark`, `LessonList`, and `GradeList`, and returns a fully initialised `AddCommand`.
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+Key classes: `AddCommandParser`, `ParserUtil`, `Person`.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+#### Execution behaviour
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+![Add command execution sequence](images/AddCommandExecuteSequence.png)
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+The sequence diagram documents the runtime checks when `AddCommand#execute(Model)` is invoked. The command:
 
-![UndoRedoState0](images/UndoRedoState0.png)
+1. Calls `model.hasPerson(toAdd)` to guard against duplicates.
+2. Throws `CommandException` with `MESSAGE_DUPLICATE_PERSON` if a match exists.
+3. Otherwise adds the student via `model.addPerson(toAdd)` and formats the success message through `Messages.format`.
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Key classes: `AddCommand`, `Model`, `Messages`.
 
-![UndoRedoState1](images/UndoRedoState1.png)
+#### Validation and error handling
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+- Missing or repeated mandatory prefixes trigger `ParseException` with usage guidance.
+- Invalid value formats (e.g., phone, email) are rejected by the respective domain constructors inside `ParserUtil`.
+- Duplicate students—based on the `Person#isSamePerson` identity definition—are blocked during execution.
 
-![UndoRedoState2](images/UndoRedoState2.png)
+### Edit Student Command
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+#### What it does
 
-</div>
+Updates selected fields of an existing student without replacing the whole entry. Fields omitted from the command remain unchanged.
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+#### Parameters
 
-![UndoRedoState3](images/UndoRedoState3.png)
+`edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]... [attr/KEY=VALUE]...`
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+- `n/`, `p/`, `e/`, `a/` — optional single-occurrence fields; if present, must pass the same validators as `add`.
+- `t/` — optional, repeatable; replaces the tag set when provided. Supplying a lone `t/` clears all tags.
+- `attr/` — optional, repeatable; replaces the attribute set. Supplying `attr/` with an empty value clears attributes.
 
-</div>
+At least one field beyond the index must be provided; otherwise the command rejects the input.
 
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
+#### Overview
 
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Logic.png)
+The edit command follows the same *parse → command → execute* pattern as other logic features.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+#### High-level flow
 
-</div>
+![Edit command activity](images/EditCommandActivityDiagram.png)
 
-Similarly, how an undo operation goes through the `Model` component is shown below:
+The activity diagram illustrates the conditional checks: field presence, index validation, duplicate detection, and final update.
 
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Model.png)
+#### Parsing pipeline
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+![Edit command parser sequence](images/EditCommandParserSequence.png)
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+The sequence diagram shows how `AddressBookParser` delegates to `EditCommandParser`. The parser:
 
-</div>
+1. Tokenises optional fields and isolates the index preamble.
+2. Verifies that at least one editable field was supplied.
+3. Parses the index and checks for duplicate single-use prefixes.
+4. Builds an `EditPersonDescriptor`, parsing tags and attributes through `ParserUtil`.
+5. Ensures the descriptor contains changes before instantiating `EditCommand`.
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Key classes: `EditCommandParser`, `EditPersonDescriptor`, `ParserUtil`.
 
-![UndoRedoState4](images/UndoRedoState4.png)
+#### Execution behaviour
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+![Edit command execution sequence](images/EditCommandExecuteSequence.png)
 
-![UndoRedoState5](images/UndoRedoState5.png)
+The sequence diagram  captures the runtime flow:
 
-The following activity diagram summarizes what happens when a user executes a new command:
+1. Fetch the targeted student from the filtered list and guard against invalid indices.
+2. Produce an edited `Person` by merging descriptor values with the original.
+3. If the identity changes and clashes with another student, throw `MESSAGE_DUPLICATE_PERSON`.
+4. Otherwise replace the entry, refresh the list, and return a success message.
 
-<img src="images/CommitActivityDiagram.png" width="250" />
+Key classes: `EditCommand`, `Model`, `Messages`.
 
-#### Design considerations:
+#### Validation and error handling
 
-**Aspect: How undo & redo executes:**
+- Missing optional fields trigger `MESSAGE_NOT_EDITED`.
+- Invalid indices reuse the shared index error message.
+- Identity conflicts are blocked before the model is mutated.
 
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
+### Delete Student Command
 
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+#### What it does
 
-_{more aspects and alternatives to be added}_
+Removes a student from the roster using their displayed index.
 
-### \[Proposed\] Data archiving
+#### Parameters
 
-_{Explain here how the data archiving feature will be implemented}_
+`delete INDEX`
 
+- `INDEX` — required, 1-based. Must reference an entry in the current filtered list.
+
+#### Overview
+
+Deletion is the simplest command flow: parse the index, resolve it against the filtered list, and delete the matching person.
+
+#### High-level flow
+
+![Delete command activity](images/DeleteCommandActivityDiagram.png)
+
+The activity diagram highlights the single decision point—whether the supplied index is valid.
+
+#### Parsing pipeline
+
+![Delete command parser sequence](images/DeleteCommandParserSequence.png)
+
+The sequence diagram  shows the brief parser interaction: `requireSingleIndex`, `parseIndex`, then creation of a `DeleteCommand`.
+
+Key classes: `DeleteCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+![Delete command execution sequence](images/DeleteCommandExecuteSequence.png)
+
+The sequence diagram  depicts the execution: retrieve the filtered list, guard against invalid indices, remove the student through `model.deletePerson`, and format a confirmation message with `Messages.format`. Key classes: `DeleteCommand`, `Model`, `Messages`.
+
+#### Validation and error handling
+
+- Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Because the command is irreversible, consider pairing it with undo when available.
 
 --------------------------------------------------------------------------------------------------------------------
 

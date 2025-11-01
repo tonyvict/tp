@@ -1,0 +1,30 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters "schedule" command;
+:Logic parses index, times, date, subject;
+:Create and execute ScheduleCommand;
+if (Valid person index?) then (no)
+  :Display invalid index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+if (Lesson already scheduled?) then (yes)
+  :Display duplicate lesson error;
+  stop
+else (no)
+  :Check for overlapping lessons;
+endif
+if (Overlapping lesson found?) then (yes)
+  :Display overlapping lesson error;
+  stop
+else (no)
+  :Add lesson to person's schedule;
+  :Update filtered list;
+  :Display success to user;
+  stop
+endif
+@enduml
