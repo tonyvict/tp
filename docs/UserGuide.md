@@ -2,15 +2,9 @@
 layout: page
 title: ClassRosterPro User Guide
 ---
-## About This Guide
-Welcome to the ClassRosterPro User Guide!
-This guide is designed to help you, a private tutor, efficiently manage all your student information in one place.
-* If you are a new user, we highly recommend starting with the "Quick Start"
-section to get set up and run your first command in just 5 minutes
-* If you are an experienced user, jump directly to the "Features" section for a complete list of commands.
-* Look out for Tips and Common Mistakes icons to help you use ClassRosterPro more effectively.
 
 ## Introduction
+Welcome to the ClassRosterPro User Guide!
 Juggling student contacts, lesson schedules, and notes across different notebooks and apps?
 **ClassRosterPro** is a powerful desktop application built for private tutors
 to **centralize and manage all their student details.**
@@ -19,17 +13,17 @@ While it has a clean Graphical User Interface (GUI), it is optimized for use via
 If you can type fast, you can manage your student **roster—finding,
 updating, and organizing** much faster than with a mouse.
 
-### Use Cases:
-* Quickly add a new student after a trial lesson with their contact details and subject tag.
-* Use tags to mark students so you can filter and view them as a group.
-* Instantly update a student's phone number when they get a new one.
-* Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
-all in one expanded view
-
 ### Table of Contents 
 * Table of Contents
 {:toc}
 
+## About This Guide
+Welcome to the ClassRosterPro User Guide!
+This guide is designed to help you, a private tutor, efficiently manage all your student information in one place.
+* If you are a new user, we highly recommend starting with the "Quick Start"
+  section to get set up and run your first command in just 5 minutes
+* If you are an experienced user, jump directly to the "Features" section for a complete list of commands.
+* Look out for Tips and Common Mistakes icons to help you use ClassRosterPro more effectively.
 --------------------------------------------------------------------------------------------------------------------
 
 ## Quick start
