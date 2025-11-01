@@ -72,8 +72,8 @@ public class PersonCard extends UiPart<Region> {
         remark.setText(person.getRemark().value);
         String tagsText = person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
-                .map(tag -> tag.tagName)
-                .collect(Collectors.joining(", ")); // Join tags with a comma and space
+                .map(tag -> "[" + tag.tagName + "]")
+                .collect(Collectors.joining(", ")); // Join tags with a space
         tags.setText(tagsText);
         //making lessons into numbered list
         StringBuilder lessonSb = new StringBuilder();
