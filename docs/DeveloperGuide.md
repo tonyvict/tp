@@ -7,8 +7,7 @@ layout: page
 title: ClassRosterPro Developer Guide
 ---
 * Table of Contents
-  {:toc}
-
+{:toc}
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
@@ -28,8 +27,6 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 ## **Design**
 
 ### Architecture
-
-<div markdown="span" class="alert alert-info">:bulb: **Tip:** The PlantUML sources for these diagrams live in the `docs/diagrams` folder.</div>
 
 <img src="images/ArchitectureDiagram.png" width="280" />
 
