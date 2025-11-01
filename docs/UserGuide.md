@@ -304,7 +304,7 @@ _Deletes the attribute subject from the 1st student._
 
 * `delattr 2 attr/age attr/subject`
 
-_Deletes multiple attributes (age, subject) from the 3rd student._
+_Deletes multiple attributes (age, subject) from the 2rd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
