@@ -26,6 +26,7 @@ updating, and organizing** much faster than with a mouse.
 * Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
 all in one expanded view
 
+### Table of Contents 
 * Table of Contents
 {:toc}
 
@@ -34,8 +35,9 @@ all in one expanded view
 ## Quick start
 
 1. Ensure you have Java `17` or above installed in your Computer.<br>
-   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
-
+   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html). <br>
+   **Windows users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationWindows.html). <br>
+   **Linux users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationLinux.html).
 2. Download the latest `ClassRosterPro.jar` file from [here](https://github.com/AY2526S1-CS2103T-W13-4/tp/releases).
 
 3. Copy the file to the folder you want to use as the _home folder_ for your ClassRosterPro.
@@ -129,7 +131,7 @@ A student can have none or multiple tags.
 ![Result of adding a student](images/addUI.png)
 <p align="center"><em>Success message displayed and new student added.</em></p>
 
-### Listing all persons : `list`
+### Listing all students : `list`
 
 Shows a list of all students in your roster.
 
@@ -191,7 +193,7 @@ Trying to close a card that is already collapsed. The command will have no visib
 <p align="center"><em>Alex's contact card collapsed.</em></p>
 
 
-### Editing a person : `edit`
+### Editing a student : `edit`
 
 Edits the details of an existing student in your list.
 
@@ -225,7 +227,7 @@ Assuming the index is based on the original list. Remember, it is based on the c
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Figure: Result of editing a student.</em></p>
 
-### Deleting a person : `delete`
+### Deleting a student : `delete`
 
 Deletes the specified student from your roster.
 
@@ -240,7 +242,7 @@ Examples:
 
 _Deletes the 2nd student in the roster._
 
-* `filter Math` followed by `delete 1`
+* `filter attr/Sub = Maths` followed by `delete 1`
 
 _Deletes the 1st student in the results of the filter command._
 
@@ -354,7 +356,7 @@ Searching for partial words - the filter only matches complete tag words.
 
 ### Scheduling a lesson : `schedule`
 
-Schedule a lesson foe a student with date, time and duration.
+Schedule a lesson for a student with date, time and duration.
 
 Format:
 `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`
@@ -466,7 +468,7 @@ Using this command on a student who doesn't have any completed lessons to unmark
 
 ### Quick Search : `search`
 
-Allows users to instantly search for contacts by name, email or phone number.
+Allows users to instantly search for students by name, email or phone number.
 
 Format: `search [KEYWORD]`
 
@@ -579,21 +581,21 @@ Therefore, edit the data file only if you are confident that you can update it c
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous ClassRosterPro home folder.
 
-**Q**: Is there an undo command?
+**Q**: Is there an undo command?<br>
 **A**: Currently, ClassRosterPro does not support an undo function. Please use commands with care, especially delete and clear.
 
-**Q**: What happens if I forget to include a compulsory field when adding a student?
+**Q**: What happens if I forget to include a compulsory field when adding a student?<br>
 **A**: ClassRosterPro will show an error message explaining which field is missing and the correct format for the add command.
 
-**Q**: Can I use the same attribute tags for multiple students?
+**Q**: Can I use the same attribute tags for multiple students?<br>
 **A**: Yes! That's the main purpose of tags. You can use the filter command to find all students with a specific tag.
 
-**Q**: Can I see my teaching schedule for the week?
+**Q**: Can I see my teaching schedule for the week?<br>
 **A**: Currently, you need to check each student individually using the open command. Future versions may include a calendar view.
 
-**Q**: Why can't I see all the details for a student?
+**Q**: Why can't I see all the details for a student?<br>
 **A**: Student cards start in a collapsed state to save space. Use the open INDEX command to expand a student's card and view all their details.
 
 --------------------------------------------------------------------------------------------------------------------
