@@ -129,7 +129,7 @@ A student can have none or multiple tags.
 ![Result of adding a student](images/addUI.png)
 <p align="center"><em>Success message displayed and new student added.</em></p>
 
-### Listing all persons : `list`
+### Listing all students : `list`
 
 Shows a list of all students in your roster.
 
@@ -191,7 +191,7 @@ Trying to close a card that is already collapsed. The command will have no visib
 <p align="center"><em>Alex's contact card collapsed.</em></p>
 
 
-### Editing a person : `edit`
+### Editing a student : `edit`
 
 Edits the details of an existing student in your list.
 
@@ -225,7 +225,7 @@ Assuming the index is based on the original list. Remember, it is based on the c
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Figure: Result of editing a student.</em></p>
 
-### Deleting a person : `delete`
+### Deleting a student : `delete`
 
 Deletes the specified student from your roster.
 
@@ -354,7 +354,7 @@ Searching for partial words - the filter only matches complete tag words.
 
 ### Scheduling a lesson : `schedule`
 
-Schedule a lesson foe a student with date, time and duration.
+Schedule a lesson for a student with date, time and duration.
 
 Format:
 `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`
@@ -466,7 +466,7 @@ Using this command on a student who doesn't have any completed lessons to unmark
 
 ### Quick Search : `search`
 
-Allows users to instantly search for contacts by name, email or phone number.
+Allows users to instantly search for students by name, email or phone number.
 
 Format: `search [KEYWORD]`
 
