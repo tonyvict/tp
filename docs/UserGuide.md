@@ -419,7 +419,6 @@ Format: `mark INDEX lesson/LESSON_INDEX`
 *   The `INDEX` refers to the index number shown in the displayed person list.
 *   The `LESSON_INDEX` refers to the index number shown in the displayed lesson list.
 *   The `INDEX` and `LESSON_INDEX` **must be a positive integer** 1, 2, 3, …​
-*   Only lessons scheduled on the current date can be marked.
 
 Examples:
 * `mark 1 lesson/1`
@@ -432,6 +431,11 @@ Combine with the schedule command to maintain a complete teaching schedule.
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
 Using this command on a student who doesn't have any scheduled lessons.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Application
+allows lessons in the future/past to be marked as present, to accommodate
+students arriving early or last minute changes in lesson schedule.
 </div>
 
 ![result for 'mark student at 1st index'](images/markUI.png)
@@ -447,7 +451,7 @@ Format: `unmark INDEX lesson/LESSON_INDEX`
 *   The `INDEX` refers to the index number shown in the displayed person list.
 *   The `LESSON_INDEX` refers to the index number shown in the displayed lesson list.
 *   The `INDEX` and `LESSON_INDEX` **must be a positive integer** 1, 2, 3, …​
-*   Only lessons that are currently marked as present will be unmarked.
+*   Only lessons that are currently marked as present can be unmarked.
 
 Examples:
 * `unmark 1 lesson/1`
@@ -459,7 +463,12 @@ Use this command to correct accidental marks or handle last-minute cancellations
 </div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Using this command on a student who doesn't have any completed lessons to unmark.
+Using this command on a student who doesn't have any scheduled lessons to unmark.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Application
+allows lessons in the future/past to be marked as not present, to accommodate
+students arriving early or last minute changes in lesson schedule.
 </div>
 
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
@@ -629,6 +638,8 @@ Therefore, edit the data file only if you are confident that you can update it c
 
 Action | Format, Examples
 --------|------------------
+**Open Student card** | `open INDEX`<br> e.g., `open 1`
+**Close Student card** | `close INDEX`<br> e.g., `close 1`
 **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
