@@ -8,6 +8,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +75,33 @@ public class TagCommandTest {
 
         Person expectedEditedPerson = new PersonBuilder(personToEdit)
                 .withAttributes(attributesToAdd)
+                .build();
+
+        String expectedMessage = String.format(TagCommand.MESSAGE_ADD_ATTRIBUTE_SUCCESS,
+                expectedEditedPerson.getName());
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(personToEdit, expectedEditedPerson);
+
+        CommandResult result = tagCommand.execute(model);
+        assertEquals(expectedMessage, result.getFeedbackToUser());
+        assertEquals(expectedModel, model);
+    }
+
+    @Test
+    public void execute_duplicateAttributeKeys_lastValueApplied() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(0);
+
+        Attribute attrFirst = new Attribute("height", "1.3");
+        Attribute attrSecond = new Attribute("height", "1.6");
+        Set<Attribute> attributesToAdd = new LinkedHashSet<>();
+        attributesToAdd.add(attrFirst);
+        attributesToAdd.add(attrSecond);
+
+        TagCommand tagCommand = new TagCommand(INDEX_FIRST_PERSON, attributesToAdd);
+
+        Person expectedEditedPerson = new PersonBuilder(personToEdit)
+                .withAttributes(Set.of(attrSecond))
                 .build();
 
         String expectedMessage = String.format(TagCommand.MESSAGE_ADD_ATTRIBUTE_SUCCESS,

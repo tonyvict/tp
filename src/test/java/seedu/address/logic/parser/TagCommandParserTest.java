@@ -79,4 +79,16 @@ public class TagCommandParserTest {
                 parser.parse("1 " + PREFIX_ATTRIBUTE + "=math"));
     }
 
+    @Test
+    public void parse_duplicateAttributeKeys_lastOneWins() throws Exception {
+        Attribute expectedAttribute = new Attribute("height", Set.of("1.6"));
+        TagCommand expectedCommand = new TagCommand(Index.fromOneBased(1), Set.of(expectedAttribute));
+
+        TagCommand actualCommand = parser.parse("1 "
+                + PREFIX_ATTRIBUTE + "height=1.3 "
+                + PREFIX_ATTRIBUTE + "height=1.6");
+
+        assertEquals(expectedCommand, actualCommand);
+    }
+
 }

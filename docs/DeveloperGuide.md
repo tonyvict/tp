@@ -360,7 +360,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC-1: Add and tag a student**
+### **UC-1: Add attributes to a student**
 
 **Goal:** Add a new student and assign attributes.
 **Scope:** Roster management
@@ -371,8 +371,8 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 1. Tutor enters `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`.
 2. System validates all fields and adds the student.
-3. Tutor enters `tag 1 attr/subject=math attr/age=16`.
-4. System updates the student and confirms tags.
+3. Tutor enters `addattr 1 attr/subject=math attr/age=16`.
+4. System adds the new attribute values to the student.
 
 **Extensions:**
 
@@ -470,14 +470,14 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor types `deltag 1 attr/subject`.
+1. Tutor types `delattr 1 attr/subject`.
 2. System validates index and attribute key.
 3. System removes the specified attribute and confirms.
 
 **Extensions:**
 
 * 1a. Invalid index → error "Invalid person index".
-* 2a. Attribute doesn't exist → no error, command succeeds.
+* 2a. Attribute doesn't exist → error "No matching attributes found".
 * 2b. Multiple attributes specified → all valid attributes removed.
 
 ---
@@ -600,22 +600,22 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **5. Glossary**
 
-| Term                | Definition                                                                                  |
-| ------------------- | ------------------------------------------------------------------------------------------- |
-| **Command**         | A typed instruction (e.g., `add`, `delete`, `find`, `schedule`) processed by the logic layer. |
-| **Index**           | 1-based position of a student in the current displayed list (after `list`/`find`/`filter`). |
-| **Lesson Index**    | 1-based position of a lesson in a student's lesson list. |
-| **Tag / Attribute** | Key–value metadata attached to a student (e.g., `subject=math`, `age=16`). Can have multiple comma-separated values. |
-| **Remark**          | Short free-text note attached to a student for remembering important details. |
-| **Attendance**      | Mark/unmark record indicating if a student attended a specific lesson. |
-| **Lesson**          | A scheduled time block (date, start time, end time, subject) tied to a student. |
-| **Grade**           | A subject-assessment-score triplet recorded for a student (e.g., MATH/WA1/89). |
-| **List**            | Default roster view showing all students; also the command that resets filters. |
-| **Filter**          | Command to display only students matching specified attribute criteria. |
-| **Quick Search**    | Real-time search feature that finds students by name, email, or phone number. |
-| **Help**            | Window listing all supported commands with examples and grouped by category. |
-| **Overlap**         | When two lessons for the same student share any time period on the same date. |
-| **Duplicate Lesson**| An exact match of student, date, start time, end time, and subject with an existing lesson. |
+| Term          | Definition                                                                                                                  |
+| ------------- |-----------------------------------------------------------------------------------------------------------------------------|
+| **Command**   | A typed instruction (e.g., `add`, `delete`, `find`, `schedule`) processed by the logic layer.                               |
+| **Index**     | 1-based position of a student in the current displayed list (after `list`/`find`/`filter`).                                 |
+| **Lesson Index** | 1-based position of a lesson in a student's lesson list.                                                                    |
+| **Attribute** | Key–value metadata attached to a student (e.g., `subject=math`, `age=16`). Can have multiple comma-separated values. |
+| **Remark**    | Short free-text note attached to a student for remembering important details.                                               |
+| **Attendance** | Mark/unmark record indicating if a student attended a specific lesson.                                                      |
+| **Lesson**    | A scheduled time block (date, start time, end time, subject) tied to a student.                                             |
+| **Grade**     | A subject-assessment-score triplet recorded for a student (e.g., MATH/WA1/89).                                              |
+| **List**      | Default roster view showing all students; also the command that resets filters.                                             |
+| **Filter**    | Command to display only students matching specified attribute criteria.                                                     |
+| **Quick Search** | Real-time search feature that finds students by name, email, or phone number.                                               |
+| **Help**      | Window listing all supported commands with examples and grouped by category.                                                |
+| **Overlap**   | When two lessons for the same student share any time period on the same date.                                               |
+| **Duplicate Lesson**| An exact match of student, date, start time, end time, and subject with an existing lesson.                                 |
 
 ---
 
@@ -693,8 +693,8 @@ Purpose: Add attributes to students and filter by them.
 
 Steps to test:
 1. Tag a student with attributes:
-   - `tag 1 attr/subject=Math attr/age=16`
-2. Verify tags appear under the student's details.
+   - `addattr 1 attr/subject=Math attr/age=16`
+2. Verify attributes appear under the student's details.
 3. Filter students by multiple attributes:
    - `filter attr/subject=Math attr/age=16`
 
@@ -770,9 +770,9 @@ Purpose: Remove specific attributes (tags) from a student.
 
 Steps to test:
 1. Add attributes first (if not present):
-   - `tag 1 attr/subject=Math attr/level=Sec3`
+   - `addattr 1 attr/subject=Math attr/level=Sec3`
 2. Delete an attribute:
-   - `deltag 1 attr/level`
+   - `delattr 1 attr/level`
 
 Expected: Only the `level` attribute is removed; `subject=Math` remains.
 
@@ -781,8 +781,8 @@ Expected: Only the `level` attribute is removed; `subject=Math` remains.
 Purpose: Confirm that data modifications are saved correctly.
 
 Steps to test:
-1. Modify data using any commands above (e.g., add tags, schedule a lesson, add grades).
+1. Modify data using any commands above (e.g., add attributes, schedule a lesson, add grades).
 2. Exit the app.
 3. Reopen the app.
 
-Expected: All changes persist (e.g., added tags, scheduled lessons, grades).
+Expected: All changes persist (e.g., added attributes, scheduled lessons, grades).

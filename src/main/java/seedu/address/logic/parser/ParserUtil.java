@@ -23,9 +23,9 @@ import seedu.address.model.tag.Tag;
 public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX =
-            "Please input a positive integer between 1 and 2,147,483,647 for INDEX";
+            "The person index provided is invalid";
     public static final String MESSAGE_INVALID_LESSON_INDEX =
-            "Please input a positive integer between 1 and 2,147,483,647 for LESSON_INDEX";
+            "The lesson index provided is invalid";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
