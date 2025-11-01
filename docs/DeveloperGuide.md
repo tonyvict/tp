@@ -4,7 +4,7 @@ title: Developer Guide
 ---
 ---
 layout: page
-title: Developer Guide
+title: ClassRosterPro Developer Guide
 ---
 * Table of Contents
   {:toc}
