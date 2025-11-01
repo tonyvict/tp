@@ -26,6 +26,7 @@ updating, and organizing** much faster than with a mouse.
 * Use the open command to see a student's full profile, including your notes and their upcoming lesson schedule,
 all in one expanded view
 
+### Table of Contents 
 * Table of Contents
 {:toc}
 
