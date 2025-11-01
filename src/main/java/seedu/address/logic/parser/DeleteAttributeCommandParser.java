@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.DeleteAttributeCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -38,7 +39,12 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
                     DeleteAttributeCommand.MESSAGE_USAGE));
         }
 
-        Index index = ParserUtil.parseIndex(preamble);
+        Index index;
+        try {
+            index = ParserUtil.parseIndex(preamble);
+        } catch (ParseException e) {
+            throw new ParseException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX, e);
+        }
 
         return new DeleteAttributeCommand(index, keys);
     }
