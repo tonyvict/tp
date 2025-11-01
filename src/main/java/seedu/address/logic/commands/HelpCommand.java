@@ -40,7 +40,7 @@ public class HelpCommand extends Command {
             " - unmark <INDEX> lesson/<LESSON_INDEX>",
             "",
             "GRADE COMMANDS:",
-            " - grade <INDEX> sub/<Subject>/<Assessment>/<Score> [sub/<Subject2>/<Assessment2>/<Score2>]...",
+            " - grade <INDEX> sub/<SUBJECT>/<ASSESSMENT>/<SCORE> [sub/<SUBJECT2>/<ASSESSMENT2>/<SCORE2>]...",
             "",
             "OTHER STUDENT COMMANDS:",
             " - remark <INDEX> r/REMARK1 [r/REMARK2]...",
