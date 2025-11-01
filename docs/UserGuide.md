@@ -580,7 +580,7 @@ Therefore, edit the data file only if you are confident that you can update it c
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous ClassRosterPro home folder.
 
 **Q**: Is there an undo command?<br>
 **A**: Currently, ClassRosterPro does not support an undo function. Please use commands with care, especially delete and clear.
