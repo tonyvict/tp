@@ -616,7 +616,7 @@ Therefore, edit the data file only if you are confident that you can update it c
 | **Prefix**   | A short code (e.g., `n/`, `p/`, `attr/`) used to specify which parameter you are providing.                                                 |
 | **Parameter**| The information you provide to a command (e.g., `John Doe` in `add n/John Doe`).                                                            |
 | **Keyword**  | A word used for searching, especially with the `search` command.                                                                            |
-| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`). Used for tagging and filtering.          |
+| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`).                                          |
 | **Remark**   | A short, free-text note you can add to a student's profile to remember important details.                                                   |
 | **Lesson**   | A scheduled class for a student, which includes a date, start time, end time, and subject.                                                  |
 | **Attendance**| A record showing whether a student was present or not for a scheduled lesson.                                                               |
