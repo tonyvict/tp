@@ -240,7 +240,7 @@ Examples:
 
 _Deletes the 2nd student in the roster._
 
-* `filter Math` followed by `delete 1`
+* `filter attr/Sub = Maths` followed by `delete 1`
 
 _Deletes the 1st student in the results of the filter command._
 
@@ -581,19 +581,19 @@ Therefore, edit the data file only if you are confident that you can update it c
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
 
-**Q**: Is there an undo command?
+**Q**: Is there an undo command?<br>
 **A**: Currently, ClassRosterPro does not support an undo function. Please use commands with care, especially delete and clear.
 
-**Q**: What happens if I forget to include a compulsory field when adding a student?
+**Q**: What happens if I forget to include a compulsory field when adding a student?<br>
 **A**: ClassRosterPro will show an error message explaining which field is missing and the correct format for the add command.
 
-**Q**: Can I use the same attribute tags for multiple students?
+**Q**: Can I use the same attribute tags for multiple students?<br>
 **A**: Yes! That's the main purpose of tags. You can use the filter command to find all students with a specific tag.
 
-**Q**: Can I see my teaching schedule for the week?
+**Q**: Can I see my teaching schedule for the week?<br>
 **A**: Currently, you need to check each student individually using the open command. Future versions may include a calendar view.
 
-**Q**: Why can't I see all the details for a student?
+**Q**: Why can't I see all the details for a student?<br>
 **A**: Student cards start in a collapsed state to save space. Use the open INDEX command to expand a student's card and view all their details.
 
 --------------------------------------------------------------------------------------------------------------------
