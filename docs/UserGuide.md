@@ -636,8 +636,8 @@ Therefore, edit the data file only if you are confident that you can update it c
 
 Action | Format, Examples
 --------|------------------
-**Open** | `open INDEX`<br> e.g., `open 1`
-**Close** | `close INDEX`<br> e.g., `close 1`
+**Open Student card** | `open INDEX`<br> e.g., `open 1`
+**Close Student card** | `close INDEX`<br> e.g., `close 1`
 **Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
