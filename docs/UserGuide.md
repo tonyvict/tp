@@ -526,7 +526,7 @@ Records English Final score as 88 and History Midterm score as 92 for the 5th st
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
 
 
-### Recording student grades : `remark`
+### Recording student remarks : `remark`
 Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
 
 * Adds on to the remarks of the student at the specified INDEX.
