@@ -25,7 +25,7 @@ public class ParserUtil {
     public static final String MESSAGE_INVALID_INDEX =
             "The person index provided is invalid";
     public static final String MESSAGE_INVALID_LESSON_INDEX =
-            "The person index provided is invalid";
+            "The lesson index provided is invalid";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
