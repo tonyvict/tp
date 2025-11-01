@@ -314,7 +314,7 @@ _{Explain here how the data archiving feature will be implemented}_
 
 ### **Target User Profile**
 
-Private tutors and small teaching teams who manage many students without the infrastructure of a tuition agency and need a fast, keyboard-driven desktop tool to keep contacts, lessons, attendance, grades, and notes organized.
+Private tutors who manage many students without the infrastructure of a tuition agency and need a fast, keyboard-driven desktop tool to keep contacts, lessons, attendance, grades, and notes organized.
 
 ### **Value Proposition**
 
