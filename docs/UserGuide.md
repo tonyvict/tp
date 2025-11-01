@@ -300,11 +300,11 @@ Format:
 Examples:
 * `delattr 1 attr/subject`
 
-_Deletes the attribute subject from the 1st student._
+_Deletes the attribute `subject` from the 1st student._
 
 * `delattr 2 attr/age attr/subject`
 
-_Deletes multiple attributes (age, subject) from the 2nd student._
+_Deletes multiple attributes `age` and `subject` from the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
