@@ -554,6 +554,10 @@ Clears all entries from ClassRosterPro.
 
 Format: `clear`
 
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
+Double-check the index before deleting, as this action cannot be undone.
+</div>
+
 ### Exiting the program : `exit`
 
 Exits the program.
