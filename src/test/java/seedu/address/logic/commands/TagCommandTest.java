@@ -8,6 +8,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -93,7 +94,7 @@ public class TagCommandTest {
 
         Attribute attrFirst = new Attribute("height", "1.3");
         Attribute attrSecond = new Attribute("height", "1.6");
-        Set<Attribute> attributesToAdd = new java.util.LinkedHashSet<>();
+        Set<Attribute> attributesToAdd = new LinkedHashSet<>();
         attributesToAdd.add(attrFirst);
         attributesToAdd.add(attrSecond);
 
