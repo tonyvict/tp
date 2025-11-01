@@ -579,7 +579,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 1a. Index out of bounds → error "Invalid person index".
-* 2a. The student card is already closed → error "Card is already closed".
+* 3a. The student card is already closed → error "Card is already closed".
 
 ---
 
