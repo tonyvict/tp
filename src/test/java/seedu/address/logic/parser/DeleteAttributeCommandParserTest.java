@@ -9,6 +9,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.DeleteAttributeCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.testutil.Assert;
@@ -78,5 +79,11 @@ public class DeleteAttributeCommandParserTest {
     @Test
     public void parse_attrPrefixWithWhitespaceOnly_throwsParseException() {
         Assert.assertThrows(ParseException.class, MESSAGE_INVALID_FORMAT, () -> parser.parse("5 attr/   "));
+    }
+
+    @Test
+    public void parse_negativeIndex_returnsInvalidPersonMessage() {
+        Assert.assertThrows(ParseException.class, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX, () ->
+                parser.parse("-1 attr/subject"));
     }
 }

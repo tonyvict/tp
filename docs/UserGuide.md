@@ -253,12 +253,12 @@ Double-check the index before deleting, as this action cannot be undone.
 ![Result of deleting a student](images/deleteUI.png)
 <p align="center"><em>Betsy Crowe has been removed from the roster.</em></p>
 
-### Tagging a student with attributes : `tag`
+### Adding attributes to a student : `addattr`
 
 Adds or updates descriptive attributes for a specific student, such as their subject, age, house, or CCA.
 
 Format:
-`tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
+`addattr INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`
 
 * Adds or updates the attributes of a student at the specified `INDEX`.
 * The index refers to the index number shown in the current list.
@@ -269,28 +269,28 @@ Format:
 * At least one `attr/` prefix must be provided.
 
 Examples:
-* `tag 2 attr/subject=math,science attr/age=16`
+* `addattr 2 attr/subject=math,science attr/age=16`
 
-_Adds attributes `subject` and `age=16` to the 2nd student._
+_Adds attributes `subject=math,science` and `age=16` to the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
-Use this command when you want to add additional attributes to a student without affecting their existing tags.
+Use this command when you want to add additional attributes to a student without affecting their existing records.
 </div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Using the same tag multiple times - duplicate tags will be ignored.
+Using the same attribute key multiple times - duplicate keys will be ignored (only the last one is used).
 </div>
 
 
-![Result of tagging a student](images/tagUI.png)
-<p align="center"><em>Bernice is tagged with 2 attributes.</em></p>
+![Result of adding attributes](images/tagUI.png)
+<p align="center"><em>Bernice now has 2 custom attributes.</em></p>
 
-### Removing tags from a student : `deltag`
+### Removing attributes from a student : `delattr`
 
-Removes one or more specific tags from an existing student.
+Removes one or more specific attributes from an existing student.
 
 Format:
-`deltag INDEX attr/KEY [attr/KEY2]…​`
+`delattr INDEX attr/KEY [attr/KEY2]…​`
 
 * Deletes the specified attribute(s) from the student at the specified INDEX.
 * The index refers to the index number shown in the displayed student list.
@@ -300,20 +300,20 @@ Format:
 * Only the specified attributes are deleted — other attributes remain unchanged.
 
 Examples:
-* `deltag 1 attr/subject`
+* `delattr 1 attr/subject`
 
-_Deletes the attribute subject from the 1st student._
+_Deletes the attribute `subject` from the 1st student._
 
-* `deltag 2 attr/age attr/subject`
+* `delattr 2 attr/age attr/subject`
 
-_Deletes multiple attributes (age, subject) from the 3rd student._
+_Deletes multiple attributes `age` and `subject` from the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 Use this when a student's status changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
 </div>
 
 ![Result of deleting attributes](images/deltagUI.png)
-<p align="center"><em>Bernice's tags has been removed.</em></p>
+<p align="center"><em>Bernice's selected attributes have been removed.</em></p>
 
 
 ### Filtering students by attributes : `filter`
@@ -618,7 +618,7 @@ Therefore, edit the data file only if you are confident that you can update it c
 | **Prefix**   | A short code (e.g., `n/`, `p/`, `attr/`) used to specify which parameter you are providing.                                                 |
 | **Parameter**| The information you provide to a command (e.g., `John Doe` in `add n/John Doe`).                                                            |
 | **Keyword**  | A word used for searching, especially with the `search` command.                                                                            |
-| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`). Used for tagging and filtering.          |
+| **Attribute**| A piece of information you can attach to a student using a key and a value (e.g., `subject=math`).                                          |
 | **Remark**   | A short, free-text note you can add to a student's profile to remember important details.                                                   |
 | **Lesson**   | A scheduled class for a student, which includes a date, start time, end time, and subject.                                                  |
 | **Attendance**| A record showing whether a student was present or not for a scheduled lesson.                                                               |
@@ -639,8 +639,8 @@ Action | Format, Examples
 **Unschedule Lesson** | `unschedule INDEX lesson/LESSON_INDEX`<br> e.g., `unschedule 1 lesson/1`
 **Mark Attendance** | `mark INDEX lesson/LESSON_INDEX`<br> e.g., `mark 1 lesson/1`
 **Unmark Attendance** | `unmark INDEX lesson/LESSON_INDEX`<br> e.g., `unmark 1 lesson/1`
-**Tag Attributes** | `tag INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `tag 2 attr/subject=math,science attr/age=16`
-**Delete Attributes** | `deltag INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `deltag 2 attr/age attr/subject`
+**Add Attributes** | `addattr INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `addattr 2 attr/subject=math,science attr/age=16`
+**Delete Attributes** | `delattr INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `delattr 2 attr/age attr/subject`
 **Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
 **List** | `list`
 **Help** | `help`

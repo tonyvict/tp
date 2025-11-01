@@ -101,6 +101,26 @@ public class DeleteAttributeCommandTest {
     }
 
     @Test
+    public void execute_multipleKeysIncludesInvalid_successOnlyValidKeysReported() {
+        Person originalPerson = new PersonBuilder(model.getFilteredPersonList().get(0))
+                .withAttributes(new Attribute("subject", "Math"), new Attribute("cca", "Football"))
+                .build();
+        model.setPerson(model.getFilteredPersonList().get(0), originalPerson);
+
+        Set<String> keysToDelete = Set.of("subject", "height");
+        DeleteAttributeCommand command = new DeleteAttributeCommand(INDEX_FIRST_PERSON, keysToDelete);
+        Person expectedPerson = removeAttributes(originalPerson, Set.of("subject"));
+
+        String expectedMessage = String.format(DeleteAttributeCommand.MESSAGE_DELETE_ATTRIBUTE_SUCCESS,
+                expectedPerson.getName(), formatKeysForMessage(Set.of("subject")));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(originalPerson, expectedPerson);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void execute_nonExistingKey_noChange() throws Exception {
         Person originalPerson = new PersonBuilder(model.getFilteredPersonList().get(0))
                 .withAttributes(new Attribute("subject", "Math"))
