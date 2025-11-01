@@ -1,0 +1,41 @@
+@startuml
+' Edit command execution sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/LogicManager.java
+' - src/main/java/seedu/address/logic/commands/EditCommand.java
+' - src/main/java/seedu/address/model/Model.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+participant "Logic\\n(LogicManager)" as LM
+participant "EditCommand" as EC <<command>>
+participant Model as M
+participant Messages as MSG
+
+LM -> EC : execute(model)
+activate EC
+EC -> M : getFilteredPersonList()
+M --> EC : List<Person>
+EC -> EC : validate index bounds
+alt invalid index
+  EC --> LM : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else valid index
+  EC -> EC : personToEdit = list.get(index)
+  EC -> EC : editedPerson = createEditedPerson(personToEdit, descriptor)
+  EC -> EC : identityChanged = !personToEdit.isSamePerson(editedPerson)
+  EC -> M : hasPerson(editedPerson)
+  M --> EC : true/false
+  alt identity changed and duplicate exists
+    EC --> LM : throw CommandException(MESSAGE_DUPLICATE_PERSON)
+  else safe to edit
+    EC -> M : setPerson(personToEdit, editedPerson)
+    EC -> M : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+    EC -> MSG : format(editedPerson)
+    MSG --> EC : formatted string
+    EC --> LM : CommandResult("Edited Person: %1$s")
+  end
+end
+@enduml
