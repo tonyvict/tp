@@ -19,7 +19,7 @@ import seedu.address.model.person.Person;
  */
 public class DeleteAttributeCommand extends Command {
 
-    public static final String COMMAND_WORD = "deltag";
+    public static final String COMMAND_WORD = "delattr";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Deletes the specified attribute(s) of the person "
             + "identified by the index number used in the displayed person list.\n"

@@ -360,7 +360,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC-1: Add and tag a student**
+### **UC-1: Add attributes to a student**
 
 **Goal:** Add a new student and assign attributes.
 **Scope:** Roster management
@@ -371,8 +371,8 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 1. Tutor enters `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`.
 2. System validates all fields and adds the student.
-3. Tutor enters `tag 1 attr/subject=math attr/age=16`.
-4. System updates the student and confirms tags.
+3. Tutor enters `addattr 1 attr/subject=math attr/age=16`.
+4. System updates the student and confirms the new attributes.
 
 **Extensions:**
 
@@ -470,7 +470,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor types `deltag 1 attr/subject`.
+1. Tutor types `delattr 1 attr/subject`.
 2. System validates index and attribute key.
 3. System removes the specified attribute and confirms.
 
@@ -693,8 +693,8 @@ Purpose: Add attributes to students and filter by them.
 
 Steps to test:
 1. Tag a student with attributes:
-   - `tag 1 attr/subject=Math attr/age=16`
-2. Verify tags appear under the student's details.
+   - `addattr 1 attr/subject=Math attr/age=16`
+2. Verify attributes appear under the student's details.
 3. Filter students by multiple attributes:
    - `filter attr/subject=Math attr/age=16`
 
@@ -770,9 +770,9 @@ Purpose: Remove specific attributes (tags) from a student.
 
 Steps to test:
 1. Add attributes first (if not present):
-   - `tag 1 attr/subject=Math attr/level=Sec3`
+   - `addattr 1 attr/subject=Math attr/level=Sec3`
 2. Delete an attribute:
-   - `deltag 1 attr/level`
+   - `delattr 1 attr/level`
 
 Expected: Only the `level` attribute is removed; `subject=Math` remains.
 
@@ -781,8 +781,8 @@ Expected: Only the `level` attribute is removed; `subject=Math` remains.
 Purpose: Confirm that data modifications are saved correctly.
 
 Steps to test:
-1. Modify data using any commands above (e.g., add tags, schedule a lesson, add grades).
+1. Modify data using any commands above (e.g., add attributes, schedule a lesson, add grades).
 2. Exit the app.
 3. Reopen the app.
 
-Expected: All changes persist (e.g., added tags, scheduled lessons, grades).
+Expected: All changes persist (e.g., added attributes, scheduled lessons, grades).

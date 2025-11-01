@@ -20,7 +20,7 @@ import seedu.address.model.person.Person;
  */
 public class TagCommand extends Command {
 
-    public static final String COMMAND_WORD = "tag";
+    public static final String COMMAND_WORD = "addattr";
     public static final String MESSAGE_ADD_ATTRIBUTE_SUCCESS = "Added attribute to Person: %1$s";
     public static final String MESSAGE_DELETE_ATTRIBUTE_SUCCESS = "Removed attribute from Person: %1$s";
     public static final String MESSAGE_INVALID_INDEX = "The student index provided is invalid.";
