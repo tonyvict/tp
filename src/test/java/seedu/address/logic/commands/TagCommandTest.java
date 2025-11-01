@@ -88,6 +88,33 @@ public class TagCommandTest {
     }
 
     @Test
+    public void execute_duplicateAttributeKeys_lastValueApplied() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(0);
+
+        Attribute attrFirst = new Attribute("height", "1.3");
+        Attribute attrSecond = new Attribute("height", "1.6");
+        Set<Attribute> attributesToAdd = new java.util.LinkedHashSet<>();
+        attributesToAdd.add(attrFirst);
+        attributesToAdd.add(attrSecond);
+
+        TagCommand tagCommand = new TagCommand(INDEX_FIRST_PERSON, attributesToAdd);
+
+        Person expectedEditedPerson = new PersonBuilder(personToEdit)
+                .withAttributes(Set.of(attrSecond))
+                .build();
+
+        String expectedMessage = String.format(TagCommand.MESSAGE_ADD_ATTRIBUTE_SUCCESS,
+                expectedEditedPerson.getName());
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(personToEdit, expectedEditedPerson);
+
+        CommandResult result = tagCommand.execute(model);
+        assertEquals(expectedMessage, result.getFeedbackToUser());
+        assertEquals(expectedModel, model);
+    }
+
+    @Test
     public void execute_invalidIndex_throwsCommandException() {
         int outOfBoundIndex = model.getFilteredPersonList().size() + 1;
         TagCommand tagCommand = new TagCommand(Index.fromOneBased(outOfBoundIndex),

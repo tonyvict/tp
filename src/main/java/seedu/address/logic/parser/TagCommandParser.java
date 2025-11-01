@@ -6,6 +6,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ATTRIBUTE;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -27,7 +30,7 @@ public class TagCommandParser implements Parser<TagCommand> {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_ATTRIBUTE);
 
-        Set<Attribute> attributesToAdd = new HashSet<>();
+        Map<String, Attribute> attributesByKey = new LinkedHashMap<>();
 
         // For each attr/ prefix segment (e.g. attr/subject=math,science)
         for (String attrString : argMultimap.getAllValues(PREFIX_ATTRIBUTE)) {
@@ -54,10 +57,10 @@ public class TagCommandParser implements Parser<TagCommand> {
             }
 
             Attribute attribute = new Attribute(key, values);
-            attributesToAdd.add(attribute);
+            attributesByKey.put(key, attribute);
         }
 
-        if (attributesToAdd.isEmpty()) {
+        if (attributesByKey.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
         }
 
@@ -66,6 +69,8 @@ public class TagCommandParser implements Parser<TagCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, TagCommand.MESSAGE_USAGE));
         }
         Index index = ParserUtil.parseIndex(preamble);
+
+        Set<Attribute> attributesToAdd = new LinkedHashSet<>(attributesByKey.values());
 
         return new TagCommand(index, attributesToAdd);
     }

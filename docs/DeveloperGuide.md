@@ -372,7 +372,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 1. Tutor enters `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`.
 2. System validates all fields and adds the student.
 3. Tutor enters `addattr 1 attr/subject=math attr/age=16`.
-4. System updates the student and confirms the new attributes.
+4. System updates the student and confirms the new attribute values.
 
 **Extensions:**
 
@@ -477,7 +477,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 1a. Invalid index → error "Invalid person index".
-* 2a. Attribute doesn't exist → no error, command succeeds.
+* 2a. Attribute doesn't exist → error "No matching attributes found".
 * 2b. Multiple attributes specified → all valid attributes removed.
 
 ---
