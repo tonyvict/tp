@@ -83,7 +83,7 @@ public class DeleteAttributeCommandParserTest {
 
     @Test
     public void parse_negativeIndex_returnsInvalidPersonMessage() {
-        Assert.assertThrows(ParseException.class, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX,
-                () -> parser.parse("-1 attr/subject"));
+        Assert.assertThrows(ParseException.class, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX, () ->
+                parser.parse("-1 attr/subject"));
     }
 }
