@@ -106,7 +106,7 @@ Format: `help`
 ![help_window](images/helpWindow.png)
 <p align="center"><em>Pop-up window after entering the `help` command </em></p>
 
-### Adding a student: `add`
+### Adding a student : `add`
 
 Adds a new student to your ClassRosterPro.
 
@@ -140,7 +140,7 @@ Format: `list`
 ![Result of list command](images/listUI.png)
 <p align="center"><em>All students are displayed</em></p>
 
-### Viewing full student details: `open`
+### Viewing full student details : `open`
 Expands a student's card to view all their details, including additional attributes and scheduled lessons.
 
 Format: `open INDEX`
