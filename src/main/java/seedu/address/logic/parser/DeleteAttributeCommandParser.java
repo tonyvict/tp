@@ -39,12 +39,7 @@ public class DeleteAttributeCommandParser implements Parser<DeleteAttributeComma
                     DeleteAttributeCommand.MESSAGE_USAGE));
         }
 
-        Index index;
-        try {
-            index = ParserUtil.parseIndex(preamble);
-        } catch (ParseException e) {
-            throw new ParseException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX, e);
-        }
+        Index index = ParserUtil.parseIndex(preamble);
 
         return new DeleteAttributeCommand(index, keys);
     }
