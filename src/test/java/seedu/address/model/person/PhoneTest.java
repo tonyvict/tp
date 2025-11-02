@@ -42,6 +42,34 @@ public class PhoneTest {
     }
 
     @Test
+    public void hasDigits() {
+        // No digits -> returns false
+        assertFalse(Phone.hasDigits("phone"));
+        assertFalse(Phone.hasDigits("()+- "));
+        assertFalse(Phone.hasDigits("abc-def"));
+
+        // Contains digits -> returns true
+        assertTrue(Phone.hasDigits("911"));
+        assertTrue(Phone.hasDigits("phone911"));
+        assertTrue(Phone.hasDigits("911phone"));
+        assertTrue(Phone.hasDigits("ph1one"));
+    }
+
+    @Test
+    public void containsNonStandardChars() {
+        // Only standard characters (digits, spaces, + - ( ) ) -> returns false
+        assertFalse(Phone.containsNonStandardChars("911"));
+        assertFalse(Phone.containsNonStandardChars("9312 1534"));
+        assertFalse(Phone.containsNonStandardChars("+65 12345678"));
+        assertFalse(Phone.containsNonStandardChars("(65) 1234-5678"));
+
+        // Contains non-standard characters -> returns true
+        assertTrue(Phone.containsNonStandardChars("phone")); // alphabets
+        assertTrue(Phone.containsNonStandardChars("9011p041")); // alphabet within digits
+        assertTrue(Phone.containsNonStandardChars("911#")); // special character #
+    }
+
+    @Test
     public void equals() {
         Phone phone = new Phone("999");
 

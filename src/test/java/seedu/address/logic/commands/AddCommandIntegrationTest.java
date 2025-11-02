@@ -12,6 +12,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
 import seedu.address.testutil.PersonBuilder;
 
 /**
@@ -37,6 +38,33 @@ public class AddCommandIntegrationTest {
                 String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validPerson)),
                 expectedModel);
     }
+
+    @Test
+    public void execute_newPersonWithNoDigitsInPhone_successWithNoDigitsWarning() {
+        Person personWithNoDigitsInPhone = new PersonBuilder().withPhone("no-digits-here").build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithNoDigitsInPhone);
+
+        String expectedMessage = String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithNoDigitsInPhone))
+                + "\n" + Phone.MESSAGE_WARNING_NO_DIGITS;
+
+        assertCommandSuccess(new AddCommand(personWithNoDigitsInPhone), model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_newPersonWithNonStandardCharsInPhone_successWithInvalidCharsWarning() {
+        Person personWithInvalidCharsInPhone = new PersonBuilder().withPhone("911-is-a-joke").build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithInvalidCharsInPhone);
+
+        String expectedMessage = String.format(AddCommand.MESSAGE_SUCCESS,
+                Messages.format(personWithInvalidCharsInPhone)) + "\n" + Phone.MESSAGE_WARNING_INVALID_CHARACTERS;
+
+        assertCommandSuccess(new AddCommand(personWithInvalidCharsInPhone), model, expectedMessage, expectedModel);
+    }
+
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
