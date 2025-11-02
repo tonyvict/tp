@@ -24,6 +24,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class MainWindow extends UiPart<Stage> {
 
     private static final String FXML = "MainWindow.fxml";
+    private static final String HELP_STATUS_MESSAGE = "Help window opened";
+
     private final Logger logger = LogsCenter.getLogger(getClass());
 
     private Stage primaryStage;
@@ -134,6 +136,10 @@ public class MainWindow extends UiPart<Stage> {
         } else {
             helpWindow.focus();
         }
+
+        if (resultDisplay != null) {
+            resultDisplay.setFeedbackToUser(HELP_STATUS_MESSAGE);
+        }
     }
 
     void show() {
@@ -183,5 +189,3 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 }
-
-

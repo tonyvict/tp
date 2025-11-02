@@ -19,7 +19,7 @@ import seedu.address.model.person.Person;
  */
 public class DeleteAttributeCommand extends Command {
 
-    public static final String COMMAND_WORD = "deltag";
+    public static final String COMMAND_WORD = "delattr";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Deletes the specified attribute(s) of the person "
             + "identified by the index number used in the displayed person list.\n"
@@ -67,15 +67,20 @@ public class DeleteAttributeCommand extends Command {
         }
 
         Person personToEdit = lastShownList.get(index.getZeroBased());
-        Person editedPerson = createEditedPerson(personToEdit);
 
-        if (personToEdit.equals(editedPerson)) {
-            // Nothing removed
+        Set<String> keysToRemove = personToEdit.getAttributes().stream()
+                .map(Attribute::getKey)
+                .filter(attributeKeysToDelete::contains)
+                .collect(Collectors.toSet());
+
+        if (keysToRemove.isEmpty()) {
             throw new CommandException(String.format(MESSAGE_NO_ATTRIBUTES_REMOVED, personToEdit.getName()));
         }
 
+        Person editedPerson = createEditedPerson(personToEdit, keysToRemove);
+
         model.setPerson(personToEdit, editedPerson);
-        String formattedKeys = attributeKeysToDelete.stream()
+        String formattedKeys = keysToRemove.stream()
                 .sorted()
                 .collect(Collectors.toList())
                 .toString();
@@ -98,9 +103,9 @@ public class DeleteAttributeCommand extends Command {
                 && attributeKeysToDelete.equals(((DeleteAttributeCommand) other).attributeKeysToDelete));
     }
 
-    private Person createEditedPerson(Person personToEdit) {
+    private Person createEditedPerson(Person personToEdit, Set<String> keysToRemove) {
         Set<Attribute> filteredAttributes = personToEdit.getAttributes().stream()
-                .filter(attribute -> !attributeKeysToDelete.contains(attribute.getKey()))
+                .filter(attribute -> !keysToRemove.contains(attribute.getKey()))
                 .collect(Collectors.toCollection(HashSet::new));
 
         if (filteredAttributes.equals(personToEdit.getAttributes())) {

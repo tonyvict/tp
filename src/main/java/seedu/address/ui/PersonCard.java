@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -46,7 +45,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private VBox detailsPane;
     @FXML
-    private FlowPane tags;
+    private Label tags;
     @FXML
     private Label remark;
     @FXML
@@ -56,7 +55,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private VBox attributes;
     @FXML
-    private FlowPane grades;
+    private Label grades;
 
 
     /**
@@ -71,9 +70,11 @@ public class PersonCard extends UiPart<Region> {
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         remark.setText(person.getRemark().value);
-        person.getTags().stream()
+        String tagsText = person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+                .map(tag -> "[" + tag.tagName + "]")
+                .collect(Collectors.joining(", ")); // Join tags with a space
+        tags.setText(tagsText);
         //making lessons into numbered list
         StringBuilder lessonSb = new StringBuilder();
         int lessonNumber = 1;
@@ -102,16 +103,11 @@ public class PersonCard extends UiPart<Region> {
                 });
 
         // Display grades
-        person.getGradeList().getGrades().values().stream()
+        String gradesText = person.getGradeList().getGrades().values().stream()
                 .sorted(Comparator.comparing(grade -> grade.getSubject() + "/" + grade.getAssessment()))
-                .forEach(grade -> {
-                    String displayText = grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore();
-                    Label gradeLabel = new Label(displayText);
-                    gradeLabel.setWrapText(true);
-                    gradeLabel.setMinWidth(0);
-                    gradeLabel.setMaxWidth(Double.MAX_VALUE);
-                    grades.getChildren().add(gradeLabel);
-                });
+                .map(grade -> grade.getSubject() + "/" + grade.getAssessment() + ": " + grade.getScore())
+                .collect(Collectors.joining("\n"));
+        grades.setText(gradesText);
         detailsPane.visibleProperty().bind(person.expandedProperty());
         detailsPane.managedProperty().bind(person.expandedProperty());
     }

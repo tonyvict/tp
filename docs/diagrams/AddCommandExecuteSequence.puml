@@ -1,0 +1,31 @@
+@startuml
+' Add command execution sequence
+' Mirrors code in
+' - src/main/java/seedu/address/logic/LogicManager.java
+' - src/main/java/seedu/address/logic/commands/AddCommand.java
+' - src/main/java/seedu/address/model/Model.java
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+skinparam sequenceParticipant underline
+
+participant "Logic\\n(LogicManager)" as LM
+participant "AddCommand" as AC <<command>>
+participant Model as M
+participant Messages as MSG
+
+LM -> AC : execute(model)
+activate AC
+AC -> AC : requireNonNull(model)
+AC -> M : hasPerson(toAdd)
+M --> AC : true/false
+alt duplicate person
+  AC --> LM : throw CommandException("This person already exists...")
+else not duplicate
+  AC -> M : addPerson(toAdd)
+  AC -> MSG : format(toAdd)
+  MSG --> AC : formatted string
+  AC --> LM : CommandResult("New person added: %1$s")
+end
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters "add" command;
+:Logic parses arguments into Person;
+:Create and execute AddCommand;
+if (Duplicate person?) then (yes)
+  :Display duplicate person error;
+  stop
+else (no)
+  :Add person to model;
+  :Format success message;
+  :Display success to user;
+  stop
+endif
+@enduml
