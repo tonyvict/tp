@@ -489,27 +489,46 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC-1: Add attributes to a student**
+### **UC01: Add attributes to a student**
 
-**Goal:** Add a new student and assign attributes.
-**Scope:** Roster management
-**Primary actor:** Tutor
+**System:** ClassRosterPro
+**Use Case:** UC01 - Add attributes to students
+**Actor:** Tutor
 **Preconditions:** None
+**Guarantees:**
+  - Student is added to roster if all fields are valid and no duplicate exists
+  - Attributes are added to student if index is valid and attribute format is correct
 
-**Main Success Scenario (MSS):**
+**MSS:**
 
-1. Tutor enters `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`.
-2. System validates all fields and adds the student.
-3. Tutor enters `addattr 1 attr/subject=math attr/age=16`.
-4. System adds the new attribute values to the student.
+1. Tutor enters add command with student details. 
+2. ClassRosterPro validates all fields and adds the student.
+3. Tutor enters addattr command with index and attribute.
+4. ClassRosterPro adds the new attribute values to the student.
+   Use case ends. 
 
 **Extensions:**
 
-* 1a. Invalid email/phone format → show error message and reject.
-* 1b. Duplicate contact → show error "This person already exists".
-* 3a. Invalid index → show "Invalid person index".
-* 3b. Invalid attribute format → show "Incorrect format" and do nothing.
+* 1a. Tutor enters invald email/phone number. 
+  * 1a1. ClassRosterPro shows error message and rejects the command.
+  
+    Use case ends.
+* 1b. Tutor enters duplicate contact.
+  * 1b1. ClassRosterPro shows error "This person already exists in the address book".
+  
+    Use case ends.
+* 3a. Tutor enters invalid index.
+  * 3a1. ClassRosterPro shows "The person index provided is invalid".
+  
+    Use case ends.
+* 3b.  Tutor enters invalid attribute format.
+  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.
+  
+    Use case ends.
+* a. At any time, Tutor enters exit command.
+    * a1. ClassRosterPro saves data and exits.
 
+    Use case ends.
 ---
 
 ### **UC-2: Schedule a lesson for a student**
