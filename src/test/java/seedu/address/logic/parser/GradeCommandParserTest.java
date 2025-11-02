@@ -118,4 +118,28 @@ public class GradeCommandParserTest {
         assertParseSuccess(parser, "1 sub/ MATH / WA1 / 89 ",
                 new GradeCommand(INDEX_FIRST_PERSON, expectedGrades));
     }
+
+    @Test
+    public void parse_duplicateSubjectAssessment_throwsParseException() {
+        // Duplicate subject/assessment with different scores - should throw error
+        assertParseFailure(parser, "1 sub/SCIENCE/Quiz1/22 sub/SCIENCE/Quiz1/100",
+                "Duplicate grade detected for SCIENCE/Quiz1. Each subject/assessment combination "
+                        + "can only be specified once per command.");
+    }
+
+    @Test
+    public void parse_duplicateSubjectAssessmentDifferentScore_throwsParseException() {
+        // Duplicate subject/assessment with different scores - should throw error
+        assertParseFailure(parser, "1 sub/MATH/Quiz1/80 sub/MATH/Quiz1/95",
+                "Duplicate grade detected for MATH/Quiz1. Each subject/assessment combination "
+                        + "can only be specified once per command.");
+    }
+
+    @Test
+    public void parse_duplicateSubjectAssessmentSameScore_throwsParseException() {
+        // Duplicate subject/assessment with same scores - should throw error
+        assertParseFailure(parser, "1 sub/MATH/Quiz1/80 sub/MATH/Quiz1/80",
+                "Duplicate grade detected for MATH/Quiz1. Each subject/assessment combination "
+                        + "can only be specified once per command.");
+    }
 }

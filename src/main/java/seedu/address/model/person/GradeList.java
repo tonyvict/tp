@@ -41,6 +41,23 @@ public class GradeList {
     }
 
     /**
+     * Removes a grade for the specified subject and assessment.
+     * Returns a new GradeList without the specified grade.
+     *
+     * @param subject The subject name.
+     * @param assessment The assessment name.
+     * @return A new GradeList with the grade removed, or the same GradeList if the grade doesn't exist.
+     */
+    public GradeList removeGrade(String subject, String assessment) {
+        requireNonNull(subject);
+        requireNonNull(assessment);
+        Map<String, Grade> newGrades = new HashMap<>(this.grades);
+        String key = subject + "/" + assessment;
+        newGrades.remove(key);
+        return new GradeList(newGrades);
+    }
+
+    /**
      * Returns the grade for the specified subject and assessment, or null if not found.
      */
     public Grade getGrade(String subject, String assessment) {
