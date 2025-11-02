@@ -112,6 +112,7 @@ Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
 * The student's NAME, PHONE_NUMBER, EMAIL and ADDRESS must be provided. 
 * Tags [t/TAG] are optional. You can use them to group students by subject, level, or status.
+* The student's name has to be unique. (i.e. Duplicate names with an existing student is not allowed)
 
 Examples:
 * `add n/Betsy Crowe p/91234567 e/betsyc@example.com a/123 Bishan Street t/Physics t/ALevels t/NeedsHomeworkCheck`
@@ -480,7 +481,7 @@ Using this command on a student who doesn't have any completed lessons to unmark
 
 ### Quick Search : `search`
 
-Allows users to instantly search for contacts by name, email or phone number.
+Allows tutors to instantly search for contacts by name, email or phone number.
 
 <div markdown="span" class="alert alert-primary"> :bulb: **Tip**
 The Quick Search feature is ideal for quick lookups during lessons or when managing attendance.
@@ -553,7 +554,7 @@ There is no need to save manually.
 
 ### Editing the data file
 
-**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/classrosterpro.json`. 
+**ClassRosterPro** data is saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. 
 Advanced users are welcome to update data directly by editing that data file.
 
 <div markdown="span" class="alert alert-warning">:exclamation: Caution:
