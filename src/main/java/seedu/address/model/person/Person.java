@@ -174,8 +174,13 @@ public class Person {
             return true;
         }
 
-        return otherPerson != null
-                && otherPerson.getName().equals(getName());
+        if (otherPerson == null) {
+            return false;
+        }
+
+        String thisName = this.getName().fullName.replaceAll("\\s+", "").toLowerCase();
+        String otherName = otherPerson.getName().fullName.replaceAll("\\s+", "").toLowerCase();
+        return thisName.equals(otherName);
     }
 
     /**

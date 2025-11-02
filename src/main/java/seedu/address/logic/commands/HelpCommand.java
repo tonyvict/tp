@@ -41,6 +41,7 @@ public class HelpCommand extends Command {
             "",
             "GRADE COMMANDS:",
             " - grade <INDEX> sub/<SUBJECT>/<ASSESSMENT>/<SCORE> [sub/<SUBJECT2>/<ASSESSMENT2>/<SCORE2>]...",
+            " - delgrade <INDEX> sub/<SUBJECT>/<ASSESSMENT>",
             "",
             "OTHER STUDENT COMMANDS:",
             " - remark <INDEX> r/<REMARK1> [r/<REMARK2>]...",

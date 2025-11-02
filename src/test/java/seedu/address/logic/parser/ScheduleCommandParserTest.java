@@ -2,13 +2,14 @@ package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUB;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
-import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_END_TIME_BEFORE_START;
+import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_END_BEFORE_START;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_FORMAT;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_DATE_VALUE;
 import static seedu.address.logic.parser.ScheduleCommandParser.MESSAGE_INVALID_END_TIME_FORMAT;
@@ -37,6 +38,15 @@ public class ScheduleCommandParserTest {
     public void parse_allFieldsPresent_success() {
         String userInput = INDEX_FIRST_PERSON.getOneBased() + VALID_ARGUMENTS;
         Lesson lesson = new Lesson("10:00", "12:00", "2025-10-20", "Mathematics", false);
+        ScheduleCommand expectedCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lesson);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_allFieldsWithEndDatePresent_success() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/23:00 end/01:00 date/2025-10-20 date2/2025-10-21 sub/Camp";
+        Lesson lesson = new Lesson("23:00", "01:00", "2025-10-20", "2025-10-21", "Camp", false);
         ScheduleCommand expectedCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lesson);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
@@ -113,6 +123,14 @@ public class ScheduleCommandParserTest {
     }
 
     @Test
+    public void parse_emptyEndDateValue_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/11:00 end/12:00 date/2025-09-20 date2/ sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ScheduleCommand.MESSAGE_USAGE));
+    }
+
+    @Test
     public void parse_invalidStartTimeFormat_failure() {
         String userInput = INDEX_FIRST_PERSON.getOneBased()
                 + " start/aa:00 end/12:00 date/2025-10-20 sub/Mathematics";
@@ -123,7 +141,14 @@ public class ScheduleCommandParserTest {
     public void parse_endTimeBeforeStartTime_failure() {
         String userInput = INDEX_FIRST_PERSON.getOneBased()
                 + " start/12:00 end/10:00 date/2025-10-20 sub/Mathematics";
-        assertParseFailure(parser, userInput, MESSAGE_END_TIME_BEFORE_START);
+        assertParseFailure(parser, userInput, MESSAGE_END_BEFORE_START);
+    }
+
+    @Test
+    public void parse_endDateBeforeStartDate_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-21 date2/2025-10-20 sub/Mathematics";
+        assertParseFailure(parser, userInput, MESSAGE_END_BEFORE_START);
     }
 
     @Test
@@ -162,6 +187,20 @@ public class ScheduleCommandParserTest {
     }
 
     @Test
+    public void parse_invalidEndDateFormat_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-20 date2/2025/10/21 sub/Mathematics";
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_DATE_FORMAT);
+    }
+
+    @Test
+    public void parse_invalidEndDateValue_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-20 date2/2025-11-31 sub/Mathematics";
+        assertParseFailure(parser, userInput, MESSAGE_INVALID_DATE_VALUE);
+    }
+
+    @Test
     public void parse_duplicateStartPrefix_failure() {
         String userInput = INDEX_FIRST_PERSON.getOneBased()
                 + " start/10:00 start/11:00 end/12:00 date/2025-10-20 sub/Mathematics";
@@ -183,6 +222,14 @@ public class ScheduleCommandParserTest {
                 + " start/10:00 end/12:00 date/2025-10-20 date/2025-10-21 sub/Mathematics";
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
+    }
+
+    @Test
+    public void parse_duplicateEndDatePrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased()
+                + " start/10:00 end/12:00 date/2025-10-20 date2/2025-10-21 date2/2025-10-22 sub/Mathematics";
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE_END));
     }
 
     @Test

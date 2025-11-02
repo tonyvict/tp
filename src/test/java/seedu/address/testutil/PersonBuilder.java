@@ -6,6 +6,7 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Attribute;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Grade;
 import seedu.address.model.person.GradeList;
 import seedu.address.model.person.Lesson;
 import seedu.address.model.person.LessonList;
@@ -144,6 +145,16 @@ public class PersonBuilder {
      */
     public PersonBuilder withLessonList(LessonList lessonList) {
         this.lessonList = lessonList;
+        return this;
+    }
+
+    /**
+     * Adds the specified grades to the {@code GradeList} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withGrades(Grade... grades) {
+        for (Grade grade : grades) {
+            this.gradeList = this.gradeList.addGrade(grade);
+        }
         return this;
     }
 
