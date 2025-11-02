@@ -54,17 +54,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
                 throw new ParseException("Attribute must have at least one value.");
             }
 
-            // Special validation for age attribute
-            if (key.equals("age")) {
-                for (String value : values) {
-                    try {
-                        Integer.parseInt(value);
-                    } catch (NumberFormatException e) {
-                        throw new ParseException("Age must be a valid integer.");
-                    }
-                }
-            }
-
             attributeFilters.put(key, values);
         }
 
