@@ -696,22 +696,50 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC-6: Delete attributes from a student**
+### **UC06 - Delete Attributes from Student**
 
-**Preconditions:** Student exists with at least one attribute.
+**System**: ClassRosterPro\
+**Use Case**: UC06 - Delete Attributes from Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one attribute\
+**Guarantees**:
+- Specified attributes are removed if they exist
+- Non-existent attributes are ignored
+- Data integrity is maintained
 
 **MSS:**
 
-1. Tutor types `delattr 1 attr/subject`.
-2. System validates index and attribute key.
-3. System removes the specified attribute and confirms.
+1. Tutor enters delattr command with student index and attribute keys.
+2. ClassRosterPro validates index and attribute keys.
+3. ClassRosterPro removes the specified attributes and confirms.\
+   Use case ends.
 
 **Extensions:**
 
-* 1a. Invalid index → error "Invalid person index".
-* 2a. Attribute doesn't exist → error "No matching attributes found".
-* 2b. Multiple attributes specified → all valid attributes removed.
-
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects attribute doesn't exist.
+   * 2b1. ClassRosterPro shows "No matching attributes found".\
+     Use case ends.
+* 2c. ClassRosterPro detects multiple attributes specified.
+   * 2c1. ClassRosterPro removes all valid attributes and proceeds.\
+     Use case ends.
+* 2d. ClassRosterPro detects no attributes specified.
+   * 2d1. ClassRosterPro shows error "No attributes specified for deletion".\
+     Use case ends.
+* 3a. ClassRosterPro encounters storage error during removal.
+    * 3a1. ClassRosterPro shows "Error removing attribute data".\
+     Use case ends.
+* b. At any time, some specified attributes exist and others don't.
+   * b1. ClassRosterPro removes existing attributes and shows warning for non-existent ones.\
+     Use case resumes from step 3.
+* c. At any time, Tutor attempts to delete all attributes.
+   * c1. ClassRosterPro removes all attributes and confirms.\
+     Use case ends.
 ---
 
 ### **UC-7: Filter students by attributes**
