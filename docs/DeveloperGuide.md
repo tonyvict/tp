@@ -489,226 +489,404 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC-1: Add attributes to a student**
+### **UC01: Add attributes to a student**
 
-**Goal:** Add a new student and assign attributes.
-**Scope:** Roster management
-**Primary actor:** Tutor
-**Preconditions:** None
-
-**Main Success Scenario (MSS):**
-
-1. Tutor enters `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`.
-2. System validates all fields and adds the student.
-3. Tutor enters `addattr 1 attr/subject=math attr/age=16`.
-4. System adds the new attribute values to the student.
-
-**Extensions:**
-
-* 1a. Invalid email/phone format → show error message and reject.
-* 1b. Duplicate contact → show error "This person already exists".
-* 3a. Invalid index → show "Invalid person index".
-* 3b. Invalid attribute format → show "Incorrect format" and do nothing.
-
----
-
-### **UC-2: Schedule a lesson for a student**
-
-**Preconditions:** Student exists in the roster.
+**System:** ClassRosterPro\
+**Use Case:** UC01 - Add attributes to students\
+**Actor:** Tutor\
+**Preconditions:** None\
+**Guarantees:**
+  - Student is added to roster if all fields are valid and no duplicate exists
+  - Attributes are added to student if index is valid and attribute format is correct
 
 **MSS:**
 
-1. Tutor types `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science` (or includes `date2/2025-09-21` for cross-day sessions).
-2. System validates index, time format (HH:mm), date format (YYYY-MM-DD), and ensures the end date/time is after the start date/time.
-3. System checks for overlapping lessons across the scheduled interval.
-4. System saves and confirms the lesson.
+1. Tutor enters add command with student details. 
+2. ClassRosterPro validates all fields and adds the student.
+3. Tutor enters addattr command with index and attribute.
+4. ClassRosterPro adds the new attribute values to the student.\
+   Use case ends. 
 
 **Extensions:**
 
-* 2a. Invalid time format → error "Invalid start/end time format. Use HH:mm".
-* 2b. Invalid time values (e.g., 24:01) → error "Invalid time. Hours must be 00-23 and minutes must be 00-59".
-* 2c. Invalid date format → error "Invalid date format. Use YYYY-MM-DD".
-* 2d. Invalid date values (e.g., 2025-11-31) → error "Invalid date. Ensure the day is valid for the given month and year".
-* 2e. End date/time ≤ start date/time → error "End date/time must be after start date/time".
-* 3a. Lesson overlaps with existing lesson → reject with "This lesson overlaps with an existing lesson".
-* 3b. Lesson duplicates an existing one → reject with "This lesson already exists".
-
+* 1a. Tutor enters invalid email/phone number. 
+  * 1a1. ClassRosterPro shows error message and rejects the command.\
+    Use case ends.
+* 1b. Tutor enters duplicate contact.
+  * 1b1. ClassRosterPro shows error "This person already exists in the address book".\
+    Use case ends.
+* 3a. Tutor enters invalid index.
+  * 3a1. ClassRosterPro shows "The person index provided is invalid".\  
+    Use case ends.
+* 3b.  Tutor enters invalid attribute format.
+  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.\
+    Use case ends.
+* a. At any time, Tutor enters exit command.
+    * a1. ClassRosterPro saves data and exits.\
+    Use case ends.
 ---
 
-### **UC-3: Record attendance for a specific lesson**
+### **UC02 - Schedule Lesson for Student**
 
-**Preconditions:** Student exists with at least one scheduled lesson.
+**System:** ClassRosterPro\
+**Use Case:** UC02 - Schedule Lesson for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
+**Guarantees:** Lesson is scheduled if no overlaps/duplicates and all validations pass
 
 **MSS:**
 
-1. Tutor filters/finds the student if needed.
-2. Tutor enters `mark 1 lesson/1`.
-3. System validates both indices and marks the lesson as attended.
-4. System updates attendance count and confirms.
+1. Tutor enters schedule command with lesson details.
+2. ClassRosterPro validates index, time format, date format, and time validity.
+3. ClassRosterPro checks for overlapping lessons on the same date.
+4. ClassRosterPro saves and confirms the lesson.\
+   Use case ends.
 
 **Extensions:**
 
-* 2a. Student index invalid → error "Invalid person index".
-* 2b. Lesson index invalid → error "Invalid lesson index".
-* 2c. Lesson already marked → error "This lesson has already been marked".
-
+* 2a. ClassRosterPro detects invalid time format.
+  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".\
+    Use case ends.
+* 2b. ClassRosterPro detects invalid time values.
+  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".\
+    Use case ends.
+* 2c. ClassRosterPro detects invalid date format.
+   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".\
+     Use case ends.
+* 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
+   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".\
+     Use case ends.
+* 2e. ClassRosterPro detects end time ≤ start time.
+   * 2e1. ClassRosterPro shows "End time must be after start time".\
+     Use case ends.
+* 2f. ClassRosterPro detects missing required fields.
+   * 2f1. ClassRosterPro shows error message indicating which fields are missing.\
+     Use case ends.
+* 3a. ClassRosterPro detects lesson overlaps with existing lesson.
+   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".\
+     Use case ends.
+* 3b. ClassRosterPro detects duplicate lesson (exact match).
+   * 3b1. ClassRosterPro shows "This lesson already exists".\
+     Use case ends.
 ---
 
-### **UC-4: Record grades for a student**
+### **UC03 - Record Attendance for Lesson**
 
-**Preconditions:** Student exists in the roster.
+**System:** ClassRosterPro\
+**Use Case:** UC03 - Record Attendance for Lesson\
+**Actor:** Tutor\
+**Preconditions:** Student exists with at least one scheduled lesson\
+**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked
 
 **MSS:**
 
-1. Tutor types `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`.
-2. System validates index and grade format.
-3. System saves grades and confirms.
+1. Tutor enters mark command with student index and lesson index.
+2. ClassRosterPro validates both indices.
+3. ClassRosterPro marks the lesson as attended.
+4. ClassRosterPro updates attendance count and confirms.\
+   Use case ends.
 
 **Extensions:**
-
-* 1a. Invalid index → error "Invalid person index".
-* 2a. Invalid grade format → error "Incorrect format".
-* 2b. Subject/assessment/score empty → error message.
-* 2c. Duplicate subject-assessment in command → last occurrence wins.
-* 2d. Subject-assessment already exists for student → overwrites with new score.
+* 2a. ClassRosterPro detects invalid student index.
+  * 2a1. ClassRosterPro shows "Invalid person index".\
+    Use case ends.
+* 2b. ClassRosterPro detects invalid lesson index.
+  * 2b1. ClassRosterPro shows "Invalid lesson index".\
+    Use case ends.
+* 2c. ClassRosterPro detects lesson already marked.
+  * 2c1. ClassRosterPro shows "This lesson has already been marked".\
+    Use case ends.
 
 ---
 
-### **UC-5: Unschedule a lesson**
+### **UC04 - Record Grades for Student**
 
-**Preconditions:** Student exists with at least one scheduled lesson.
+**System:** ClassRosterPro\
+**Use Case:** UC04 - Record Grades for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
+**Guarantees:**
+- Grades are saved with proper validation
+- Existing subject-assessment records are overwritten with new scores
+- Data integrity is maintained
+
+**MSS:**
+
+1. Tutor enters grade command with student index and grade details.
+2. ClassRosterPro validates index and grade format. 
+3. ClassRosterPro saves grades and confirms.\
+  Use case ends.
+
+**Extensions:**
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid grade format.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
+* 2c. ClassRosterPro detects subject/assessment/score empty.
+   * 2c1. ClassRosterPro shows error message indicating missing components.\
+     Use case ends.
+* 2d. ClassRosterPro detects duplicate subject-assessment in command.
+   * 2d1. ClassRosterPro uses last occurrence and proceeds without warning.\
+     Use case ends.
+* 2e. ClassRosterPro detects invalid score value.
+   * 3a1. ClassRosterPro shows "Error saving grade data".\
+     Use case ends.
+
+---
+
+### **UC05 - Unschedule Lesson**
+
+**System**: ClassRosterPro\
+**Use Case**: UC05 - Unschedule Lesson\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one scheduled lesson\
+**Guarantees**:
+- Lesson is removed if both indices are valid
+- Attendance records for the lesson are also removed
+- Data consistency is maintained
 
 **MSS:**
 
 1. Tutor lists/filters students.
-2. Tutor enters `unschedule 1 lesson/1`.
-3. System validates both indices.
-4. System removes the lesson and confirms.
+2. Tutor enters unschedule command with student index and lesson index.
+3. ClassRosterPro validates both indices.
+4. ClassRosterPro removes the lesson and confirms.\
+  Use case ends.
 
 **Extensions:**
 
-* 2a. Student index out of bounds → error "Invalid person index".
-* 2b. Lesson index out of bounds → error "Invalid lesson index".
-* 3a. Student has no lessons → error "The selected person has no lessons scheduled".
+* 1a. Tutor cannot find desired student in current view.
+   * 1a1. Tutor uses find or filter commands to locate student.\
+     Use case resumes from step 1.
+* 2a. Tutor enters invalid command format.
+   * 2a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 3a. ClassRosterPro detects student index out of bounds.
+   * 3a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3b. ClassRosterPro detects lesson index out of bounds.
+   * 3b1. ClassRosterPro shows "Invalid lesson index".\
+     Use case ends.
+* 3c. ClassRosterPro detects student has no lessons.
+   * 3c1. ClassRosterPro shows "The selected person has no lessons scheduled".\
+     Use case ends.
+* 4a. ClassRosterPro encounters data corruption in lesson records.
+   * 4a1. ClassRosterPro shows "Error accessing lesson data".\
+     Use case ends.
+* 4b. ClassRosterPro fails to remove lesson due to storage error.
+   * 4b1. ClassRosterPro shows "Error removing lesson data".\
+     Use case ends.
 
 ---
 
-### **UC-6: Delete attributes from a student**
+### **UC06 - Delete Attributes from Student**
 
-**Preconditions:** Student exists with at least one attribute.
+**System**: ClassRosterPro\
+**Use Case**: UC06 - Delete Attributes from Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one attribute\
+**Guarantees**:
+- Specified attributes are removed if they exist
+- Non-existent attributes are ignored
+- Data integrity is maintained
 
 **MSS:**
 
-1. Tutor types `delattr 1 attr/subject`.
-2. System validates index and attribute key.
-3. System removes the specified attribute and confirms.
+1. Tutor enters delattr command with student index and attribute keys.
+2. ClassRosterPro validates index and attribute keys.
+3. ClassRosterPro removes the specified attributes and confirms.\
+   Use case ends.
 
 **Extensions:**
 
-* 1a. Invalid index → error "Invalid person index".
-* 2a. Attribute doesn't exist → error "No matching attributes found".
-* 2b. Multiple attributes specified → all valid attributes removed.
-
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects attribute doesn't exist.
+   * 2b1. ClassRosterPro shows "No matching attributes found".\
+     Use case ends.
+* 2c. ClassRosterPro detects multiple attributes specified.
+   * 2c1. ClassRosterPro removes all valid attributes and proceeds.\
+     Use case ends.
+* 2d. ClassRosterPro detects no attributes specified.
+   * 2d1. ClassRosterPro shows error "No attributes specified for deletion".\
+     Use case ends.
+* 3a. ClassRosterPro encounters storage error during removal.
+    * 3a1. ClassRosterPro shows "Error removing attribute data".\
+     Use case ends.
 ---
 
-### **UC-7: Filter students by attributes**
+### **UC07 - Filter Students by Attributes**
+
+**System**: ClassRosterPro\
+**Use Case**: UC07 - Filter Students by Attributes\
+**Actor**: Tutor\
+**Preconditions**: None\
+**Guarantees**: Students matching filter criteria are displayed with count
 
 **MSS:**
 
-1. Tutor types `filter attr/subject=math,science attr/age=16`.
-2. System applies filters (AND logic between different attributes, OR within same attribute).
-3. System displays filtered list with count.
+1. Tutor enters filter command with attribute criteria.
+2. ClassRosterPro applies filters using AND logic between attributes and OR logic within same attribute.
+3. ClassRosterPro displays filtered list with count.\
+   Use case ends.
 
 **Extensions:**
 
-* 1a. No students match → display "0 students listed".
-* 2a. Invalid age value (non-integer) → error message.
-* 2b. No attr/ prefix provided → error "Incorrect format".
+* 1a. No students match filter criteria.
+   * 1a1. ClassRosterPro displays "0 students listed".\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid age value (non-integer).
+    * 2a1. ClassRosterPro shows error message.\
+     Use case ends.
+* 2b. ClassRosterPro detects no attr/ prefix provided.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
 
 ---
 
-### **UC-8: Search a student**
+### **UC08 - Search Student**
+
+**System**: ClassRosterPro\
+**Use Case**: UC08 - Search Student\
+**Actor**: Tutor\
+**Preconditions**: None\
+**Guarantees**: Students matching search criteria in name, phone, or email are displayed
 
 **MSS:**
 
-1. Tutor types in the search box (e.g., "alex" or "9876" or "john12").
-2. System searches name, phone, and email fields in real-time.
-3. System displays matching results.
+1. Tutor types search query in search box.
+2. ClassRosterPro searches name, phone, and email fields in real-time.
+3. ClassRosterPro displays matching results.\
+   Use case ends.
 
 **Extensions:**
 
-* 1a. No matches found → display empty list.
-* 2a. Search cleared → return to full list.
+* 1a. No matches found.
+   * 1a1. ClassRosterPro displays empty list.\
+     Use case ends.
+* 2a. Search query is cleared.
+   * 2a1. ClassRosterPro returns to full list.\
+     Use case ends.
 
 ---
 
-### **UC-9: Delete a student**
+### **UC09 - Delete Student**
+
+**System**: ClassRosterPro\
+**Use Case**: UC09 - Delete Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster\
+**Guarantees**: Student is permanently removed from roster
 
 **MSS:**
 
 1. Tutor lists/filters students.
-2. Tutor enters `delete 3`.
-3. System validates index and removes the contact.
-4. System confirms deletion.
+2. Tutor enters delete command with student index.
+3. ClassRosterPro validates index and removes the contact.
+4. ClassRosterPro confirms deletion.\
+   Use case ends.
 
 **Extensions:**
 
-* 2a. Index out of bounds → error "Invalid person index".
-* 2b. Index not a positive integer → error message.
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects index not a positive integer.
+   * 2b1. ClassRosterPro shows error message.\
+     Use case ends.
 
 ---
-### **UC-10: Unrecords attendance for a specific lesson**
+### **UC10 - Unmark Attendance for Lesson**
 
-**Preconditions:** Student exists with at least one scheduled lesson.
+**System**: ClassRosterPro\
+**Use Case**: UC10 - Unmark Attendance for Lesson\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one scheduled lesson\
+**Guarantees**: Attendance record is updated to not attended
 
 **MSS:**
 
 1. Tutor filters/finds the student if needed.
-2. Tutor enters `unmark 1 lesson/1`.
-3. System validates both indices and marks the lesson as not attended.
-4. System updates attendance count and confirms.
+2. Tutor enters unmark command with student index and lesson index.
+3. ClassRosterPro validates both indices and marks the lesson as not attended.
+4. ClassRosterPro updates attendance count and confirms.
+   Use case ends.
 
 **Extensions:**
 
-* 2a. Student index invalid → error "Invalid person index".
-* 2b. Lesson index invalid → error "Invalid lesson index".
-* 2c. Lesson already marked as not present → error "This lesson is already marked as not present".
+* 2a. ClassRosterPro detects invalid student index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid lesson index.
+   * 2b1. ClassRosterPro shows "Invalid lesson index".\
+     Use case ends.
+* 2c. ClassRosterPro detects lesson already marked as not present.
+   * 2c1. ClassRosterPro shows "This lesson is already marked as not present".\
+     Use case ends.
 
 ---
 
-### **UC-11: Open a student's contact card**
+### **UC11 - Open Student Contact Card**
 
-**Preconditions:** Student exists in the roster with Student card closed.
+**System**: ClassRosterPro\
+**Use Case**: UC11 - Open Student Contact Card\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster with student card closed\
+**Guarantees**: Student card expands to show all details
 
 **MSS:**
 
 1. Tutor lists/filters students to find the desired student.
-2. Tutor enters `open 1`.
-3. System validates the index.
-4. System expands the student card to show all details (lessons, grades, etc.).
+2. Tutor enters open command with student index.
+3. ClassRosterPro validates the index.
+4. ClassRosterPro expands the student card to show all details.\
+   Use case ends.
 
 **Extensions:**
 
-* 2a. Index out of bounds → error "Invalid person index".
-* 3a. The student card is already open → error "Card is already open".
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3a. ClassRosterPro detects student card is already open.
+   * 3a1. ClassRosterPro shows "Card is already open".\
+     Use case ends.
 
 ---
 
 ### **UC-12: Close a student's contact card**
 
-**Preconditions:** Student exists in the roster with Student card open.
+**System**: ClassRosterPro\
+**Use Case**: UC11 - Open Student Contact Card\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster with student card open\
+**Guarantees**:  Student card collapses to summary view
 
 **MSS:**
 
 1. Tutor lists/filters students to find the desired student.
-2. Tutor enters `close 1`.
-3. System validates the index of the open card.
-4. System collapses the student card to its summary view.
+2. Tutor enters close command with student index.
+3. ClassRosterPro validates the index of the open card.
+4. ClassRosterPro collapses the student card to its summary view.\
+   Use case ends.
 
 **Extensions:**
 
-* 1a. Index out of bounds → error "Invalid person index".
-* 3a. The student card is already closed → error "Card is already closed".
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3a. ClassRosterPro detects student card is already closed.
+   * 3a1. ClassRosterPro shows "Card is already closed".\
+     Use case ends.
 
 ---
 
