@@ -95,11 +95,31 @@ public class Lesson implements Comparable<Lesson> {
         this.isPresent = isPresent;
     }
 
+    /**
+     * Constructs a {@code Lesson} with explicit start/end date strings.
+     *
+     * @param start A valid time in HH:mm format
+     * @param end A valid time in HH:mm format
+     * @param date A valid start date in YYYY-MM-DD format
+     * @param endDate A valid end date in YYYY-MM-DD format
+     * @param sub A valid subject
+     * @param isPresent The attendance status
+     */
     public Lesson(String start, String end, String date, String endDate, String sub, boolean isPresent) {
         this(LocalTime.parse(start), LocalTime.parse(end), LocalDate.parse(date), LocalDate.parse(endDate), sub,
                 isPresent);
     }
 
+    /**
+     * Constructs a {@code Lesson} with explicit {@link LocalDate} boundaries.
+     *
+     * @param start A valid time
+     * @param end A valid time after start
+     * @param date The start date of the lesson
+     * @param endDate The end date of the lesson
+     * @param sub A valid subject
+     * @param isPresent The attendance status
+     */
     public Lesson(LocalTime start, LocalTime end, LocalDate date, LocalDate endDate, String sub, boolean isPresent) {
         requireAllNonNull(start, end, date, endDate, sub);
         this.start = start;
