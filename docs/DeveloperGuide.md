@@ -531,32 +531,65 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
     Use case ends.
 ---
 
-### **UC-2: Schedule a lesson for a student**
+### **UC02 - Schedule Lesson for Student**
 
-**Preconditions:** Student exists in the roster.
+**System:** ClassRosterPro
+**Use Case:** UC02 - Schedule Lesson for Student
+**Actor:** Tutor
+**Preconditions:** Student exists in the roster
+**Guarantees:** Lesson is scheduled if no overlaps/duplicates and all validations pass
 
 **MSS:**
 
-1. Tutor types `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`.
-2. System validates index, time format (HH:mm), date format (YYYY-MM-DD), and time validity.
-3. System checks for overlapping lessons on the same date.
-4. System saves and confirms the lesson.
+1. Tutor enters schedule command with lesson details.
+2. ClassRosterPro validates index, time format, date format, and time validity.
+3. ClassRosterPro checks for overlapping lessons on the same date.
+4. ClassRosterPro saves and confirms the lesson.
+   Use case ends.
 
 **Extensions:**
 
-* 2a. Invalid time format → error "Invalid start/end time format. Use HH:mm".
-* 2b. Invalid time values (e.g., 24:01) → error "Invalid time. Hours must be 00-23 and minutes must be 00-59".
-* 2c. Invalid date format → error "Invalid date format. Use YYYY-MM-DD".
-* 2d. Invalid date values (e.g., 2025-11-31) → error "Invalid date. Ensure the day is valid for the given month and year".
-* 2e. End time ≤ start time → error "End time must be after start time".
-* 3a. Lesson overlaps with existing lesson → reject with "This lesson overlaps with an existing lesson".
-* 3b. Lesson duplicates an existing one → reject with "This lesson already exists".
+* 2a. ClassRosterPro detects invalid time format.
+  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".
 
+    Use case ends.
+* 2b. ClassRosterPro detects invalid time values.
+  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".
+
+    Use case ends.
+* 2c. ClassRosterPro detects invalid date format.
+   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".
+
+     Use case ends.
+* 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
+   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".
+
+     Use case ends.
+* 2e. ClassRosterPro detects end time ≤ start time.
+   * 2e1. ClassRosterPro shows "End time must be after start time".
+
+     Use case ends.
+* 2f. ClassRosterPro detects missing required fields.
+   * 2f1. ClassRosterPro shows error message indicating which fields are missing.
+
+     Use case ends.
+* 3a. ClassRosterPro detects lesson overlaps with existing lesson.
+   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".
+
+     Use case ends.
+* 3b. ClassRosterPro detects duplicate lesson (exact match).
+   * 3b1. ClassRosterPro shows "This lesson already exists".
+
+     Use case ends.
 ---
 
-### **UC-3: Record attendance for a specific lesson**
+### **UC03 - Record Attendance for Lesson**
 
-**Preconditions:** Student exists with at least one scheduled lesson.
+**System:** ClassRosterPro
+**Use Case:** UC03 - Record Attendance for Lesson
+**Actor:** Tutor
+**Preconditions:** Student exists with at least one scheduled lesson
+**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked
 
 **MSS:**
 
