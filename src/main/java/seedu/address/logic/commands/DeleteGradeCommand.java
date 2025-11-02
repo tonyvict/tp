@@ -64,4 +64,18 @@ public class DeleteGradeCommand extends Command {
         model.setPerson(personToEdit, editedPerson);
         return new CommandResult(String.format(MESSAGE_SUCCESS, editedPerson.getName(), subject + "/" + assessment));
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof DeleteGradeCommand)) {
+            return false;
+        }
+        DeleteGradeCommand otherCommand = (DeleteGradeCommand) other;
+        return index.equals(otherCommand.index)
+                && subject.equals(otherCommand.subject)
+                && assessment.equals(otherCommand.assessment);
+    }
 }
