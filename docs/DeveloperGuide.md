@@ -491,10 +491,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ### **UC01: Add attributes to a student**
 
-**System:** ClassRosterPro
-**Use Case:** UC01 - Add attributes to students
-**Actor:** Tutor
-**Preconditions:** None
+**System:** ClassRosterPro\
+**Use Case:** UC01 - Add attributes to students\
+**Actor:** Tutor\
+**Preconditions:** None\
 **Guarantees:**
   - Student is added to roster if all fields are valid and no duplicate exists
   - Attributes are added to student if index is valid and attribute format is correct
@@ -504,39 +504,34 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 1. Tutor enters add command with student details. 
 2. ClassRosterPro validates all fields and adds the student.
 3. Tutor enters addattr command with index and attribute.
-4. ClassRosterPro adds the new attribute values to the student.
+4. ClassRosterPro adds the new attribute values to the student.\
    Use case ends. 
 
 **Extensions:**
 
-* 1a. Tutor enters invald email/phone number. 
-  * 1a1. ClassRosterPro shows error message and rejects the command.
-  
+* 1a. Tutor enters invalid email/phone number. 
+  * 1a1. ClassRosterPro shows error message and rejects the command.\
     Use case ends.
 * 1b. Tutor enters duplicate contact.
-  * 1b1. ClassRosterPro shows error "This person already exists in the address book".
-  
+  * 1b1. ClassRosterPro shows error "This person already exists in the address book".\
     Use case ends.
 * 3a. Tutor enters invalid index.
-  * 3a1. ClassRosterPro shows "The person index provided is invalid".
-  
+  * 3a1. ClassRosterPro shows "The person index provided is invalid".\  
     Use case ends.
 * 3b.  Tutor enters invalid attribute format.
-  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.
-  
+  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.\
     Use case ends.
 * a. At any time, Tutor enters exit command.
-    * a1. ClassRosterPro saves data and exits.
-
+    * a1. ClassRosterPro saves data and exits.\
     Use case ends.
 ---
 
 ### **UC02 - Schedule Lesson for Student**
 
-**System:** ClassRosterPro
-**Use Case:** UC02 - Schedule Lesson for Student
-**Actor:** Tutor
-**Preconditions:** Student exists in the roster
+**System:** ClassRosterPro\
+**Use Case:** UC02 - Schedule Lesson for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
 **Guarantees:** Lesson is scheduled if no overlaps/duplicates and all validations pass
 
 **MSS:**
@@ -544,65 +539,65 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 1. Tutor enters schedule command with lesson details.
 2. ClassRosterPro validates index, time format, date format, and time validity.
 3. ClassRosterPro checks for overlapping lessons on the same date.
-4. ClassRosterPro saves and confirms the lesson.
+4. ClassRosterPro saves and confirms the lesson.\
    Use case ends.
 
 **Extensions:**
 
 * 2a. ClassRosterPro detects invalid time format.
-  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".
-
+  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".\
     Use case ends.
 * 2b. ClassRosterPro detects invalid time values.
-  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".
-
+  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".\
     Use case ends.
 * 2c. ClassRosterPro detects invalid date format.
-   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".
-
+   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".\
      Use case ends.
 * 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
-   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".
-
+   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".\
      Use case ends.
 * 2e. ClassRosterPro detects end time ≤ start time.
-   * 2e1. ClassRosterPro shows "End time must be after start time".
-
+   * 2e1. ClassRosterPro shows "End time must be after start time".\
      Use case ends.
 * 2f. ClassRosterPro detects missing required fields.
-   * 2f1. ClassRosterPro shows error message indicating which fields are missing.
-
+   * 2f1. ClassRosterPro shows error message indicating which fields are missing.\
      Use case ends.
 * 3a. ClassRosterPro detects lesson overlaps with existing lesson.
-   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".
-
+   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".\
      Use case ends.
 * 3b. ClassRosterPro detects duplicate lesson (exact match).
-   * 3b1. ClassRosterPro shows "This lesson already exists".
-
+   * 3b1. ClassRosterPro shows "This lesson already exists".\
      Use case ends.
 ---
 
 ### **UC03 - Record Attendance for Lesson**
 
-**System:** ClassRosterPro
-**Use Case:** UC03 - Record Attendance for Lesson
-**Actor:** Tutor
-**Preconditions:** Student exists with at least one scheduled lesson
-**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked
+**System:** ClassRosterPro\
+**Use Case:** UC03 - Record Attendance for Lesson\
+**Actor:** Tutor\
+**Preconditions:** Student exists with at least one scheduled lesson\
+**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked\
 
 **MSS:**
 
-1. Tutor filters/finds the student if needed.
-2. Tutor enters `mark 1 lesson/1`.
-3. System validates both indices and marks the lesson as attended.
-4. System updates attendance count and confirms.
+1. Tutor enters mark command with student index and lesson index.
+2. ClassRosterPro validates both indices.
+3. ClassRosterPro marks the lesson as attended.
+4. ClassRosterPro updates attendance count and confirms.\
+   Use case ends.
 
 **Extensions:**
+* 2a. ClassRosterPro detects invalid student index.
+  * 2a1. ClassRosterPro shows "Invalid person index".\
+    Use case ends.
 
-* 2a. Student index invalid → error "Invalid person index".
-* 2b. Lesson index invalid → error "Invalid lesson index".
-* 2c. Lesson already marked → error "This lesson has already been marked".
+* 2b. ClassRosterPro detects invalid lesson index.
+  * 2b1. ClassRosterPro shows "Invalid lesson index".\
+    Use case ends.
+
+* 2c. ClassRosterPro detects lesson already marked.
+  * 2c1. ClassRosterPro shows "This lesson has already been marked".\
+    Use case ends.
 
 ---
 
