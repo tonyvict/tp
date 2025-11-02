@@ -45,4 +45,12 @@ public class AddCommandIntegrationTest {
                 AddCommand.MESSAGE_DUPLICATE_PERSON);
     }
 
+    @Test
+    public void execute_duplicatePersonNameDifferentCaseAndWhitespace_throwsCommandException() {
+        Person personInList = model.getAddressBook().getPersonList().get(0);
+        String nameWithDifferentCaseAndWhitespace = personInList.getName().fullName.replaceAll("\\s+", "").toLowerCase();
+        Person duplicatePerson = new PersonBuilder(personInList).withName(nameWithDifferentCaseAndWhitespace).build();
+        assertCommandFailure(new AddCommand(duplicatePerson), model, AddCommand.MESSAGE_DUPLICATE_PERSON);
+    }
+
 }
