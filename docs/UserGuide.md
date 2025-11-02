@@ -353,17 +353,19 @@ Searching for partial words - the filter only matches complete tag words.
 Schedule a lesson for a student with date, time and duration.
 
 Format:
-`schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`
+`schedule INDEX start/START_TIME end/END_TIME date/START_DATE [date2/END_DATE] sub/SUBJECT`
 
 * Schedules a lesson for the student at the specified `INDEX`.
 * The index **must be a positive integer** 1, 2, 3, …
 * Times use 24-hour `HH:mm` (e.g., `09:30`, `14:00`) and dates use `YYYY-MM-DD` (e.g., `2025-09-20`).
-* `END_TIME` must be strictly later than `START_TIME`.
-* Overlapping lessons for the same student on the same date are rejected.
+* `date2/END_DATE` is optional—supply it for lessons that end on a different day (e.g., camps). When omitted, the lesson ends on the same date as it starts.
+* The combined end date/time must be strictly later than the start date/time.
+* Overlapping lessons for the same student across the scheduled interval are rejected.
 * Exact duplicates (same student, date, start, end, subject) are not added.
 
 Examples:
 * `schedule 2 start/13:00 end/14:00 date/2025-09-20 sub/Maths`
+* `schedule 1 start/22:00 end/01:00 date/2025-09-20 date2/2025-09-21 sub/Camp`
 
 _Schedules specified lesson for the 2nd person in the current list_
 
@@ -644,7 +646,7 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Filter** | `filter attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `filter attr/subject=math,science attr/age=16`
 **Grade** | `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…​`<br> e.g., `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`
-**Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/DATE sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
+**Schedule Lesson** | `schedule INDEX start/START_TIME end/END_TIME date/START_DATE [date2/END_DATE] sub/SUBJECT`<br> e.g., `schedule 1 start/14:00 end/15:00 date/2025-09-20 sub/science`
 **Unschedule Lesson** | `unschedule INDEX lesson/LESSON_INDEX`<br> e.g., `unschedule 1 lesson/1`
 **Mark Attendance** | `mark INDEX lesson/LESSON_INDEX`<br> e.g., `mark 1 lesson/1`
 **Unmark Attendance** | `unmark INDEX lesson/LESSON_INDEX`<br> e.g., `unmark 1 lesson/1`

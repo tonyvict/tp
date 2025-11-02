@@ -26,8 +26,8 @@ public class ScheduleCommand extends Command {
             + "by the index number used in the last person listing. "
             + "Existing student will have new lesson stated in input added.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + "start/ [START TIME] end/ [END TIME} "
-            + "date/ [DATE] sub/ [SUBJECT]\n"
+            + "start/ START TIME end/ END TIME "
+            + "date/ START DATE [date2/ END DATE] sub/ SUBJECT\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + "start/ 09:30 end/ 11:30 "
             + "date/ 2025-09-20 sub/ Maths";
