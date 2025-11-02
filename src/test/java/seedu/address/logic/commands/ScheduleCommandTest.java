@@ -63,6 +63,25 @@ public class ScheduleCommandTest {
     }
 
     @Test
+    public void execute_addCrossDayLesson_success() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Lesson lessonToAdd = new Lesson("22:00", "01:00", "2025-09-20", "2025-09-21", "Overnight Camp", false);
+
+        Person editedPerson = new PersonBuilder(firstPerson)
+                .withLesson(lessonToAdd)
+                .build();
+
+        ScheduleCommand scheduleCommand = new ScheduleCommand(INDEX_FIRST_PERSON, lessonToAdd);
+
+        String expectedMessage = String.format(ScheduleCommand.MESSAGE_ADD_LESSON_SUCCESS, format(editedPerson));
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(firstPerson, editedPerson);
+
+        assertCommandSuccess(scheduleCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void execute_addMultipleLessonsUnfilteredList_success() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Lesson firstLesson = new Lesson(VALID_START_TIME, VALID_END_TIME, VALID_DATE, VALID_SUBJECT);

@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ public class Lesson implements Comparable<Lesson> {
     private final LocalTime start;
     private final LocalTime end;
     private final LocalDate date;
+    private final LocalDate endDate;
     private final String sub;
     private final boolean isPresent;
 
@@ -33,6 +35,7 @@ public class Lesson implements Comparable<Lesson> {
         this.end = LocalTime.parse(end);
         this.date = LocalDate.parse(date);
         this.sub = sub;
+        this.endDate = this.date;
         this.isPresent = false;
     }
 
@@ -50,6 +53,7 @@ public class Lesson implements Comparable<Lesson> {
         this.end = end;
         this.date = date;
         this.sub = sub;
+        this.endDate = date;
         this.isPresent = false;
     }
 
@@ -68,6 +72,7 @@ public class Lesson implements Comparable<Lesson> {
         this.end = LocalTime.parse(end);
         this.date = LocalDate.parse(date);
         this.sub = sub;
+        this.endDate = LocalDate.parse(date);
         this.isPresent = isPresent;
     }
 
@@ -86,6 +91,22 @@ public class Lesson implements Comparable<Lesson> {
         this.end = end;
         this.date = date;
         this.sub = sub;
+        this.endDate = date;
+        this.isPresent = isPresent;
+    }
+
+    public Lesson(String start, String end, String date, String endDate, String sub, boolean isPresent) {
+        this(LocalTime.parse(start), LocalTime.parse(end), LocalDate.parse(date), LocalDate.parse(endDate), sub,
+                isPresent);
+    }
+
+    public Lesson(LocalTime start, LocalTime end, LocalDate date, LocalDate endDate, String sub, boolean isPresent) {
+        requireAllNonNull(start, end, date, endDate, sub);
+        this.start = start;
+        this.end = end;
+        this.date = date;
+        this.endDate = endDate;
+        this.sub = sub;
         this.isPresent = isPresent;
     }
 
@@ -99,6 +120,10 @@ public class Lesson implements Comparable<Lesson> {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
     public String getSub() {
@@ -115,17 +140,19 @@ public class Lesson implements Comparable<Lesson> {
      */
     public boolean overlapsWith(Lesson other) {
         requireAllNonNull(other);
-        if (!date.equals(other.date)) {
-            return false;
-        }
-        return start.isBefore(other.end) && end.isAfter(other.start);
+        LocalDateTime startDateTime = date.atTime(start);
+        LocalDateTime endDateTime = endDate.atTime(end);
+        LocalDateTime otherStart = other.date.atTime(other.start);
+        LocalDateTime otherEnd = other.endDate.atTime(other.end);
+        return startDateTime.isBefore(otherEnd) && endDateTime.isAfter(otherStart);
     }
 
     /**
      * Returns a string with the lesson's details, excluding attendance.
      */
     public String getLessonDetails() {
-        return sub + " class on " + date.toString() + " from " + start.toString() + " to " + end.toString();
+        String endPart = endDate.equals(date) ? end.toString() : endDate + " " + end;
+        return sub + " class on " + date + " from " + start + " to " + endPart;
     }
 
     /**
@@ -138,12 +165,12 @@ public class Lesson implements Comparable<Lesson> {
     @Override
     public int compareTo(Lesson other) {
         // First compare by date
-        int dateComparison = this.date.compareTo(other.date);
+        int dateComparison = this.date.atTime(start).compareTo(other.date.atTime(other.start));
         if (dateComparison != 0) {
             return dateComparison;
         }
         // If same date, compare by start time
-        return this.start.compareTo(other.start);
+        return this.endDate.atTime(end).compareTo(other.endDate.atTime(other.end));
     }
 
     @Override
@@ -161,19 +188,20 @@ public class Lesson implements Comparable<Lesson> {
         return start.equals(otherLesson.start)
                 && end.equals(otherLesson.end)
                 && date.equals(otherLesson.date)
+                && endDate.equals(otherLesson.endDate)
                 && sub.equals(otherLesson.sub)
                 && isPresent == otherLesson.isPresent;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, end, date, sub);
+        return Objects.hash(start, end, date, endDate, sub);
     }
 
     @Override
     public String toString() {
         String attendance = isPresent ? "[Present]" : "[Not Present]";
-        return sub + " class: " + date.toString() + " from " + start.toString() + " to " + end.toString() + attendance;
+        return sub + ": " + date + " || " + start + " to " + endDate + " || " + end + attendance;
     }
 
 }
