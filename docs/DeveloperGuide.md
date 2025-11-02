@@ -648,22 +648,51 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
      Use case ends.
 ---
 
-### **UC-5: Unschedule a lesson**
+### **UC05 - Unschedule Lesson**
 
-**Preconditions:** Student exists with at least one scheduled lesson.
+**System**: ClassRosterPro\
+**Use Case**: UC05 - Unschedule Lesson\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one scheduled lesson\
+**Guarantees**:
+- Lesson is removed if both indices are valid
+- Attendance records for the lesson are also removed
+- Data consistency is maintained
 
 **MSS:**
 
 1. Tutor lists/filters students.
-2. Tutor enters `unschedule 1 lesson/1`.
-3. System validates both indices.
-4. System removes the lesson and confirms.
+2. Tutor enters unschedule command with student index and lesson index.
+3. ClassRosterPro validates both indices.
+4. ClassRosterPro removes the lesson and confirms.\
+  Use case ends.
 
 **Extensions:**
 
-* 2a. Student index out of bounds → error "Invalid person index".
-* 2b. Lesson index out of bounds → error "Invalid lesson index".
-* 3a. Student has no lessons → error "The selected person has no lessons scheduled".
+* 1a. Tutor cannot find desired student in current view.
+   * 1a1. Tutor uses find or filter commands to locate student.\
+     Use case resumes from step 1.
+* 2a. Tutor enters invalid command format.
+   * 2a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 3a. ClassRosterPro detects student index out of bounds.
+   * 3a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3b. ClassRosterPro detects lesson index out of bounds.
+   * 3b1. ClassRosterPro shows "Invalid lesson index".\
+     Use case ends.
+* 3c. ClassRosterPro detects student has no lessons.
+   * 3c1. ClassRosterPro shows "The selected person has no lessons scheduled".\
+     Use case ends.
+* 4a. ClassRosterPro encounters data corruption in lesson records.
+   * 4a1. ClassRosterPro shows "Error accessing lesson data".\
+     Use case ends.
+* 4b. ClassRosterPro fails to remove lesson due to storage error.
+   * 4b1. ClassRosterPro shows "Error removing lesson data".\
+     Use case ends.
+* c. At any time, Tutor cancels the operation.
+   * c1. ClassRosterPro returns to command prompt without changes.\
+     Use case ends.
 
 ---
 
