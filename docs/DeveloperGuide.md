@@ -425,6 +425,133 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 - Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - Because the command is irreversible, consider pairing it with undo when available.
 
+### Mark Student Attendance Command
+
+#### What it does
+
+Marks a student's attendance for a specific lesson as 'present'. This helps tutors keep an accurate record of class attendance, which is essential for tracking student records and for billing purposes.
+
+#### Parameters
+
+`mark INDEX lesson/LESSON_INDEX`
+
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `LESSON_INDEX` — required, 1-based. Identifies the lesson in the student's lesson list, which is visible when the student's card is expanded.
+
+#### Overview
+
+The `mark` command follows the standard command pattern of *parse → construct command → execute on the model*. It is designed to be a quick and straightforward way to update a single lesson's attendance.
+
+#### High-level flow
+
+!Mark command activity
+
+The activity diagram shows the user's journey: the tutor provides the student and lesson indices, the system validates them, checks if the lesson is already marked, and then updates the attendance status before confirming success.
+
+#### Parsing pipeline
+
+!Mark command parser sequence
+
+The sequence diagram shows how `AddressBookParser` delegates to `MarkCommandParser`. The parser:
+
+1.  Tokenises the arguments to find the person `INDEX` and the `lesson/LESSON_INDEX`.
+2.  Uses `ParserUtil` to parse both indices into `Index` objects.
+3.  Ensures both indices are present and valid.
+4.  Instantiates and returns a fully initialised `MarkCommand`.
+
+Key classes: `MarkCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+!Mark command execution sequence
+
+The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
+
+1.  Retrieves the target `Person` from the filtered list using the person index.
+2.  Retrieves the target `Lesson` from the person's `LessonList` using the lesson index.
+3.  Checks if the lesson is already marked as present. If so, it throws a `CommandException` with `MESSAGE_LESSON_ALREADY_MARKED`.
+4.  Creates a new `Lesson` object with the same details but with its attendance status set to `true`.
+5.  Creates a new `Person` object with the updated `LessonList`.
+6.  Calls `model.setPerson(...)` to replace the old person object with the new one, and returns a success message.
+
+Key classes: `MarkCommand`, `Model`, `Person`, `Lesson`, `LessonList`.
+
+#### Validation and error handling
+
+-   Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Invalid or missing `LESSON_INDEX` throws `MESSAGE_INVALID_LESSON_DISPLAYED_INDEX`.
+-   Attempting to mark a lesson that is already marked as present throws `MESSAGE_LESSON_ALREADY_MARKED`.
+
+#### Design Considerations
+
+-   **Immutability**: The command creates new `Lesson` and `Person` objects instead of mutating existing ones. This aligns with the functional programming paradigm and makes state management more predictable.
+-   **Idempotency Check**: The check for whether a lesson is already marked prevents redundant operations and provides clear feedback to the user, avoiding confusion.
+-   **User Experience**: The command requires two separate indices, which is clear but requires the user to first identify the student and then the specific lesson. This is a trade-off for precision.
+-   **Flexibility**: The command intentionally allows marking lessons in the past, present, or future. This gives tutors the flexibility to catch up on old attendance records or pre-mark attendance for a known upcoming attendance.
+
+### Unmark Student Attendance Command
+
+#### What it does
+
+Reverts a student's attendance for a specific lesson to 'not present'. This is useful for correcting mistakes made during attendance-taking.
+
+#### Parameters
+
+`unmark INDEX lesson/LESSON_INDEX`
+
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `LESSON_INDEX` — required, 1-based. Identifies the lesson in the student's lesson list.
+
+#### Overview
+
+The `unmark` command is the direct counterpart to the `mark` command and follows the same *parse → command → execute* pattern. Its primary function is to reverse an attendance mark.
+
+#### High-level flow
+
+!Unmark command activity
+
+The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
+
+#### Parsing pipeline
+
+!Unmark command parser sequence
+
+The sequence diagram shows `AddressBookParser` delegating to `UnmarkCommandParser`. The parser:
+
+1.  Parses the person `INDEX` from the preamble.
+2.  Parses the `lesson/LESSON_INDEX` from the prefixed arguments.
+3.  Uses `ParserUtil` to validate and create `Index` objects for both.
+4.  Constructs and returns an `UnmarkCommand` with the parsed indices.
+
+Key classes: `UnmarkCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+!Unmark command execution sequence
+
+The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
+
+1.  Retrieves the target `Person` and `Lesson` using the provided indices.
+2.  Guards against invalid indices by throwing a `CommandException` if either is out of bounds.
+3.  Checks if the lesson is already marked as 'not present'. If so, it throws a `CommandException` with `MESSAGE_LESSON_ALREADY_UNMARKED`.
+4.  Creates a new `Lesson` with its attendance status set to `false`.
+5.  Creates a new `Person` with the updated `LessonList`.
+6.  Updates the model via `model.setPerson(...)` and returns a success message confirming the change.
+
+Key classes: `UnmarkCommand`, `Model`, `Person`, `Lesson`, `LessonList`.
+
+#### Validation and error handling
+
+-   Invalid student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Invalid `LESSON_INDEX` throws `MESSAGE_INVALID_LESSON_DISPLAYED_INDEX`.
+-   Attempting to unmark a lesson that is already 'not present' throws `MESSAGE_LESSON_ALREADY_UNMARKED`.
+
+#### Design Considerations
+
+-   **Symmetry with `mark`**: The command's structure, validation, and execution flow are intentionally symmetric with `MarkCommand` to ensure a consistent and predictable developer and user experience.
+-   **Error-Correction Focus**: This command serves as a simple and direct way to correct errors, which is a critical usability feature for data entry applications.
+-   **State-Awareness**: By checking if the lesson is already unmarked, the command avoids unnecessary model updates and provides precise feedback, preventing user confusion about the state of the data.
+-   **Flexibility**: Mirroring the `mark` command, `unmark` also works on past, present, and future lessons. This is crucial for correcting historical attendance errors or adjusting plans for future lessons.
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -802,116 +929,111 @@ This section provides guidance to manually verify the new or modified features o
 
 ### 1. Search
 
-Purpose: Instantly locate students by typing into the search box.
+**Command name**: `search`
 
-Steps to test:
+**Purpose**: Instantly locate students by typing into the search box.
+
+**Steps to test**:
 1. Launch the app and ensure several students are listed.
-2. Enter:
-   - `search alex`
+2. Enter `search alex` in the command box.
 
-Expected: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
-
-1. Enter
-   - `search zzz`.
-
-Expected: The list clears and an error message is shown.
+**Expected**: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
 
 ### 2. Tag and Filter
 
-Purpose: Add attributes to students and filter by them.
+**Command name**: `addattr` and `filter`
 
-Steps to test:
+**Purpose**: Add attributes to students and filter the student list based on them.
+
+**Steps to test**:
 1. Tag a student with attributes:
    - `addattr 1 attr/subject=Math attr/age=16`
 2. Verify attributes appear under the student's details.
 3. Filter students by multiple attributes:
    - `filter attr/subject=Math attr/age=16`
 
-Expected: Only students with both `subject=Math` and `age=16` are displayed.
-
-Reset view:
-- `list`
+**Expected**: Only students with both `subject=Math` and `age=16` are displayed.
 
 ### 3. Schedule and Unschedule Lessons
 
-Purpose: Create and remove scheduled lessons.
+**Command name**: `schedule` and `unschedule`
 
-Steps to test:
+**Purpose**: Create and remove scheduled lessons for a student.
+
+**Steps to test**:
 1. Schedule a lesson for the first student:
    - `schedule 1 start/14:00 end/15:00 date/2025-11-01 sub/Science`
+2. Remove the lesson:
+   -`unschedule 1 lesson/1`.
 
-Expected: A lesson entry appears in the expanded student card.
-
-Try scheduling an overlapping lesson (same date/time). Expected: Error about overlapping lesson.
-
-Remove the lesson:
-- `unschedule 1 lesson/1`
+**Expected**: A lesson entry appears after scheduling command in the expanded student card and is removed after unschedule command.
 
 ### 4. Attendance Tracking
 
-Purpose: Mark and unmark lesson attendance.
+**Command name**: `mark` and `unmark`
 
-Steps to test:
-1. Ensure a student has a scheduled lesson (see previous test).
+**Purpose**: Mark and unmark lesson attendance.
+
+**Steps to test**:
+1. Ensure a student has a scheduled lesson (see previous test). 
 2. Mark attendance:
    - `mark 1 lesson/1`
+3. Unmark attendance:
+    - `unmark 1 lesson/1`
 
-Expected: Lesson marked as "Attended".
-
-Unmark attendance:
-- `unmark 1 lesson/1`
-
-Expected: Lesson reverted to "Not attended".
+**Expected**: The lesson is marked as "Present" after mark command and marked as "Not Present" after unmark command.
 
 ### 5. Grade Recording
 
-Purpose: Record grades for multiple subjects/assessments.
+**Command name**: `grade`
 
-Steps to test:
+**Purpose**: Record and update grades for various subjects and assessments.
+
+**Steps to test**:
 1. Add grades to a student:
    - `grade 1 sub/MATH/WA1/85 sub/SCIENCE/Quiz1/92`
 
-Expected: Grades appear under the student's card.
+**Expected**: The grades appear under the student's card.
 
+**Steps to test**:
 2. Add another grade for the same subject/assessment to test overwrite behavior:
    - `grade 1 sub/MATH/WA1/90`
 
-Expected: The score updates to 90.
+**Expected**: The score for MATH/WA1 updates to 90.
 
 ### 6. Open and Close Student Cards
 
-Purpose: Expand or collapse individual contact cards to view details.
+**Command name**: `open` and `close`
 
-Steps to test:
-1. Open:
-   - `open 1`
-   - Expected: The first student's card expands to show all details (lessons, grades, tags).
-2. Close:
-   - `close 1`
-   - Expected: The same card collapses back to summary view.
-3. Try opening multiple cards:
-   - `open 2`
-   - Expected: Both card 1 and 2 can stay open simultaneously.
+**Purpose**: Expand or collapse individual student cards to view or hide details.
+
+**Steps to test**:
+1. Enter `open 1`
+2. Enter `close 1`.
+
+**Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
 ### 7. Delete Attributes
 
-Purpose: Remove specific attributes (tags) from a student.
+**Command name**: `delattr`
 
-Steps to test:
+**Purpose**: Remove specific attributes from a student.
+
+**Steps to test**:
 1. Add attributes first (if not present):
    - `addattr 1 attr/subject=Math attr/level=Sec3`
 2. Delete an attribute:
    - `delattr 1 attr/level`
 
-Expected: Only the `level` attribute is removed; `subject=Math` remains.
+**Expected**: Only the `level` attribute is removed; `subject=Math` remains.
 
 ### 8. Data Persistence Verification
 
-Purpose: Confirm that data modifications are saved correctly.
+**Purpose**: Confirm that data modifications are saved correctly after closing and reopening the application.
 
-Steps to test:
+**Steps to test**:
 1. Modify data using any commands above (e.g., add attributes, schedule a lesson, add grades).
 2. Exit the app.
 3. Reopen the app.
 
-Expected: All changes persist (e.g., added attributes, scheduled lessons, grades).
+**Expected**: All changes persist (e.g., added attributes, scheduled lessons, grades).
