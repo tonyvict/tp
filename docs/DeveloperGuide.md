@@ -576,7 +576,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Use Case:** UC03 - Record Attendance for Lesson\
 **Actor:** Tutor\
 **Preconditions:** Student exists with at least one scheduled lesson\
-**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked\
+**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked
 
 **MSS:**
 
@@ -590,35 +590,62 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 2a. ClassRosterPro detects invalid student index.
   * 2a1. ClassRosterPro shows "Invalid person index".\
     Use case ends.
-
 * 2b. ClassRosterPro detects invalid lesson index.
   * 2b1. ClassRosterPro shows "Invalid lesson index".\
     Use case ends.
-
 * 2c. ClassRosterPro detects lesson already marked.
   * 2c1. ClassRosterPro shows "This lesson has already been marked".\
     Use case ends.
 
 ---
 
-### **UC-4: Record grades for a student**
+### **UC04 - Record Grades for Student**
 
-**Preconditions:** Student exists in the roster.
+**System:** ClassRosterPro\
+**Use Case:** UC04 - Record Grades for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
+**Guarantees:**
+- Grades are saved with proper validation
+- Existing subject-assessment records are overwritten with new scores
+- Data integrity is maintained
 
 **MSS:**
 
-1. Tutor types `grade 2 sub/MATH/WA1/89 sub/SCIENCE/Quiz1/95`.
-2. System validates index and grade format.
-3. System saves grades and confirms.
+1. Tutor enters grade command with student index and grade details.
+2. ClassRosterPro validates index and grade format. 
+3. ClassRosterPro saves grades and confirms.\
+  Use case ends.
 
 **Extensions:**
 
-* 1a. Invalid index → error "Invalid person index".
-* 2a. Invalid grade format → error "Incorrect format".
-* 2b. Subject/assessment/score empty → error message.
-* 2c. Duplicate subject-assessment in command → last occurrence wins.
-* 2d. Subject-assessment already exists for student → overwrites with new score.
-
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid grade format.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
+* 2c. ClassRosterPro detects subject/assessment/score empty.
+   * 2c1. ClassRosterPro shows error message indicating missing components.\
+     Use case ends.
+* 2d. ClassRosterPro detects duplicate subject-assessment in command.
+   * 2d1. ClassRosterPro uses last occurrence and proceeds without warning.\
+     Use case ends.
+* 2e. ClassRosterPro detects invalid score value.
+   * 3a1. ClassRosterPro shows "Error saving grade data".\
+     Use case ends.
+* 3a. ClassRosterPro encounters storage error.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
+* b. At any time, subject-assessment already exists for student.
+   * b1. ClassRosterPro overwrites with new score without warning.\
+     Use case ends.
+* c. At any time, system encounters unexpected error.
+   * c1. ClassRosterPro shows "An unexpected error occurred" and logs details.\
+     Use case ends.
 ---
 
 ### **UC-5: Unschedule a lesson**
