@@ -8,7 +8,6 @@ participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":ScheduleCommandParser" as ScheduleCommandParser LOGIC_COLOR
 participant "s:ScheduleCommand" as ScheduleCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
-participant "Messages" as Messages LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1

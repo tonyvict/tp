@@ -3,7 +3,7 @@ skin rose
 skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
 start
-:User enters "schedule" command;
+:User enters command to schedule a lesson;
 :Logic parses index, times, date, subject;
 :Create and execute ScheduleCommand;
 if (Valid person index?) then (no)
