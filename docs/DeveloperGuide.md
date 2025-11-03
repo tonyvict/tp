@@ -153,7 +153,7 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 * [Help Command](#help-command)
-* [Add Student Command](#add-student-command)
+* [Add Command](#add-command)
 * [Edit Command](#edit-student-command)
 * [Delete Student Command](#delete-student-command)
 * [List Command](#list-command)
@@ -189,11 +189,22 @@ When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The comman
 - The window opens idempotently—the same command simply refocuses the existing help stage instead of spawning duplicates.
 - The `CommandResult` flagging approach keeps UI behaviour configurable without introducing UI dependencies into the logic layer.
 
-### Add Student Command
+### Add Command
 
 #### What it does
 
-Registers a new student in the roster. The created `Person` initially has empty remark, grade, and lesson lists; tags may be provided to group students immediately.
+The `add` command creates a new Person object representing a student and adds it to the AddressBook. 
+Each Person contains core contact information and optional metadata for student management.
+
+#### Execution Walkthrough
+1. User enters the command in the Command Box
+2. LogicManager receives the input string and forwards it to AddressBookParser
+3. AddressBookParser identifies the add keyword and instantiates AddCommandParser
+4. AddCommandParser tokenizes parameters using ArgumentTokenizer and constructs a Person using ParserUtil
+5. The constructed Person is passed to the AddCommand object
+6. AddCommand#execute(Model model) adds the person to the model via model.addPerson()
+7. The updated list is stored by ModelManager, and StorageManager subsequently saves it to disk
+8. A CommandResult object is returned, containing success message and UI update flags
 
 #### Parameters
 
@@ -209,13 +220,15 @@ The command rejects missing mandatory prefixes, duplicate occurrences of the sam
 
 #### Overview
 
-The `add` command follows the standard command pattern of *parse → construct command → execute on the model*.
+The `add` command follows the Command Pattern, consistent with the AB3 architecture.
+It encapsulates all logic for adding a new student and ensures that only valid, non-duplicate entries are added to the address book.
 
 #### High-level flow
 
 ![Add command activity](images/AddCommandActivityDiagram.png)
 
-The activity diagram captures the user journey: the tutor submits the command, the system validates the input, and either reports a duplicate or persists the new student before confirming success.
+The activity diagram captures the user journey: the tutor submits the command, 
+the system validates the input, and either reports a duplicate or persists the new student before confirming success.
 
 #### Parsing pipeline
 
@@ -396,6 +409,95 @@ Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the ca
 - Mirroring the open logic keeps the commands complementary and predictable.
 - Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
 - Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
+
+### Addattr Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Delattr Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Filter Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Schedule Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Unschedule Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Mark Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Unmark Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
+### Search Command
+
+#### What it does
+#### Execution Walkthrough
+#### Parameters
+#### Overview
+#### High Level Overview
+#### Execution Behaviour
+#### Validation and Error Handling
+#### Design considerations
+
 
 ### Clear Command
 
