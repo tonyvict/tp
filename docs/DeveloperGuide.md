@@ -129,8 +129,6 @@ The `Model` component,
 
 <img src="images/BetterModelClassDiagram.png" width="450" />
 
-</div>
-
 
 ### Storage component
 
@@ -1042,10 +1040,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters add command with student details.
+1. Tutor enters command to add student with corresponding student details.
 2. ClassRosterPro validates all fields and adds the student.
-3. Tutor enters addattr command with index and attribute.
-4. ClassRosterPro adds the new attribute values to the student.\
+3. Tutor enters command to add attribute with corresponding key and values.
+4. ClassRosterPro adds the new attribute values to the student successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1062,7 +1060,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 3b.  Tutor enters invalid attribute format.
   * 3b1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
-* a. At any time, Tutor enters exit command.
+* a. At any time, Tutor enters command to exit.
     * a1. ClassRosterPro saves data and exits.\
     Use case ends.
 ---
@@ -1077,10 +1075,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters schedule command with lesson details.
-2. ClassRosterPro validates index, time format, date format, and time validity.
+1. Tutor enters command to schedule lesson with corresponding lesson details.
+2. ClassRosterPro validates input parameters.
 3. ClassRosterPro checks for overlapping lessons on the same date.
-4. ClassRosterPro saves and confirms the lesson.\
+4. ClassRosterPro schedules the lesson successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1121,10 +1119,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters mark command with student index and lesson index.
+1. Tutor enters command to mark a lesson with the corresponding student index and lesson index.
 2. ClassRosterPro validates both indices.
 3. ClassRosterPro marks the lesson as attended.
-4. ClassRosterPro updates attendance count and confirms.\
+4. ClassRosterPro updates attendance count successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1153,9 +1151,9 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters grade command with student index and grade details.
+1. Tutor enters command to record grade with corresponding student index and grade details.
 2. ClassRosterPro validates index and grade format.
-3. ClassRosterPro saves grades and confirms.\
+3. ClassRosterPro records grades successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1169,7 +1167,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 2b. ClassRosterPro detects invalid grade format.
    * 2b1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
-* 2c. ClassRosterPro detects subject/assessment/score empty.
+* 2c. ClassRosterPro detects invalid subject-assessment format.
    * 2c1. ClassRosterPro shows error message indicating missing components.\
      Use case ends.
 * 2d. ClassRosterPro detects duplicate subject-assessment in command.
@@ -1194,10 +1192,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters delgrade command with student index and subject-assessment identifier.
+1. Tutor enters command to delete grade with corresponding student index and subject-assessment details.
 2. ClassRosterPro validates index and subject-assessment format.
 3. ClassRosterPro checks if the grade exists.
-4. ClassRosterPro removes the grade and confirms.\
+4. ClassRosterPro removes the grade successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1233,10 +1231,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor lists/filters students.
-2. Tutor enters unschedule command with student index and lesson index.
+1. Tutor views list of students.
+2. Tutor enters command to unschedule lesson with corresponding student index and lesson index.
 3. ClassRosterPro validates both indices.
-4. ClassRosterPro removes the lesson and confirms.\
+4. ClassRosterPro removes the lesson successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1247,10 +1245,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 2a. Tutor enters invalid command format.
    * 2a1. ClassRosterPro shows correct usage format.\
      Use case ends.
-* 3a. ClassRosterPro detects student index out of bounds.
+* 3a. ClassRosterPro detects invalid student index.
    * 3a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
-* 3b. ClassRosterPro detects lesson index out of bounds.
+* 3b. ClassRosterPro detects invalid lesson index.
    * 3b1. ClassRosterPro shows error message for invalid lesson index.\
      Use case ends.
 * 3c. ClassRosterPro detects student has no lessons.
@@ -1278,9 +1276,9 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters delattr command with student index and attribute keys.
+1. Tutor enters command to delete attribute with corresponding student index and attribute keys.
 2. ClassRosterPro validates index and attribute keys.
-3. ClassRosterPro removes the specified attributes and confirms.\
+3. ClassRosterPro removes the specified attributes successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1315,9 +1313,9 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters filter command with attribute criteria.
-2. ClassRosterPro applies filters using AND logic between attributes and OR logic within same attribute.
-3. ClassRosterPro displays filtered list with count.\
+1. Tutor enters command to filter with corresponding attribute criteria.
+2. ClassRosterPro applies filters and validates input parameters.
+3. ClassRosterPro displays filtered list successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1344,9 +1342,9 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor types search query in search box.
-2. ClassRosterPro searches name, phone, and email fields in real-time.
-3. ClassRosterPro displays matching results.\
+1. Tutor types command to search with corresponding matching details.
+2. ClassRosterPro validates input parameters and searches accordingly.
+3. ClassRosterPro displays matching results successfully.\
    Use case ends.
 
 **Extensions:**
