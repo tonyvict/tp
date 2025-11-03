@@ -533,6 +533,39 @@ Records English Final score as 88 and History Midterm score as 92 for the 5th st
 <p align="center"><em>Figure: Result of recording grades for a student.</em></p>
 
 
+### Deleting student grades : `delgrade`
+
+Removes a specific grade entry from a student's grade list. This enables tutors to correct mistakes, such as accidentally recording a grade for a test a student did not take.
+
+Format: `delgrade INDEX sub/SUBJECT/ASSESSMENT`
+
+* Deletes the grade for the specified `SUBJECT` and `ASSESSMENT` from the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed student list.
+* The index **must be a positive integer** 1, 2, 3, …​
+* Both `SUBJECT` and `ASSESSMENT` must match exactly (case-sensitive).
+* The grade must exist for the student; otherwise, an error message will be displayed.
+
+Examples:
+* `delgrade 1 sub/MATH/WA1`
+
+_Deletes the MATH/WA1 grade from the 1st student_
+
+* `delgrade 2 sub/SCIENCE/Quiz1`
+
+_Deletes the SCIENCE/Quiz1 grade from the 2nd student_
+
+<div markdown="span" class="alert alert-primary">:bulb: Tip:
+Use this command to correct accidental grade entries or remove grades for assessments that were not completed.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning: Common Mistake:
+Using incorrect subject or assessment names - they must match exactly as they were originally recorded (including capitalization).
+</div>
+
+![Result of deleting a grade](images/DeleteGradeUI.png)
+<p align="center"><em>Figure: Result of deleting a grade from a student.</em></p>
+
+
 ### Recording student remarks : `remark`
 Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
 
