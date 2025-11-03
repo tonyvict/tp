@@ -562,6 +562,8 @@ The activity diagram shows the user's journey: the tutor provides the student an
 
 #### Execution behaviour
 
+![Mark command execution sequence](images/MarkCommandSequence.png)
+
 The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
 
 1.  Retrieves the target `Person` from the filtered list using the person index.
@@ -610,6 +612,8 @@ The `unmark` command is the direct counterpart to the `mark` command and follows
 The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
 
 #### Execution behaviour
+
+![Unmark command execution sequence](images/UnmarkCommandSequence.png)
 
 The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
 
@@ -1527,7 +1531,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **7. Architecture Overview**
 
-ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.
+ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
 Each major layer has a distinct responsibility:
 - **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`, `QuickSearchBox`).
 - **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
@@ -1595,7 +1599,7 @@ This section provides guidance to manually verify the new or modified features o
 2. Mark attendance:
    - `mark 1 lesson/1`
 3. Unmark attendance:
-    - `unmark 1 lesson/1`
+- `unmark 1 lesson/1`
 
 **Expected**: The lesson is marked as "Present" after mark command and marked as "Not Present" after unmark command.
 
@@ -1611,13 +1615,11 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The grades appear under the student's card.
 
-**Steps to test**:
 2. Add another grade for the same subject/assessment to test overwrite behavior:
    - `grade 1 sub/MATH/WA1/90`
 
 **Expected**: The score for MATH/WA1 updates to 90.
 
-**Steps to test**:
 3. Delete a grade:
    - `delgrade 1 sub/SCIENCE/Quiz1`
 
@@ -1632,7 +1634,7 @@ This section provides guidance to manually verify the new or modified features o
 **Steps to test**:
 1. Add an initial remark to the first student:
    - `remark 1 r/Needs extra help with algebra`
-2. . Clear the remark for the same student:
+2. Clear the remark for the same student:
     - `remark 1 r/`
 
 **Expected**: The remark "Needs extra help with algebra" appears under the student's card. After clear remark, the remark for the student is cleared and no longer visible.
@@ -1675,6 +1677,17 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: All changes persist (e.g., added attributes, scheduled lessons, grades).
 
+### 10. Schedule Cross-Day Lesson
+
+**Command name**: `schedule`
+
+**Purpose**: Create a cross-day lesson for a student.
+
+**Steps to test**:
+1. Schedule a cross-day lesson for the first student:
+  - `schedule 1 start/23:00 end/01:00 date/2025-11-02 date2/2025-11-03 sub/Science`
+
+**Expected**: A cross-day lesson entry appears after scheduling command in the expanded student card.
 ---
 
 ## Appendix: Planned Enhancements
