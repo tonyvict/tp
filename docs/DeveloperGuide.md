@@ -1574,7 +1574,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Command name**: `addattr` and `filter`
 
-**Purpose**: Add attributes to students and filter the student list based on them.
+**Purpose**: Add attribute to students and filter the student list based on them.
 
 **Steps to test**:
 1. Tag a student with attributes:
@@ -1663,7 +1663,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Command name**: `delattr`
 
-**Purpose**: Remove specific attributes from a student.
+**Purpose**: Remove specific attribute from a student.
 
 **Steps to test**:
 1. Add attributes first (if not present):
