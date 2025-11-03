@@ -1026,41 +1026,33 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC01: Add attributes to a student**
+### **UC01: Add a student**
 
 **System:** ClassRosterPro\
-**Use Case:** UC01 - Add attributes to students\
+**Use Case:** UC01 - Add student\
 **Actor:** Tutor\
 **Preconditions:** None\
 **Guarantees:**
   - Student is added to roster if all fields are valid and no duplicate exists
-  - Attributes are added to student if index is valid and attribute format is correct
 
 **MSS:**
 
 1. Tutor enters command to add student with corresponding student details.
-2. ClassRosterPro adds the student successfully.
-3. Tutor enters command to add attribute with corresponding key and values.
-4. ClassRosterPro adds the new attribute values to the student successfully.\
+2. ClassRosterPro adds the student successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 1a. ClassRosterPro detects invalid email/phone number.
-  * 1a1. ClassRosterPro shows error message and rejects the command.\
-    Use case ends.
-* 1b. ClassRosterPro detects duplicate contact.
+* 1a. ClassRosterPro detects invalid index.
+    * 1a1. ClassRosterPro shows error message for invalid index\
+      Use case ends.
+* 1b. ClassRosterPro detects invalid student details.
   * 1b1. ClassRosterPro shows error message.\
     Use case ends.
-* 3a. ClassRosterPro detects invalid index.
-  * 3a1. ClassRosterPro shows error message for invalid index\
+* 1c. ClassRosterPro detects duplicate contact.
+  * 1c1. ClassRosterPro shows error message.\
     Use case ends.
-* 3b.  ClassRosterPro detects invalid attribute format.
-  * 3b1. ClassRosterPro shows error message for incorrect format.\
-    Use case ends.
-* a. At any time, Tutor enters command to exit.
-    * a1. ClassRosterPro saves data and exits.\
-    Use case ends.
+
 ---
 
 ### **UC02 - Schedule Lesson for Student**
