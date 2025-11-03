@@ -294,7 +294,7 @@ Key classes: `AddCommand`, `Model`, `Messages`.
 - Missing or repeated mandatory prefixes trigger `ParseException` with usage guidance.
 - Invalid value formats (e.g., phone, email) are rejected by the respective domain constructors inside `ParserUtil`.
 - Duplicate students—based on the `Person#isSamePerson` identity definition—are blocked during execution.
-- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters excluding common characters like +, - and ().
+- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters.
 
 #### Design considerations
 
@@ -1614,11 +1614,11 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The lesson is marked as "Present" after mark command and marked as "Not Present" after unmark command.
 
-### 5. Grade Recording
+### 5. Grade Recording and Deletion
 
-**Command name**: `grade`
+**Command name**: `grade` and `delgrade`
 
-**Purpose**: Record and update grades for various subjects and assessments.
+**Purpose**: Record, update, and delete grades for various subjects and assessments.
 
 **Steps to test**:
 1. Add grades to a student:
@@ -1631,6 +1631,12 @@ This section provides guidance to manually verify the new or modified features o
    - `grade 1 sub/MATH/WA1/90`
 
 **Expected**: The score for MATH/WA1 updates to 90.
+
+**Steps to test**:
+3. Delete a grade:
+   - `delgrade 1 sub/SCIENCE/Quiz1`
+
+**Expected**: The SCIENCE/Quiz1 grade is removed from the student's grade list, while MATH/WA1 remains.
 
 ### 6. Add/Clear Remarks
 

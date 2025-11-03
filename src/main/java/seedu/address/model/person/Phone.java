@@ -12,7 +12,8 @@ public class Phone {
 
     public static final String MESSAGE_CONSTRAINTS = "Phone numbers can take any values, but they should not be blank";
     public static final String MESSAGE_WARNING_NO_DIGITS = "Warning: Phone number does not contain any digits.";
-    public static final String MESSAGE_WARNING_INVALID_CHARACTERS = "Warning: Phone number might not be valid.";
+    public static final String MESSAGE_WARNING_INVALID_CHARACTERS = "Warning: Phone number might not be valid. "
+            + "Typical phone numbers only have numbers";
     public static final String VALIDATION_REGEX = "[^\\s].*";
     public final String value;
 
@@ -45,7 +46,7 @@ public class Phone {
      * Returns true if the given string contains characters other than digits, spaces, and standard phone symbols.
      */
     public static boolean containsNonStandardChars(String test) {
-        return test.matches(".*[^0-9+\\-()\\s].*");
+        return test.matches(".*[^0-9\\s].*");
     }
 
     @Override
