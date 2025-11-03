@@ -48,7 +48,7 @@ activate EditCommand
 
 EditCommand -> Model : getFilteredPersonList()
 activate Model
-Model --> EditCommand : persons
+Model --> EditCommand
 deactivate Model
 
 EditCommand -> Model : setPerson(personToEdit, editedPerson)
@@ -56,7 +56,7 @@ activate Model
 Model --> EditCommand
 deactivate Model
 
-EditCommand -> Model : refreshFilteredPersonList()
+EditCommand -> Model : updateFilteredPersonList()
 activate Model
 Model --> EditCommand
 deactivate Model
