@@ -12,6 +12,8 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
+
 
 /**
  * Adds a person to the address book.
@@ -57,7 +59,14 @@ public class AddCommand extends Command {
         }
 
         model.addPerson(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+        String successMessage = String.format(MESSAGE_SUCCESS, Messages.format(toAdd));
+        if (!Phone.hasDigits(toAdd.getPhone().value)) { // Prioritize no-digit warning
+            successMessage += "\n" + Phone.MESSAGE_WARNING_NO_DIGITS;
+        } else if (Phone.containsNonStandardChars(toAdd.getPhone().value)) {
+            successMessage += "\n" + Phone.MESSAGE_WARNING_INVALID_CHARACTERS;
+        }
+
+        return new CommandResult(successMessage);
     }
 
     @Override

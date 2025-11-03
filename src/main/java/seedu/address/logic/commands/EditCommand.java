@@ -88,7 +88,17 @@ public class EditCommand extends Command {
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+
+        String successMessage = String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        if (editPersonDescriptor.getPhone().isPresent()) {
+            if (!Phone.hasDigits(editedPerson.getPhone().value)) { // Prioritize no-digit warning
+                successMessage += "\n" + Phone.MESSAGE_WARNING_NO_DIGITS;
+            } else if (Phone.containsNonStandardChars(editedPerson.getPhone().value)) {
+                successMessage += "\n" + Phone.MESSAGE_WARNING_INVALID_CHARACTERS;
+            }
+        }
+
+        return new CommandResult(successMessage);
     }
 
     /**
