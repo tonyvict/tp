@@ -50,7 +50,6 @@ activate ScheduleCommand
 ScheduleCommand -> Model : getFilteredPersonList()
 activate Model
 Model --> ScheduleCommand
-deactivate Model
 
 alt invalid index
   ScheduleCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
@@ -60,12 +59,9 @@ else overlapping lesson
   ScheduleCommand --> LogicManager : throw CommandException(MESSAGE_OVERLAPPING_LESSON)
 else allowed
   ScheduleCommand -> Model : setPerson(personToEdit, editedPerson)
-  activate Model
   Model --> ScheduleCommand
-  deactivate Model
 
-  ScheduleCommand -> Model : updateFilteredPersonList
-  activate Model
+  ScheduleCommand -> Model : updateFilteredPersonList()
   Model --> ScheduleCommand
   deactivate Model
 

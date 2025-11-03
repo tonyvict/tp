@@ -49,18 +49,14 @@ activate EditCommand
 EditCommand -> Model : getFilteredPersonList()
 activate Model
 Model --> EditCommand
-deactivate Model
 
 EditCommand -> Model : setPerson(personToEdit, editedPerson)
-activate Model
 Model --> EditCommand
-deactivate Model
 
 alt invalid index
   EditCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
 else valid index
     EditCommand -> Model : updateFilteredPersonList()
-    activate Model
     Model --> EditCommand
     deactivate Model
 

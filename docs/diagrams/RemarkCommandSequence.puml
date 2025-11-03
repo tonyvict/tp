@@ -50,18 +50,15 @@ activate RemarkCommand
 RemarkCommand -> Model : getFilteredPersonList()
 activate Model
 Model --> RemarkCommand
-deactivate Model
+
 
 alt invalid index
   RemarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
 else valid index
   RemarkCommand -> Model : setPerson(personToEdit, editedPerson)
-  activate Model
   Model --> RemarkCommand
-  deactivate Model
 
   RemarkCommand -> Model : updateFilteredPersonList()
-  activate Model
   Model --> RemarkCommand
   deactivate Model
 
