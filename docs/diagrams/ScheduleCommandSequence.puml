@@ -75,10 +75,10 @@ else allowed
   CommandResult --> ScheduleCommand
   deactivate CommandResult
 
-  ScheduleCommand --> LogicManager : result
+  ScheduleCommand --> LogicManager : r
+  deactivate ScheduleCommand
 end
 
-deactivate ScheduleCommand
 [<-- LogicManager
 deactivate LogicManager
 @enduml

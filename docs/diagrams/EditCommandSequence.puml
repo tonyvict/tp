@@ -56,19 +56,23 @@ activate Model
 Model --> EditCommand
 deactivate Model
 
-EditCommand -> Model : updateFilteredPersonList()
-activate Model
-Model --> EditCommand
-deactivate Model
+alt invalid index
+  EditCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else allowed
+    EditCommand -> Model : updateFilteredPersonList()
+    activate Model
+    Model --> EditCommand
+    deactivate Model
 
-create CommandResult
-EditCommand -> CommandResult
-activate CommandResult
-CommandResult --> EditCommand
-deactivate CommandResult
+    create CommandResult
+    EditCommand -> CommandResult
+    activate CommandResult
+    CommandResult --> EditCommand
+    deactivate CommandResult
 
-EditCommand --> LogicManager : r
-deactivate EditCommand
+    EditCommand --> LogicManager : r
+    deactivate EditCommand
+end
 
 [<-- LogicManager :
 deactivate LogicManager
