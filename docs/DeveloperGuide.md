@@ -101,10 +101,10 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -628,10 +628,9 @@ The `grade` command follows the standard command pattern of *parse → construct
 
 #### High-level flow
 
-1. User provides student index and one or more grade triplets.
-2. System validates index and parses each grade triplet.
-3. System detects and prevents duplicate subject-assessment pairs within the same command.
-4. System updates the student's grade list and confirms success.
+![Grade command activity](images/GradeCommandActivityDiagram.png)
+
+The activity diagram shows the user's journey: the tutor provides the student index and grade triplets, the system validates and checks for duplicates, then updates the grade list before confirming success.
 
 #### Parsing pipeline
 
@@ -647,9 +646,11 @@ The `grade` command follows the standard command pattern of *parse → construct
 
 Key classes: `GradeCommandParser`, `ParserUtil`, `Grade`.
 
-#### Execution behaviour
+![Grade command sequence](images/GradeCommandSequence.png)
 
-When `GradeCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `GradeCommandParser`, which validates and constructs the command.
+
+#### Execution behaviour
 
 1. Retrieves the target `Person` from the filtered list using the index.
 2. Guards against invalid indices by throwing `CommandException` if out of bounds.
@@ -694,10 +695,9 @@ The `delgrade` command follows the standard command pattern of *parse → constr
 
 #### High-level flow
 
-1. User provides student index and subject-assessment identifier.
-2. System validates index and parses the subject-assessment pair.
-3. System checks if the grade exists for the student.
-4. System removes the grade and confirms success.
+![Delete grade command activity](images/DeleteGradeCommandActivityDiagram.png)
+
+The activity diagram illustrates the flow for deleting a grade: validate index and format, check if grade exists, then remove and confirm.
 
 #### Parsing pipeline
 
@@ -711,9 +711,11 @@ The `delgrade` command follows the standard command pattern of *parse → constr
 
 Key classes: `DeleteGradeCommandParser`, `ParserUtil`.
 
-#### Execution behaviour
+![Delete grade command sequence](images/DeleteGradeCommandSequence.png)
 
-When `DeleteGradeCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `DeleteGradeCommandParser`, which validates and constructs the command.
+
+#### Execution behaviour
 
 1. Retrieves the target `Person` from the filtered list using the index.
 2. Guards against invalid indices by throwing `CommandException` if out of bounds.
@@ -759,10 +761,9 @@ The `filter` command follows the standard command pattern of *parse → construc
 
 #### High-level flow
 
-1. User provides one or more attribute filters.
-2. System parses each filter, extracting keys and values.
-3. System constructs an `AttributeContainsPredicate` with the filter criteria.
-4. System applies the predicate to the filtered list and displays matching students with a count.
+![Filter command activity](images/FilterCommandActivityDiagram.png)
+
+The activity diagram shows the user's journey: the tutor provides attribute filters, the system parses and validates them, then applies the predicate to display matching students.
 
 #### Parsing pipeline
 
@@ -778,9 +779,11 @@ The `filter` command follows the standard command pattern of *parse → construc
 
 Key classes: `FilterCommandParser`, `AttributeContainsPredicate`.
 
-#### Execution behaviour
+![Filter command sequence](images/FilterCommandSequence.png)
 
-When `FilterCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `FilterCommandParser`, which constructs the predicate and command.
+
+#### Execution behaviour
 
 1. Updates the filtered list predicate via `model.updateFilteredPersonList(predicate)`.
 2. Retrieves the filtered list size.
@@ -803,6 +806,64 @@ Key classes: `FilterCommand`, `Model`, `AttributeContainsPredicate`.
 - **Case Insensitivity**: Both keys and values are matched case-insensitively, reducing user frustration from capitalization mismatches.
 - **No Data Mutation**: The command only updates the view predicate; no student data is modified, making it safe and reversible via the `list` command.
 - **Performance**: Filtering is efficient as it leverages JavaFX `FilteredList`, which wraps the master list without creating deep copies.
+
+### Search Command
+
+#### What it does
+
+Finds and lists all students whose name, email, address, or tag contains any of the specified keywords.  
+The search is **case-insensitive** and supports multiple keywords, returning all matches where any field partially matches at least one keyword.  
+It serves as a command-line complement to the real-time **Quick Search** bar.
+
+#### Parameters
+
+`search KEYWORD [MORE_KEYWORDS]...`
+
+- `KEYWORD` — required, at least one. Case-insensitive substring matched against the student's name, email, address, and tag fields.
+
+#### Overview
+
+The `search` command follows the standard command pattern of *parse → construct command → execute on the model*.  
+It uses a dedicated predicate, `PersonContainsKeywordPredicate`, which encapsulates the matching logic across all searchable fields.
+
+#### High-level flow
+
+1. The tutor enters a `search` command with one or more keywords in the Command Box.
+2. `LogicManager` forwards the input string to `AddressBookParser` for processing.
+3. `AddressBookParser` identifies the command word `search` and delegates parsing to `SearchCommandParser`.
+4. `SearchCommandParser` tokenises the input string into individual keywords, validates that at least one keyword exists, and normalises them to lowercase.
+5. A `PersonContainsKeywordPredicate` is created using the list of cleaned keywords.
+6. `LogicManager` constructs and executes a `SearchCommand` object containing the predicate.
+7. `SearchCommand#execute(Model)` invokes `model.updateFilteredPersonList(predicate)` to update the filtered list of persons.
+8. The JavaFX `FilteredList` observes this change and automatically refreshes the UI to display only the matching students.
+9. The command returns a `CommandResult` summarising how many students were found.
+
+#### Execution behaviour
+
+The sequence diagram captures the flow of `SearchCommand#execute(Model)`:
+
+1. Calls `model.updateFilteredPersonList(predicate)`, passing in the predicate constructed from the keywords.
+2. The model updates the observable list used by the UI.
+3. The UI automatically refreshes to display only the matching students.
+4. Returns a `CommandResult` summarising the number of students found.
+
+**Key classes:**  
+`SearchCommand`, `Model`, `PersonContainsKeywordPredicate`, `Messages`
+
+#### Validation and error handling
+
+- Missing keywords (empty input) trigger `ParseException` with usage guidance.
+- Excessive whitespace is ignored during tokenisation.
+- Search is non-destructive—no model mutations occur.
+- The command is resilient to malformed input such as mixed spacing or special characters in keywords.
+
+#### Design Considerations
+- **Search Scope**: Includes name, email, address, and tags | Provides flexibility and matches user expectations of a global search |
+- **Case Sensitivity**:  Case-insensitive | Reduces user friction; tutors do not need to match exact capitalization |
+- **Partial Match**: Substring-based | Enables fast, natural filtering without requiring exact terms |
+- **Predicate Reuse**: Uses `PersonContainsKeywordPredicate` | Keeps filtering logic encapsulated and testable |
+- **Performance**: Uses JavaFX `FilteredList` | Efficient, as no deep copies or re-parsing occur |
+- **User Experience**:  Command mirrors Quick Search bar | Provides both CLI and UI pathways for filtering |
 
 --------------------------------------------------------------------------------------------------------------------
 

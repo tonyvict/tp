@@ -1,0 +1,25 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:User enters command to search for students;
+:Logic parses keywords from command input;
+:Create and execute SearchCommand;
+if (Any keyword provided?) then (no)
+  :Display error about missing keywords;
+  stop
+else (yes)
+  :Construct PersonContainsKeywordPredicate;
+  :Update filtered student list using predicate;
+  if (Any matching students found?) then (no)
+    :Display "0 students listed!";
+    stop
+  else (yes)
+    :Display success message with number of matches;
+    stop
+  endif
+endif
+
+@enduml

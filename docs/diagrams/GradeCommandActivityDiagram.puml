@@ -1,0 +1,27 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters command to add/update grades;
+:Logic parses index and grade triplets;
+:Validate each grade triplet format;
+if (Duplicate subject-assessment in command?) then (yes)
+  :Display duplicate grade error;
+  stop
+else (no)
+  :Create and execute GradeCommand;
+endif
+if (Valid person index?) then (no)
+  :Display invalid index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+:Add or update each grade in grade list;
+:Update person with new grade list;
+:Update filtered list;
+:Display success to user;
+stop
+@enduml
+

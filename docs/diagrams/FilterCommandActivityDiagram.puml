@@ -1,0 +1,19 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters command to filter students;
+:Logic parses attribute filters;
+if (Invalid attribute format?) then (yes)
+  :Display format error;
+  stop
+else (no)
+  :Create AttributeContainsPredicate;
+  :Create and execute FilterCommand;
+endif
+:Apply predicate to filtered list;
+:Display filtered students with count;
+stop
+@enduml
+
