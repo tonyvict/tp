@@ -152,6 +152,26 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
+* [Help Command](#help-command)
+* [Add Student Command](#add-student-command)
+* [Edit Command](#edit-student-command)
+* [Delete Student Command](#delete-student-command)
+* [List Command](#list-command)
+* [Open Command](#open-command)
+* [Close Command](#close-command)
+* [Addattr Command](#addattr-command)
+* [Delattr Command](#delattr-command)
+* [Filter Command](#filter-command)
+* [Schedule Command](#schedule-command)
+* [Unschedule Command](#unschedule-command)
+* [Mark Command](#mark-command)
+* [Unmark Command](#unmark-command)
+* [Search Command](#search-command)
+* [Grade Command](#grade-command)
+* [Remark Command](#remark-command)
+* [Clear Command](#clear-command)
+* [Exit Command](#exit-command)
+* [[Proposed] Undo/redo feature](#proposed-undoredo-feature)
 
 ### Help Command
 
@@ -168,102 +188,6 @@ When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The comman
 - Keep help content in code to guarantee the window works even when offline.
 - The window opens idempotently—the same command simply refocuses the existing help stage instead of spawning duplicates.
 - The `CommandResult` flagging approach keeps UI behaviour configurable without introducing UI dependencies into the logic layer.
-
-### Add Command
-
-#### What it does
-
-Creates a new student entry with core contact information and optional tags. This is the primary way tutors build the roster.
-
-#### Execution walkthrough
-
-`AddressBookParser` delegates `add` commands to `AddCommandParser`, which tokenises by CLI prefixes, validates each mandatory field, and constructs a `Person`. `AddCommand#execute(Model)` then checks for duplicates via `model.hasPerson`; if none are found, `model.addPerson` is called and a success message is returned.
-
-#### Design considerations
-
-- Input validation happens during parsing so users see errors before the model is mutated.
-- Duplicate detection relies on `Person#isSamePerson`, ensuring identity rules stay centralised in the model.
-- For a detailed diagrammatic breakdown, see the subsequent **Add Student Command** section.
-
-### List Command
-
-#### What it does
-
-Resets the student list back to the full roster after filters, searches, or attribute-based queries.
-
-#### Execution walkthrough
-
-`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
-
-#### Design considerations
-
-- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
-- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
-- Returning an explicit acknowledgement helps the user confirm that the reset completed.
-
-### Open Command
-
-#### What it does
-
-Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
-
-#### Execution walkthrough
-
-`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
-
-#### Design considerations
-
-- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
-- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
-- Operations stay synchronous; no additional events or asynchronous callbacks are required.
-
-### Close Command
-
-#### What it does
-
-Collapses an expanded student card to restore the compact list view.
-
-#### Execution walkthrough
-
-Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
-
-#### Design considerations
-
-- Mirroring the open logic keeps the commands complementary and predictable.
-- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
-- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
-
-### Clear Command
-
-#### What it does
-
-Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
-
-#### Execution walkthrough
-
-`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
-
-#### Design considerations
-
-- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
-- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
-- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
-
-### Exit Command
-
-#### What it does
-
-Terminates the application gracefully after acknowledging the user's request.
-
-#### Execution walkthrough
-
-`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
-
-#### Design considerations
-
-- The command never throws; exiting is always considered successful.
-- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
-- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
 
 ### Add Student Command
 
@@ -424,6 +348,89 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 
 - Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - Because the command is irreversible, consider pairing it with undo when available.
+
+### List Command
+
+#### What it does
+
+Resets the student list back to the full roster after filters, searches, or attribute-based queries.
+
+#### Execution walkthrough
+
+`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
+
+#### Design considerations
+
+- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
+- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
+- Returning an explicit acknowledgement helps the user confirm that the reset completed.
+
+### Open Command
+
+#### What it does
+
+Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
+
+#### Execution walkthrough
+
+`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
+
+#### Design considerations
+
+- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
+- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
+- Operations stay synchronous; no additional events or asynchronous callbacks are required.
+
+### Close Command
+
+#### What it does
+
+Collapses an expanded student card to restore the compact list view.
+
+#### Execution walkthrough
+
+Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
+
+#### Design considerations
+
+- Mirroring the open logic keeps the commands complementary and predictable.
+- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
+- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
+
+### Clear Command
+
+#### What it does
+
+Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
+
+#### Execution walkthrough
+
+`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
+
+#### Design considerations
+
+- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
+- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
+- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
+
+### Exit Command
+
+#### What it does
+
+Terminates the application gracefully after acknowledging the user's request.
+
+#### Execution walkthrough
+
+`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
+
+#### Design considerations
+
+- The command never throws; exiting is always considered successful.
+- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
+- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
+
+
+
 
 --------------------------------------------------------------------------------------------------------------------
 
