@@ -13,7 +13,7 @@ While it has a clean Graphical User Interface (GUI), it is optimized for use via
 If you can type fast, you can manage your student **roster—finding,
 updating, and organizing** much faster than with a mouse.
 
-### Table of Contents 
+### Table of Contents
 * Table of Contents
 {:toc}
 
@@ -120,6 +120,11 @@ _Adds a student named "John Doe" with only the compulsory fields. Useful for a q
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 A student can have none or multiple tags.
+</div>
+
+<div markdown="span" class="alert alert-primary">:warning:
+Phone number accepts alphanumeric values and special characters, to allow greater flexibility.
+Ensure phone numbers are valid.
 </div>
 
 ![Result of adding a student](images/addUI.png)
@@ -431,7 +436,7 @@ Using this command on a student who doesn't have any scheduled lessons.
 
 <div markdown="span" class="alert alert-primary">:warning: Application
 allows lessons in the future/past to be marked as present, to accommodate
-students arriving early or last minute changes in lesson schedule.
+catching up on old attendance records or pre-mark attendance for a known upcoming attendance.
 </div>
 
 ![result for 'mark student at 1st index'](images/markUI.png)
@@ -464,7 +469,7 @@ Using this command on a student who doesn't have any scheduled lessons to unmark
 
 <div markdown="span" class="alert alert-primary">:warning: Application
 allows lessons in the future/past to be marked as not present, to accommodate
-students arriving early or last minute changes in lesson schedule.
+ correcting historical attendance errors or adjusting plans for future lessons.
 </div>
 
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
@@ -478,18 +483,18 @@ Allows tutors to instantly search for students by name, email or phone number.
 Format: `search [KEYWORD]`
 
 *   Shows all contacts with their name, email, or phone number having a partial match with `KEYWORD`
-*   The `KEYWORD` is case-insensitive 
+*   The `KEYWORD` is case-insensitive
 
 Examples:
 * `search alex`
 
  Displays contacts such as `Alex Yeoh`
 
-* `search 9876` 
+* `search 9876`
 
  Display contacts with phone number such as 9876123
 
-* `search john12` 
+* `search john12`
 
  Displays contacts with email `john123@yahoo.com`
 
@@ -542,7 +547,7 @@ Examples:
 
 Adds the remark “Excellent progress this term” to the 2nd student
 
-* `remark 1 r/` 
+* `remark 1 r/`
 
 Clears the existing remark of the 1st student
 
