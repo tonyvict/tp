@@ -1611,13 +1611,11 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The grades appear under the student's card.
 
-**Steps to test**:
 2. Add another grade for the same subject/assessment to test overwrite behavior:
    - `grade 1 sub/MATH/WA1/90`
 
 **Expected**: The score for MATH/WA1 updates to 90.
 
-**Steps to test**:
 3. Delete a grade:
    - `delgrade 1 sub/SCIENCE/Quiz1`
 
@@ -1632,7 +1630,7 @@ This section provides guidance to manually verify the new or modified features o
 **Steps to test**:
 1. Add an initial remark to the first student:
    - `remark 1 r/Needs extra help with algebra`
-2. . Clear the remark for the same student:
+2. Clear the remark for the same student:
     - `remark 1 r/`
 
 **Expected**: The remark "Needs extra help with algebra" appears under the student's card. After clear remark, the remark for the student is cleared and no longer visible.
@@ -1675,6 +1673,17 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: All changes persist (e.g., added attributes, scheduled lessons, grades).
 
+### 10. Schedule Cross-Day Lesson
+
+**Command name**: `schedule`
+
+**Purpose**: Create a cross-day lesson for a student.
+
+**Steps to test**:
+1. Schedule a cross-day lesson for the first student:
+  - `schedule 1 start/23:00 end/01:00 date/2025-11-02 date2/2025-11-03 sub/Science`
+
+**Expected**: A cross-day lesson entry appears after scheduling command in the expanded student card.
 ---
 
 ## Appendix: Planned Enhancements
