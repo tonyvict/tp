@@ -1,0 +1,30 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters command to unschedule a lesson;
+:Logic parses student index and lesson index;
+:Create and execute UnscheduleCommand;
+if (Valid person index?) then (no)
+  :Display invalid index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+if (Any lessons scheduled?) then (no)
+  :Display "no lessons" error;
+  stop
+else (yes)
+  :Validate lesson index;
+endif
+if (Valid lesson index?) then (no)
+  :Display invalid lesson index error;
+  stop
+else (yes)
+  :Remove lesson from schedule;
+  :Update filtered list;
+  :Display success to user;
+  stop
+endif
+@enduml

@@ -60,7 +60,7 @@ else allowed
   ScheduleCommand -> Model : setPerson(personToEdit, editedPerson)
   Model --> ScheduleCommand
 
-  ScheduleCommand -> Model : updateFilteredPersonList()
+  ScheduleCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
   Model --> ScheduleCommand
   deactivate Model
 
