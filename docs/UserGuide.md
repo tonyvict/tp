@@ -205,7 +205,7 @@ Trying to close a card that is already collapsed. The command will have no visib
 
 Edits the details of an existing student in your list.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG] [attr/KEY=VALUE]…​`
 
 * Edits the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed contact list.
@@ -213,7 +213,9 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
 * When editing tags, the existing tags of the student will be removed i.e adding of tags is not cumulative.
+* When editing attributes, the existing values of the student's attribute will be overriden.
 * You can remove all the person’s tags by typing `t/` without specifying any tags after it.
+* * You can remove all the person’s attributes by typing `attr/` without specifying any key-value pairs after it.
 
 Examples:
 * `edit 1 p/91234567 e/johndoe@example.com`
@@ -226,6 +228,7 @@ Edits the name of the 2nd student to be Betsy Crower and clears all existing tag
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
 You can remove all of a student's tags by using t/ without specifying any tags after it.
+You can also remove all of a student's attributes by using attr/ without specifying any key-value pairs.
 </div>
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
