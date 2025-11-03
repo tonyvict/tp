@@ -1,0 +1,76 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":MarkCommandParser" as MarkCommandParser LOGIC_COLOR
+participant "m:MarkCommand" as MarkCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("mark 1 lesson/2")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("mark ...")
+activate AddressBookParser
+
+create MarkCommandParser
+AddressBookParser -> MarkCommandParser
+activate MarkCommandParser
+MarkCommandParser --> AddressBookParser
+deactivate MarkCommandParser
+
+AddressBookParser -> MarkCommandParser : parse(arguments)
+activate MarkCommandParser
+
+create MarkCommand
+MarkCommandParser -> MarkCommand
+activate MarkCommand
+MarkCommand --> MarkCommandParser : m
+deactivate MarkCommand
+
+MarkCommandParser --> AddressBookParser : m
+deactivate MarkCommandParser
+MarkCommandParser -[hidden]-> AddressBookParser
+destroy MarkCommandParser
+
+AddressBookParser --> LogicManager : m
+deactivate AddressBookParser
+
+LogicManager -> MarkCommand : execute(model)
+activate MarkCommand
+
+MarkCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> MarkCommand
+
+alt invalid student index
+  MarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else invalid lesson index
+  MarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)
+else already marked
+  MarkCommand --> LogicManager : throw CommandException(MESSAGE_LESSON_ALREADY_MARKED)
+else allowed
+  MarkCommand -> Model : setPerson(personToMark, updatedPerson)
+  Model --> MarkCommand
+  deactivate Model
+
+  create CommandResult
+  MarkCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> MarkCommand
+  deactivate CommandResult
+
+  MarkCommand --> LogicManager : result
+  deactivate MarkCommand
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
