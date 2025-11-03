@@ -64,7 +64,7 @@ For example, the `Logic` component defines its API in the `Logic.java` interface
 
 <img src="images/ComponentManagers.png" width="300" />
 
-The sections below give more details of each component lol.
+The sections below give more details of each component.
 
 ### UI component
 
