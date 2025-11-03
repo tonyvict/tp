@@ -1643,7 +1643,7 @@ This section provides guidance to manually verify the new or modified features o
 **Steps to test**:
 1. Add an initial remark to the first student:
    - `remark 1 r/Needs extra help with algebra`
-2. . Clear the remark for the same student:
+2. Clear the remark for the same student:
     - `remark 1 r/`
 
 **Expected**: The remark "Needs extra help with algebra" appears under the student's card. After clear remark, the remark for the student is cleared and no longer visible.

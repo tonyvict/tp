@@ -34,7 +34,7 @@ public class HelpCommand extends Command {
             " - filter attr/<KEY>=<VALUE>[,<VALUE2>]... [attr/<KEY2>=<VALUE2>]...",
             "",
             "LESSON & ATTENDANCE COMMANDS:",
-            " - schedule <INDEX> start/<START_TIME> end/<END_TIME> date/<DATE> sub/<SUBJECT>",
+            " - schedule INDEX start/START_TIME end/END_TIME date/START_DATE [date2/END_DATE] sub/SUBJECT",
             " - unschedule <INDEX> lesson/<LESSON_INDEX>",
             " - mark <INDEX> lesson/<LESSON_INDEX>",
             " - unmark <INDEX> lesson/<LESSON_INDEX>",
