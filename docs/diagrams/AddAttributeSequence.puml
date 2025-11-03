@@ -1,0 +1,85 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":TagCommandParser" as TagCommandParser LOGIC_COLOR
+participant "t:TagCommand" as TagCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addattr 1 attr/subject=Math")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("addattr 1 attr/subject=Math")
+activate AddressBookParser
+
+create TagCommandParser
+AddressBookParser -> TagCommandParser
+activate TagCommandParser
+TagCommandParser --> AddressBookParser
+deactivate TagCommandParser
+
+AddressBookParser -> TagCommandParser : parse("1 attr/subject=Math")
+activate TagCommandParser
+
+create TagCommand
+TagCommandParser -> TagCommand
+activate TagCommand
+TagCommand --> TagCommandParser
+deactivate TagCommand
+
+TagCommandParser --> AddressBookParser : t
+deactivate TagCommandParser
+TagCommandParser -[hidden]-> AddressBookParser
+destroy TagCommandParser
+
+AddressBookParser --> LogicManager : t
+deactivate AddressBookParser
+
+' Execute TagCommand
+LogicManager -> TagCommand : execute(m)
+activate TagCommand
+
+TagCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> TagCommand : List<Person>
+deactivate Model
+
+alt invalid index
+  TagCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else valid index
+  TagCommand -> TagCommand : createTaggedPerson(personToEdit, attributesToAdd)
+  note right of TagCommand
+  For each Attribute key:
+  - update existing key if present
+  - add new key,value(s) if absent
+  end note
+  TagCommand -> Model : setPerson(personToEdit, editedPerson)
+  activate Model
+  Model --> TagCommand
+  deactivate Model
+  TagCommand -> Model : updateFilteredPersonList()
+  activate Model
+  Model --> TagCommand
+  deactivate Model
+
+  create CommandResult
+  TagCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> TagCommand
+  deactivate CommandResult
+
+  TagCommand --> LogicManager : r
+end
+deactivate TagCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
