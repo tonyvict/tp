@@ -52,8 +52,6 @@ activate Model
 Model --> ScheduleCommand
 deactivate Model
 
-ScheduleCommand -> ScheduleCommand : validate index / duplicates / overlap
-
 alt invalid index
   ScheduleCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
 else duplicate lesson
