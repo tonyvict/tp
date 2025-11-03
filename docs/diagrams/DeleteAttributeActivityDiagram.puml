@@ -19,4 +19,5 @@ endif
 :Show updated contact list;
 :Display success message to user;
 stop
+
 @enduml
