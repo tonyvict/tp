@@ -379,7 +379,7 @@ Using 12-hour time format instead of 24-hour format or incorrect date format (mu
 </div>
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
-<p align="center"><em>Lesson successfully scheduled for Bernice.</em></p>
+<p align="center"><em>Lesson successfully scheduled for Alex.</em></p>
 
 ### Unscheduling a lesson : `unschedule`
 
