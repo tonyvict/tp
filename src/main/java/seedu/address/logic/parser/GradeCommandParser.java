@@ -27,6 +27,7 @@ public class GradeCommandParser implements Parser<GradeCommand> {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUB);
 
         Set<Grade> gradesToAdd = new HashSet<>();
+        Set<String> seenKeys = new HashSet<>();
 
         // Parse each subject/assessment/score triplet
         for (String subString : argMultimap.getAllValues(PREFIX_SUB)) {
@@ -75,6 +76,13 @@ public class GradeCommandParser implements Parser<GradeCommand> {
             if (!Grade.isValidScore(score)) {
                 throw new ParseException("Score value is invalid.");
             }
+
+            String key = subject + "/" + assessment;
+            if (seenKeys.contains(key)) {
+                throw new ParseException("Duplicate grade detected for " + key
+                        + ". Each subject/assessment can only be specified once per command.");
+            }
+            seenKeys.add(key);
 
             Grade gradeObj = new Grade(subject, assessment, score);
             gradesToAdd.add(gradeObj);
