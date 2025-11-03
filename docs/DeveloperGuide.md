@@ -152,26 +152,6 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
-* [Help Command](#help-command)
-* [Add Command](#add-command)
-* [Edit Command](#edit-student-command)
-* [Delete Student Command](#delete-student-command)
-* [List Command](#list-command)
-* [Open Command](#open-command)
-* [Close Command](#close-command)
-* [Addattr Command](#addattr-command)
-* [Delattr Command](#delattr-command)
-* [Filter Command](#filter-command)
-* [Schedule Command](#schedule-command)
-* [Unschedule Command](#unschedule-command)
-* [Mark Command](#mark-command)
-* [Unmark Command](#unmark-command)
-* [Search Command](#search-command)
-* [Grade Command](#grade-command)
-* [Remark Command](#remark-command)
-* [Clear Command](#clear-command)
-* [Exit Command](#exit-command)
-* [[Proposed] Undo/redo feature](#proposed-undoredo-feature)
 
 ### Help Command
 
@@ -193,18 +173,103 @@ When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The comman
 
 #### What it does
 
-The `add` command creates a new Person object representing a student and adds it to the AddressBook. 
-Each Person contains core contact information and optional metadata for student management.
+Creates a new student entry with core contact information and optional tags. This is the primary way tutors build the roster.
 
-#### Execution Walkthrough
-1. User enters the command in the Command Box
-2. LogicManager receives the input string and forwards it to AddressBookParser
-3. AddressBookParser identifies the add keyword and instantiates AddCommandParser
-4. AddCommandParser tokenizes parameters using ArgumentTokenizer and constructs a Person using ParserUtil
-5. The constructed Person is passed to the AddCommand object
-6. AddCommand#execute(Model model) adds the person to the model via model.addPerson()
-7. The updated list is stored by ModelManager, and StorageManager subsequently saves it to disk
-8. A CommandResult object is returned, containing success message and UI update flags
+#### Execution walkthrough
+
+`AddressBookParser` delegates `add` commands to `AddCommandParser`, which tokenises by CLI prefixes, validates each mandatory field, and constructs a `Person`. `AddCommand#execute(Model)` then checks for duplicates via `model.hasPerson`; if none are found, `model.addPerson` is called and a success message is returned.
+
+#### Design considerations
+
+- Input validation happens during parsing so users see errors before the model is mutated.
+- Duplicate detection relies on `Person#isSamePerson`, ensuring identity rules stay centralised in the model.
+- For a detailed diagrammatic breakdown, see the subsequent **Add Student Command** section.
+
+### List Command
+
+#### What it does
+
+Resets the student list back to the full roster after filters, searches, or attribute-based queries.
+
+#### Execution walkthrough
+
+`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
+
+#### Design considerations
+
+- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
+- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
+- Returning an explicit acknowledgement helps the user confirm that the reset completed.
+
+### Open Command
+
+#### What it does
+
+Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
+
+#### Execution walkthrough
+
+`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
+
+#### Design considerations
+
+- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
+- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
+- Operations stay synchronous; no additional events or asynchronous callbacks are required.
+
+### Close Command
+
+#### What it does
+
+Collapses an expanded student card to restore the compact list view.
+
+#### Execution walkthrough
+
+Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
+
+#### Design considerations
+
+- Mirroring the open logic keeps the commands complementary and predictable.
+- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
+- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
+
+### Clear Command
+
+#### What it does
+
+Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
+
+#### Execution walkthrough
+
+`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
+
+#### Design considerations
+
+- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
+- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
+- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
+
+### Exit Command
+
+#### What it does
+
+Terminates the application gracefully after acknowledging the user's request.
+
+#### Execution walkthrough
+
+`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
+
+#### Design considerations
+
+- The command never throws; exiting is always considered successful.
+- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
+- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
+
+### Add Student Command
+
+#### What it does
+
+Registers a new student in the roster. The created `Person` initially has empty remark, grade, and lesson lists; tags may be provided to group students immediately.
 
 #### Parameters
 
@@ -220,15 +285,13 @@ The command rejects missing mandatory prefixes, duplicate occurrences of the sam
 
 #### Overview
 
-The `add` command follows the Command Pattern, consistent with the AB3 architecture.
-It encapsulates all logic for adding a new student and ensures that only valid, non-duplicate entries are added to the address book.
+The `add` command follows the standard command pattern of *parse → construct command → execute on the model*.
 
 #### High-level flow
 
 ![Add command activity](images/AddCommandActivityDiagram.png)
 
-The activity diagram captures the user journey: the tutor submits the command, 
-the system validates the input, and either reports a duplicate or persists the new student before confirming success.
+The activity diagram captures the user journey: the tutor submits the command, the system validates the input, and either reports a duplicate or persists the new student before confirming success.
 
 #### Parsing pipeline
 
@@ -362,177 +425,331 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 - Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - Because the command is irreversible, consider pairing it with undo when available.
 
-### List Command
+### Mark Student Attendance Command
 
 #### What it does
 
-Resets the student list back to the full roster after filters, searches, or attribute-based queries.
+Marks a student's attendance for a specific lesson as 'present'. This helps tutors keep an accurate record of class attendance, which is essential for tracking student records and for billing purposes.
 
-#### Execution walkthrough
-
-`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
-
-#### Design considerations
-
-- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
-- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
-- Returning an explicit acknowledgement helps the user confirm that the reset completed.
-
-### Open Command
-
-#### What it does
-
-Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
-
-#### Execution walkthrough
-
-`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
-
-#### Design considerations
-
-- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
-- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
-- Operations stay synchronous; no additional events or asynchronous callbacks are required.
-
-### Close Command
-
-#### What it does
-
-Collapses an expanded student card to restore the compact list view.
-
-#### Execution walkthrough
-
-Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
-
-#### Design considerations
-
-- Mirroring the open logic keeps the commands complementary and predictable.
-- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
-- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
-
-### Addattr Command
-
-#### What it does
-#### Execution Walkthrough
 #### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
 
-### Delattr Command
+`mark INDEX lesson/LESSON_INDEX`
+
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `LESSON_INDEX` — required, 1-based. Identifies the lesson in the student's lesson list, which is visible when the student's card is expanded.
+
+#### Overview
+
+The `mark` command follows the standard command pattern of *parse → construct command → execute on the model*. It is designed to be a quick and straightforward way to update a single lesson's attendance.
+
+#### High-level flow
+
+!Mark command activity
+
+The activity diagram shows the user's journey: the tutor provides the student and lesson indices, the system validates them, checks if the lesson is already marked, and then updates the attendance status before confirming success.
+
+#### Parsing pipeline
+
+!Mark command parser sequence
+
+The sequence diagram shows how `AddressBookParser` delegates to `MarkCommandParser`. The parser:
+
+1.  Tokenises the arguments to find the person `INDEX` and the `lesson/LESSON_INDEX`.
+2.  Uses `ParserUtil` to parse both indices into `Index` objects.
+3.  Ensures both indices are present and valid.
+4.  Instantiates and returns a fully initialised `MarkCommand`.
+
+Key classes: `MarkCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+!Mark command execution sequence
+
+The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
+
+1.  Retrieves the target `Person` from the filtered list using the person index.
+2.  Retrieves the target `Lesson` from the person's `LessonList` using the lesson index.
+3.  Checks if the lesson is already marked as present. If so, it throws a `CommandException` with `MESSAGE_LESSON_ALREADY_MARKED`.
+4.  Creates a new `Lesson` object with the same details but with its attendance status set to `true`.
+5.  Creates a new `Person` object with the updated `LessonList`.
+6.  Calls `model.setPerson(...)` to replace the old person object with the new one, and returns a success message.
+
+Key classes: `MarkCommand`, `Model`, `Person`, `Lesson`, `LessonList`.
+
+#### Validation and error handling
+
+-   Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Invalid or missing `LESSON_INDEX` throws `MESSAGE_INVALID_LESSON_DISPLAYED_INDEX`.
+-   Attempting to mark a lesson that is already marked as present throws `MESSAGE_LESSON_ALREADY_MARKED`.
+
+#### Design Considerations
+
+-   **Immutability**: The command creates new `Lesson` and `Person` objects instead of mutating existing ones. This aligns with the functional programming paradigm and makes state management more predictable.
+-   **Idempotency Check**: The check for whether a lesson is already marked prevents redundant operations and provides clear feedback to the user, avoiding confusion.
+-   **User Experience**: The command requires two separate indices, which is clear but requires the user to first identify the student and then the specific lesson. This is a trade-off for precision.
+-   **Flexibility**: The command intentionally allows marking lessons in the past, present, or future. This gives tutors the flexibility to catch up on old attendance records or pre-mark attendance for a known upcoming attendance.
+
+### Unmark Student Attendance Command
 
 #### What it does
-#### Execution Walkthrough
+
+Reverts a student's attendance for a specific lesson to 'not present'. This is useful for correcting mistakes made during attendance-taking.
+
 #### Parameters
+
+`unmark INDEX lesson/LESSON_INDEX`
+
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `LESSON_INDEX` — required, 1-based. Identifies the lesson in the student's lesson list.
+
 #### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+
+The `unmark` command is the direct counterpart to the `mark` command and follows the same *parse → command → execute* pattern. Its primary function is to reverse an attendance mark.
+
+#### High-level flow
+
+!Unmark command activity
+
+The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
+
+#### Parsing pipeline
+
+!Unmark command parser sequence
+
+The sequence diagram shows `AddressBookParser` delegating to `UnmarkCommandParser`. The parser:
+
+1.  Parses the person `INDEX` from the preamble.
+2.  Parses the `lesson/LESSON_INDEX` from the prefixed arguments.
+3.  Uses `ParserUtil` to validate and create `Index` objects for both.
+4.  Constructs and returns an `UnmarkCommand` with the parsed indices.
+
+Key classes: `UnmarkCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+!Unmark command execution sequence
+
+The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
+
+1.  Retrieves the target `Person` and `Lesson` using the provided indices.
+2.  Guards against invalid indices by throwing a `CommandException` if either is out of bounds.
+3.  Checks if the lesson is already marked as 'not present'. If so, it throws a `CommandException` with `MESSAGE_LESSON_ALREADY_UNMARKED`.
+4.  Creates a new `Lesson` with its attendance status set to `false`.
+5.  Creates a new `Person` with the updated `LessonList`.
+6.  Updates the model via `model.setPerson(...)` and returns a success message confirming the change.
+
+Key classes: `UnmarkCommand`, `Model`, `Person`, `Lesson`, `LessonList`.
+
+#### Validation and error handling
+
+-   Invalid student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Invalid `LESSON_INDEX` throws `MESSAGE_INVALID_LESSON_DISPLAYED_INDEX`.
+-   Attempting to unmark a lesson that is already 'not present' throws `MESSAGE_LESSON_ALREADY_UNMARKED`.
+
+#### Design Considerations
+
+-   **Symmetry with `mark`**: The command's structure, validation, and execution flow are intentionally symmetric with `MarkCommand` to ensure a consistent and predictable developer and user experience.
+-   **Error-Correction Focus**: This command serves as a simple and direct way to correct errors, which is a critical usability feature for data entry applications.
+-   **State-Awareness**: By checking if the lesson is already unmarked, the command avoids unnecessary model updates and provides precise feedback, preventing user confusion about the state of the data.
+-   **Flexibility**: Mirroring the `mark` command, `unmark` also works on past, present, and future lessons. This is crucial for correcting historical attendance errors or adjusting plans for future lessons.
+
+### Grade Command
+
+#### What it does
+
+Adds or updates grades for a student by subject and assessment. This enables tutors to maintain a detailed grade book per student, tracking performance across different subjects and assessment types over time.
+
+#### Parameters
+
+`grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…`
+
+- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+- `sub/SUBJECT/ASSESSMENT/SCORE` — required, at least one. Each triplet specifies a grade entry:
+  - `SUBJECT` — subject name (e.g., MATH, SCIENCE); validated for format.
+  - `ASSESSMENT` — assessment type (e.g., WA1, Quiz1); validated for format.
+  - `SCORE` — numeric score; validated to be a valid score value.
+
+#### Overview
+
+The `grade` command follows the standard command pattern of *parse → construct command → execute on the model*. It supports adding or updating multiple grades in a single command. If a subject-assessment combination already exists for the student, the new score overwrites the existing one.
+
+#### High-level flow
+
+1. User provides student index and one or more grade triplets.
+2. System validates index and parses each grade triplet.
+3. System detects and prevents duplicate subject-assessment pairs within the same command.
+4. System updates the student's grade list and confirms success.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates `grade` commands to `GradeCommandParser`. The parser:
+
+1. Tokenises arguments using the `sub/` prefix to extract all grade triplets.
+2. For each triplet, splits by `/` to separate subject, assessment, and score.
+3. Validates each component (non-empty, proper format).
+4. Tracks seen subject-assessment pairs using a `HashSet` to detect duplicates within the command.
+5. Throws `ParseException` if duplicates are detected or if validation fails.
+6. Parses the student index from the preamble.
+7. Constructs `Grade` objects and returns a `GradeCommand` with the index and set of grades.
+
+Key classes: `GradeCommandParser`, `ParserUtil`, `Grade`.
+
+#### Execution behaviour
+
+When `GradeCommand#execute(Model)` is invoked, the command:
+
+1. Retrieves the target `Person` from the filtered list using the index.
+2. Guards against invalid indices by throwing `CommandException` if out of bounds.
+3. Iterates through the grades to add, calling `GradeList#addGrade` for each.
+4. Creates a new `Person` with the updated `GradeList`.
+5. Updates the model via `model.setPerson(...)` and returns a success message with the updated grades.
+
+Key classes: `GradeCommand`, `Model`, `Person`, `GradeList`, `Grade`.
+
+#### Validation and error handling
+
+- Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Missing or malformed grade triplets (missing parts, wrong format) throw `ParseException` with specific guidance.
+- Duplicate subject-assessment pairs within the same command throw `ParseException` with a descriptive error message.
+- Invalid subject, assessment, or score formats throw `ParseException` during parsing.
+
+#### Design Considerations
+
+- **Duplicate Prevention**: Duplicate detection at the parser level prevents ambiguous behavior and provides immediate feedback before model mutation.
+- **Overwrite Behavior**: Existing grades with the same subject-assessment combination are overwritten, following the principle that the latest data is authoritative.
+- **Immutability**: The command creates new `GradeList` and `Person` objects, maintaining immutability and predictable state management.
+- **Batch Operations**: Supporting multiple grades per command improves efficiency when recording several assessments at once.
+
+### Delete Grade Command
+
+#### What it does
+
+Removes a specific grade entry (identified by subject and assessment) from a student's grade list. This enables tutors to correct mistakes, such as accidentally recording a grade for a test a student did not take.
+
+#### Parameters
+
+`delgrade INDEX sub/SUBJECT/ASSESSMENT`
+
+- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+- `sub/SUBJECT/ASSESSMENT` — required. Specifies which grade to remove:
+  - `SUBJECT` — subject name (must match exactly).
+  - `ASSESSMENT` — assessment type (must match exactly).
+
+#### Overview
+
+The `delgrade` command follows the standard command pattern of *parse → construct command → execute on the model*. It is the inverse operation to the `grade` command, allowing tutors to maintain accurate grade records by removing erroneous entries.
+
+#### High-level flow
+
+1. User provides student index and subject-assessment identifier.
+2. System validates index and parses the subject-assessment pair.
+3. System checks if the grade exists for the student.
+4. System removes the grade and confirms success.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates `delgrade` commands to `DeleteGradeCommandParser`. The parser:
+
+1. Tokenises arguments using the `sub/` prefix.
+2. Extracts the index from the preamble.
+3. Splits the `sub/` value by `/` to separate subject and assessment.
+4. Validates that both subject and assessment are non-empty.
+5. Constructs and returns a `DeleteGradeCommand` with the index, subject, and assessment.
+
+Key classes: `DeleteGradeCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+When `DeleteGradeCommand#execute(Model)` is invoked, the command:
+
+1. Retrieves the target `Person` from the filtered list using the index.
+2. Guards against invalid indices by throwing `CommandException` if out of bounds.
+3. Checks if the grade exists using `GradeList#hasGrade(subject, assessment)`.
+4. Throws `CommandException` with `MESSAGE_GRADE_NOT_FOUND` if the grade does not exist.
+5. Creates a new `Person` with the grade removed via `GradeList#removeGrade(subject, assessment)`.
+6. Updates the model via `model.setPerson(...)` and returns a success message.
+
+Key classes: `DeleteGradeCommand`, `Model`, `Person`, `GradeList`.
+
+#### Validation and error handling
+
+- Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Missing or malformed `sub/` prefix throws `ParseException` with usage guidance.
+- Empty subject or assessment throws `ParseException`.
+- Non-existent grade throws `CommandException` with `MESSAGE_GRADE_NOT_FOUND`.
+
+#### Design Considerations
+
+- **Error Prevention**: Checking for grade existence before removal provides clear feedback and prevents silent failures.
+- **Immutability**: The command creates new `GradeList` and `Person` objects, maintaining immutability consistent with other commands.
+- **Precision**: Requiring exact subject-assessment match ensures tutors remove the intended grade without ambiguity.
+- **Symmetry**: The command complements the `grade` command, providing complete CRUD operations for grade management.
 
 ### Filter Command
 
 #### What it does
-#### Execution Walkthrough
+
+Filters and displays students whose attributes match specified criteria. This enables tutors to quickly find students matching specific attributes, such as all students in a particular subject or age group, using AND logic between different attributes and OR logic within the same attribute.
+
 #### Parameters
+
+`filter attr/KEY=VALUE[,VALUE2]… [attr/KEY2=VALUE2]…`
+
+- `attr/KEY=VALUE` — required, at least one. Specifies an attribute filter:
+  - `KEY` — attribute key (e.g., subject, age); case-insensitive.
+  - `VALUE` — attribute value(s); multiple values separated by commas; case-insensitive.
+- Multiple `attr/` prefixes can be provided for AND logic between different keys.
+
 #### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
 
-### Schedule Command
+The `filter` command follows the standard command pattern of *parse → construct command → execute on the model*. It updates the filtered list predicate without mutating the underlying data, allowing the UI to display only matching students.
 
-#### What it does
-#### Execution Walkthrough
-#### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+#### High-level flow
 
-### Unschedule Command
+1. User provides one or more attribute filters.
+2. System parses each filter, extracting keys and values.
+3. System constructs an `AttributeContainsPredicate` with the filter criteria.
+4. System applies the predicate to the filtered list and displays matching students with a count.
 
-#### What it does
-#### Execution Walkthrough
-#### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+#### Parsing pipeline
 
-### Mark Command
+`AddressBookParser` delegates `filter` commands to `FilterCommandParser`. The parser:
 
-#### What it does
-#### Execution Walkthrough
-#### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+1. Tokenises arguments using the `attr/` prefix to extract all attribute filters.
+2. For each filter, splits by `=` to separate key and value(s).
+3. Validates that the key is non-empty.
+4. Splits comma-separated values and adds them to a set for the corresponding key.
+5. Validates that at least one value exists for each key.
+6. Constructs an `AttributeContainsPredicate` with the parsed attribute filters.
+7. Returns a `FilterCommand` with the predicate.
 
-### Unmark Command
+Key classes: `FilterCommandParser`, `AttributeContainsPredicate`.
 
-#### What it does
-#### Execution Walkthrough
-#### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+#### Execution behaviour
 
-### Search Command
+When `FilterCommand#execute(Model)` is invoked, the command:
 
-#### What it does
-#### Execution Walkthrough
-#### Parameters
-#### Overview
-#### High Level Overview
-#### Execution Behaviour
-#### Validation and Error Handling
-#### Design considerations
+1. Updates the filtered list predicate via `model.updateFilteredPersonList(predicate)`.
+2. Retrieves the filtered list size.
+3. Returns a success message with the count of matching students.
 
+Key classes: `FilterCommand`, `Model`, `AttributeContainsPredicate`.
 
-### Clear Command
+#### Validation and error handling
 
-#### What it does
+- Missing `attr/` prefix throws `ParseException` with usage guidance.
+- Malformed attribute format (missing `=`) throws `ParseException`.
+- Empty attribute key throws `ParseException`.
+- Empty attribute values (after trimming and filtering) throws `ParseException`.
+- At least one `attr/` prefix must be provided.
 
-Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
+#### Design Considerations
 
-#### Execution walkthrough
-
-`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
-
-#### Design considerations
-
-- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
-- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
-- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
-
-### Exit Command
-
-#### What it does
-
-Terminates the application gracefully after acknowledging the user's request.
-
-#### Execution walkthrough
-
-`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
-
-#### Design considerations
-
-- The command never throws; exiting is always considered successful.
-- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
-- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
-
-
-
+- **Predicate-Based Filtering**: Using a predicate allows the filtered list to automatically update when underlying data changes, maintaining consistency.
+- **AND/OR Logic**: AND logic between different attribute keys and OR logic within the same key provides intuitive filtering behavior for tutors.
+- **Case Insensitivity**: Both keys and values are matched case-insensitively, reducing user frustration from capitalization mismatches.
+- **No Data Mutation**: The command only updates the view predicate; no student data is modified, making it safe and reversible via the `list` command.
+- **Performance**: Filtering is efficient as it leverages JavaFX `FilteredList`, which wraps the master list without creating deep copies.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -741,10 +958,49 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 2c1. ClassRosterPro shows error message indicating missing components.\
      Use case ends.
 * 2d. ClassRosterPro detects duplicate subject-assessment in command.
-   * 2d1. ClassRosterPro uses last occurrence and proceeds without warning.\
+   * 2d1. ClassRosterPro shows error message indicating duplicate grade detected.\
      Use case ends.
 * 2e. ClassRosterPro detects invalid score value.
    * 3a1. ClassRosterPro shows "Error saving grade data".\
+     Use case ends.
+
+---
+
+### **UC04a - Delete Grade from Student**
+
+**System:** ClassRosterPro\
+**Use Case:** UC04a - Delete Grade from Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster with at least one grade\
+**Guarantees:**
+- Grade is removed if index and subject-assessment are valid
+- Data integrity is maintained
+- Error message displayed if grade does not exist
+
+**MSS:**
+
+1. Tutor enters delgrade command with student index and subject-assessment identifier.
+2. ClassRosterPro validates index and subject-assessment format.
+3. ClassRosterPro checks if the grade exists.
+4. ClassRosterPro removes the grade and confirms.\
+  Use case ends.
+
+**Extensions:**
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid format (missing subject or assessment).
+   * 2b1. ClassRosterPro shows "Use sub/SUBJECT/ASSESSMENT".\
+     Use case ends.
+* 3a. ClassRosterPro detects grade does not exist.
+   * 3a1. ClassRosterPro shows "Grade not found".\
+     Use case ends.
+* 4a. ClassRosterPro encounters storage error during removal.
+   * 4a1. ClassRosterPro shows "Error removing grade data".\
      Use case ends.
 
 ---
@@ -1089,116 +1345,111 @@ This section provides guidance to manually verify the new or modified features o
 
 ### 1. Search
 
-Purpose: Instantly locate students by typing into the search box.
+**Command name**: `search`
 
-Steps to test:
+**Purpose**: Instantly locate students by typing into the search box.
+
+**Steps to test**:
 1. Launch the app and ensure several students are listed.
-2. Enter:
-   - `search alex`
+2. Enter `search alex` in the command box.
 
-Expected: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
-
-1. Enter
-   - `search zzz`.
-
-Expected: The list clears and an error message is shown.
+**Expected**: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
 
 ### 2. Tag and Filter
 
-Purpose: Add attributes to students and filter by them.
+**Command name**: `addattr` and `filter`
 
-Steps to test:
+**Purpose**: Add attributes to students and filter the student list based on them.
+
+**Steps to test**:
 1. Tag a student with attributes:
    - `addattr 1 attr/subject=Math attr/age=16`
 2. Verify attributes appear under the student's details.
 3. Filter students by multiple attributes:
    - `filter attr/subject=Math attr/age=16`
 
-Expected: Only students with both `subject=Math` and `age=16` are displayed.
-
-Reset view:
-- `list`
+**Expected**: Only students with both `subject=Math` and `age=16` are displayed.
 
 ### 3. Schedule and Unschedule Lessons
 
-Purpose: Create and remove scheduled lessons.
+**Command name**: `schedule` and `unschedule`
 
-Steps to test:
+**Purpose**: Create and remove scheduled lessons for a student.
+
+**Steps to test**:
 1. Schedule a lesson for the first student:
    - `schedule 1 start/14:00 end/15:00 date/2025-11-01 sub/Science`
+2. Remove the lesson:
+   -`unschedule 1 lesson/1`.
 
-Expected: A lesson entry appears in the expanded student card.
-
-Try scheduling an overlapping lesson (same date/time). Expected: Error about overlapping lesson.
-
-Remove the lesson:
-- `unschedule 1 lesson/1`
+**Expected**: A lesson entry appears after scheduling command in the expanded student card and is removed after unschedule command.
 
 ### 4. Attendance Tracking
 
-Purpose: Mark and unmark lesson attendance.
+**Command name**: `mark` and `unmark`
 
-Steps to test:
-1. Ensure a student has a scheduled lesson (see previous test).
+**Purpose**: Mark and unmark lesson attendance.
+
+**Steps to test**:
+1. Ensure a student has a scheduled lesson (see previous test). 
 2. Mark attendance:
    - `mark 1 lesson/1`
+3. Unmark attendance:
+    - `unmark 1 lesson/1`
 
-Expected: Lesson marked as "Attended".
-
-Unmark attendance:
-- `unmark 1 lesson/1`
-
-Expected: Lesson reverted to "Not attended".
+**Expected**: The lesson is marked as "Present" after mark command and marked as "Not Present" after unmark command.
 
 ### 5. Grade Recording
 
-Purpose: Record grades for multiple subjects/assessments.
+**Command name**: `grade`
 
-Steps to test:
+**Purpose**: Record and update grades for various subjects and assessments.
+
+**Steps to test**:
 1. Add grades to a student:
    - `grade 1 sub/MATH/WA1/85 sub/SCIENCE/Quiz1/92`
 
-Expected: Grades appear under the student's card.
+**Expected**: The grades appear under the student's card.
 
+**Steps to test**:
 2. Add another grade for the same subject/assessment to test overwrite behavior:
    - `grade 1 sub/MATH/WA1/90`
 
-Expected: The score updates to 90.
+**Expected**: The score for MATH/WA1 updates to 90.
 
 ### 6. Open and Close Student Cards
 
-Purpose: Expand or collapse individual contact cards to view details.
+**Command name**: `open` and `close`
 
-Steps to test:
-1. Open:
-   - `open 1`
-   - Expected: The first student's card expands to show all details (lessons, grades, tags).
-2. Close:
-   - `close 1`
-   - Expected: The same card collapses back to summary view.
-3. Try opening multiple cards:
-   - `open 2`
-   - Expected: Both card 1 and 2 can stay open simultaneously.
+**Purpose**: Expand or collapse individual student cards to view or hide details.
+
+**Steps to test**:
+1. Enter `open 1`
+2. Enter `close 1`.
+
+**Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
 ### 7. Delete Attributes
 
-Purpose: Remove specific attributes (tags) from a student.
+**Command name**: `delattr`
 
-Steps to test:
+**Purpose**: Remove specific attributes from a student.
+
+**Steps to test**:
 1. Add attributes first (if not present):
    - `addattr 1 attr/subject=Math attr/level=Sec3`
 2. Delete an attribute:
    - `delattr 1 attr/level`
 
-Expected: Only the `level` attribute is removed; `subject=Math` remains.
+**Expected**: Only the `level` attribute is removed; `subject=Math` remains.
 
 ### 8. Data Persistence Verification
 
-Purpose: Confirm that data modifications are saved correctly.
+**Purpose**: Confirm that data modifications are saved correctly after closing and reopening the application.
 
-Steps to test:
+**Steps to test**:
 1. Modify data using any commands above (e.g., add attributes, schedule a lesson, add grades).
 2. Exit the app.
 3. Reopen the app.
 
-Expected: All changes persist (e.g., added attributes, scheduled lessons, grades).
+**Expected**: All changes persist (e.g., added attributes, scheduled lessons, grades).
