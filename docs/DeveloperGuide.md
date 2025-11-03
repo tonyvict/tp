@@ -1689,3 +1689,50 @@ This section provides guidance to manually verify the new or modified features o
 3. Reopen the app.
 
 **Expected**: All changes persist (e.g., added attributes, scheduled lessons, grades).
+
+---
+
+## Appendix: Planned Enhancements
+
+### Team Size : 5
+
+1. Make quick search result ordering deterministic: Right now, search results can appear in different orders between keystrokes. We plan to stabilise the ordering so prefix matches surface first and other matches follow consistently.
+
+2. Tighten duplicate detection in the grade command: Adding the same subject/assessment pair twice silently overwrites the previous score. An upcoming fix will detect this scenario and either block the duplicate or provide a clear confirmation prompt.
+
+3. Restore the help window after minimising: Tutors who minimise the help window cannot bring it back in the same session. The enhancement will ensure the window is reopened or refocused whenever `help` is invoked again.
+
+4. Restrict schedule date extremes: The scheduler currently accepts extreme year values (e.g., `9999`). We will clamp the allowable range and return a precise validation error for unrealistic dates.
+
+5. Preserve filtered lists across commands: Executing follow-up commands such as `edit` or `schedule` resets the roster to show all students. We plan to retain the active predicate so tutors stay within their filtered context.
+
+6. More specific warning messages shown for phone number inputs: Phone validation currently allows a broad range of characters; we intend to surface clearer guidance when users enter suspicious formats so they can correct potential mistakes quickly.
+
+---
+
+## Appendix: Effort
+
+**Difficulty relative to AB3**: ClassRosterPro extends beyond the single-entity focus of AB3 (persons) by layering additional aggregates—lessons, attendance, grades, attributes, and remarks—onto each student record. Every command must resolve and update nested structures while preserving immutability, which increases cognitive load and testing effort. Features such as cross-day scheduling, contextual filtering, and bulk attribute manipulation required more complex validation and data transformations than AB3’s straightforward CRUD operations.
+
+**Key challenges**
+
+- **Lesson scheduling across boundaries**: Supporting cross-day lessons (via optional `date2/`) demanded redesigning the `Lesson` model to track end dates and updating overlap detection, serialization, and UI display without breaking existing commands.
+- **Filter-aware workflows**: Commands needed to honour the filtered view that tutors work in. Balancing usability (keeping context) with predictability (resetting to show all when appropriate) required careful coordination between the `Model` layer and command implementations.
+- **Rich attribute management**: Multi-valued attributes, dynamic tag operations, and remark appends mandated defensive copying and descriptor patterns to avoid mutating shared references.
+
+**Effort highlights**
+
+- **Implementation breadth**: Most commands have both parsing and execution variants, with bespoke validation (e.g. duplicate detection for grades, overlap checks for lessons, attendance toggles). Each uses immutable replacements for `Person`/`LessonList`, leading to more boilerplate but clearer state transitions.
+- **Testing**: Extensive command, parser, and model tests cover edge cases (invalid indices, duplicate grades, lesson conflicts, help window behaviour). Sequence/activity diagrams were refreshed to mirror the code, supporting maintainability.
+- **Tooling & documentation**: The Developer Guide now documents each core command in depth, aided by newly created PUML diagrams (e.g., `ScheduleCommandSequence`, `UnscheduleCommandSequence`). This documentation effort parallels the code changes and helps future contributors ramp up faster.
+
+**Reuse and adaptation**
+
+- Some foundational pieces were adapted from AB3 (e.g., the command architecture, `AddressBookParser`, descriptor patterns). However, new features such as lesson scheduling, attendance, quick search, and attribute filtering were implemented largely from scratch.
+- UI components (e.g., `PersonCard.fxml`) were extended to surface lessons, grades, and attributes. No external libraries beyond the original tech stack (JavaFX, Jackson, JUnit) were introduced. Consequently, reuse savings were minimal (<5%), and most effort went into integrating new domain concepts.
+
+**Achievements**
+
+- Delivered a multi-faceted student management tool covering lessons, grades, attendance, and notes—all driven by keyboard-centric commands.
+- Implemented cross-day scheduling, quick search, rich filtering, and grade management atop the AB3 foundation without regressing baseline functionality.
+- Augmented documentation with updated command write-ups and diagrams, clarifying the architecture for evaluators and future developers.
