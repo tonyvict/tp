@@ -6,10 +6,10 @@ start
 :User enters command to delete a person
 :Logic parses target index;
 :Create and execute DeleteCommand;
-if (Valid person index?) then (no)
+if () then ([invalid index])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid index])
   :Retrieve person and remove from model;
   :Display success to user;
   stop

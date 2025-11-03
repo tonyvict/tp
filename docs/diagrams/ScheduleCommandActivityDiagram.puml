@@ -6,22 +6,22 @@ start
 :User enters command to schedule a lesson;
 :Logic parses index, times, date, subject;
 :Create and execute ScheduleCommand;
-if (Valid person index?) then (no)
+if () then ([invalid index])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid index])
   :Retrieve target person;
 endif
-if (Lesson already scheduled?) then (yes)
+if () then ([lesson exists])
   :Display duplicate lesson error;
   stop
-else (no)
+else ([lesson does not exist])
   :Check for overlapping lessons;
 endif
-if (Overlapping lesson found?) then (yes)
+if () then ([has overlap])
   :Display overlapping lesson error;
   stop
-else (no)
+else ([no overlap])
   :Add lesson to person's schedule;
   :Update filtered list;
   :Display success to user;

@@ -6,16 +6,16 @@ start
 :User enters command to delete a grade;
 :Logic parses index and subject-assessment;
 :Create and execute DeleteGradeCommand;
-if (Valid person index?) then (no)
+if () then ([invaild inex])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid index])
   :Retrieve target person;
 endif
-if (Grade exists?) then (no)
+if () then ([grade does not exist])
   :Display grade not found error;
   stop
-else (yes)
+else ([grade exsists])
   :Remove grade from person's grade list;
   :Update person with modified grade list;
   :Display success to user;

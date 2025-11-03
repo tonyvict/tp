@@ -6,22 +6,22 @@ start
 :User enters "unmark" command with indices;
 :Logic parses arguments into person and lesson indices;
 :Create and execute UnmarkCommand;
-if (Valid person index?) then (no)
+if () then ([invalid index])
   :Display invalid person index error;
   stop
-else (yes)
+else ([valid index])
   :Retrieve target person;
 endif
-if (Valid lesson index?) then (no)
+if () then ([invalid lesson index])
   :Display invalid lesson index error;
   stop
-else (yes)
+else ([valid lesson index])
   :Retrieve target lesson;
 endif
-if (Lesson already unmarked?) then (yes)
+if () then ([lesson unmarked])
   :Display "already unmarked" error;
   stop
-else (no)
+else ([lesson marked])
   :Update lesson attendance in model;
   :Format success message;
   :Display success to user;

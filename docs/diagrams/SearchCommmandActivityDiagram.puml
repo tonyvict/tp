@@ -7,16 +7,16 @@ start
 :User enters command to search for students;
 :Logic parses keywords from command input;
 :Create and execute SearchCommand;
-if (Any keyword provided?) then (no)
+if () then ([no keywords provided])
   :Display error about missing keywords;
   stop
-else (yes)
+else ([keywords provided])
   :Construct PersonContainsKeywordPredicate;
   :Update filtered student list using predicate;
-  if (Any matching students found?) then (no)
+  if () then ([no matches])
     :Display "0 students listed!";
     stop
-  else (yes)
+  else ([has matches])
     :Display success message with number of matches;
     stop
   endif

@@ -6,16 +6,16 @@ start
 :User enters command to add/update grades;
 :Logic parses index and grade triplets;
 :Validate each grade triplet format;
-if (Duplicate subject-assessment in command?) then (yes)
+if () then ([has duplicates])
   :Display duplicate grade error;
   stop
-else (no)
+else ([no duplicates])
   :Create and execute GradeCommand;
 endif
-if (Valid person index?) then (no)
+if () then ([invalid index])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid index])
   :Retrieve target person;
 endif
 :Add or update each grade in grade list;
