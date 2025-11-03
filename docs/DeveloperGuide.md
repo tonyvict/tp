@@ -1458,37 +1458,37 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **4. Non-Functional Requirements (NFRs)**
 
-| Category               | Requirement                                                                                                      |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Portability**        | Runs on mainstream OS (Windows/macOS/Linux) with Java 17+.                                                       |
-| **Performance**        | Responsive command execution (≤150ms parse/dispatch). Handles ~1,000 students smoothly.                          |
-| **Usability**          | Keyboard-first with GUI support; all actions via commands with clear error messages. Help window lists all commands and examples. Quick search provides instant feedback. |
-| **Reliability**        | Atomic saves with JSON backup. Detects corrupted storage and continues running with empty data file.             |
-| **Data Validation**    | Strict validation for time (00:00-23:59), date (valid calendar dates), email format, and phone numbers.          |
-| **Maintainability**    | Command pattern structure. Each new feature = new Command + parser + model update. Unit tests mandatory.         |
-| **Security & Privacy** | Data stored locally in JSON format. No auto-sync. Contact details remain private.                                |
-| **Scalability**        | Support for multiple lessons per student, multiple attributes, multiple grades per subject.                      |
+| Category               | Requirement                                                                                                                       |
+| ---------------------- |-----------------------------------------------------------------------------------------------------------------------------------|
+| **Portability**        | Runs on mainstream OS (Windows/macOS/Linux) with Java 17+.                                                                        |
+| **Performance**        | Responsive command execution (≤150ms parse/dispatch). Handles ~1,000 students smoothly.                                           |
+| **Usability**          | Keyboard-first with GUI support; all actions via commands with clear error messages. Help window lists all commands and examples. |
+| **Reliability**        | Atomic saves with JSON backup. Detects corrupted storage and continues running with empty data file.                              |
+| **Data Validation**    | Strict validation for time (00:00-23:59), date (valid calendar dates), and email format.                                          |
+| **Maintainability**    | Command pattern structure. Each new feature = new Command + parser + model update. Unit tests mandatory.                          |
+| **Security & Privacy** | Data stored locally in JSON format. No auto-sync. Contact details remain private.                                                 |
+| **Scalability**        | Support for multiple lessons per student, multiple attributes, multiple grades per subject.                                       |
 
 ---
 
 ## **5. Glossary**
 
-| Term          | Definition                                                                                                                  |
-| ------------- |-----------------------------------------------------------------------------------------------------------------------------|
-| **Command**   | A typed instruction (e.g., `add`, `delete`, `find`, `schedule`) processed by the logic layer.                               |
-| **Index**     | 1-based position of a student in the current displayed list (after `list`/`find`/`filter`).                                 |
-| **Lesson Index** | 1-based position of a lesson in a student's lesson list.                                                                    |
+| Term          | Definition                                                                                                           |
+| ------------- |----------------------------------------------------------------------------------------------------------------------|
+| **Command**   | A typed instruction (e.g., `add`, `delete`, `find`, `schedule`) processed by the logic layer.                        |
+| **Index**     | 1-based position of a student in the current displayed list (after `list`/`find`/`filter`).                          |
+| **Lesson Index** | 1-based position of a lesson in a student's lesson list.                                                             |
 | **Attribute** | Key–value metadata attached to a student (e.g., `subject=math`, `age=16`). Can have multiple comma-separated values. |
-| **Remark**    | Short free-text note attached to a student for remembering important details.                                               |
-| **Attendance** | Mark/unmark record indicating if a student attended a specific lesson.                                                      |
-| **Lesson**    | A scheduled time block (date, start time, end time, subject) tied to a student.                                             |
-| **Grade**     | A subject-assessment-score triplet recorded for a student (e.g., MATH/WA1/89).                                              |
-| **List**      | Default roster view showing all students; also the command that resets filters.                                             |
-| **Filter**    | Command to display only students matching specified attribute criteria.                                                     |
-| **Quick Search** | Real-time search feature that finds students by name, email, or phone number.                                               |
-| **Help**      | Window listing all supported commands with examples and grouped by category.                                                |
-| **Overlap**   | When two lessons for the same student share any time period on the same date.                                               |
-| **Duplicate Lesson**| An exact match of student, date, start time, end time, and subject with an existing lesson.                                 |
+| **Remark**    | Short free-text note attached to a student for remembering important details.                                        |
+| **Attendance** | Mark/unmark record indicating if a student attended a specific lesson.                                               |
+| **Lesson**    | A scheduled time block (date, start time, end time, subject) tied to a student.                                      |
+| **Grade**     | A subject-assessment-score triplet recorded for a student (e.g., MATH/WA1/89).                                       |
+| **List**      | Default roster view showing all students; also the command that resets filters.                                      |
+| **Filter**    | Command to display only students matching specified attribute criteria.                                              |
+| **Quick Search** | Search feature that finds students by name, email, or phone number.                                                  |
+| **Help**      | Window listing all supported commands with examples and grouped by category.                                         |
+| **Overlap**   | When two lessons for the same student share any time period on the same date.                                        |
+| **Duplicate Lesson**| An exact match of student, date, start time, end time, and subject with an existing lesson.                          |
 
 ---
 
@@ -1521,7 +1521,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
 Each major layer has a distinct responsibility:
-- **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`, `QuickSearchBox`).
+- **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`).
 - **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
 - **Model**: Manages in-memory data such as `Person`, `Lesson`, `Grade`, and `Tag`.
 - **Storage**: Reads and writes persistent data to local JSON files.
