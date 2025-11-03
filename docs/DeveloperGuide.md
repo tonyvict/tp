@@ -1695,6 +1695,8 @@ This section provides guidance to manually verify the new or modified features o
 
 6. More specific warning messages shown for phone number inputs: Phone validation currently allows a broad range of characters; we intend to surface clearer guidance when users enter suspicious formats so they can correct potential mistakes quickly.
 
+7. Preserve search results across commands: Executing follow-up commands such as `edit` or `schedule` resets the roster to show all students. We plan to retain the active predicate so tutors stay within their filtered context.
+
 ---
 
 ## Appendix: Effort
