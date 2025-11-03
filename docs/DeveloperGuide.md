@@ -277,22 +277,9 @@ The `add` command follows the standard command pattern of *parse → construct c
 
 The activity diagram captures the user journey: the tutor submits the command, the system validates the input, and either reports a duplicate or persists the new student before confirming success.
 
-#### Parsing pipeline
-
-![Add command parser sequence](images/AddCommandParserSequence.png)
-
-The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `AddCommandParser`. The parser:
-
-1. Tokenises the raw arguments by prefixes (`n/`, `p/`, `e/`, `a/`, `t/`).
-2. Ensures the preamble is empty and every mandatory prefix appears exactly once.
-3. Delegates to `ParserUtil` to construct domain objects (`Name`, `Phone`, `Email`, `Address`, `Tag`).
-4. Builds a `Person` with default `Remark`, `LessonList`, and `GradeList`, and returns a fully initialised `AddCommand`.
-
-Key classes: `AddCommandParser`, `ParserUtil`, `Person`.
-
 #### Execution behaviour
 
-![Add command execution sequence](images/AddCommandExecuteSequence.png)
+![Add command execution sequence](images/AddCommandSequence.png)
 
 The sequence diagram documents the runtime checks when `AddCommand#execute(Model)` is invoked. The command:
 
@@ -342,23 +329,9 @@ The edit command follows the same *parse → command → execute* pattern as oth
 
 The activity diagram illustrates the conditional checks: field presence, index validation, duplicate detection, and final update.
 
-#### Parsing pipeline
-
-![Edit command parser sequence](images/EditCommandParserSequence.png)
-
-The sequence diagram shows how `AddressBookParser` delegates to `EditCommandParser`. The parser:
-
-1. Tokenises optional fields and isolates the index preamble.
-2. Verifies that at least one editable field was supplied.
-3. Parses the index and checks for duplicate single-use prefixes.
-4. Builds an `EditPersonDescriptor`, parsing tags and attributes through `ParserUtil`.
-5. Ensures the descriptor contains changes before instantiating `EditCommand`.
-
-Key classes: `EditCommandParser`, `EditPersonDescriptor`, `ParserUtil`.
-
 #### Execution behaviour
 
-![Edit command execution sequence](images/EditCommandExecuteSequence.png)
+![Edit command execution sequence](images/EditCommandSequence.png)
 
 The sequence diagram  captures the runtime flow:
 
@@ -394,26 +367,13 @@ The `remark` command follows the standard command pattern of *parse → construc
 
 #### High-level flow
 
-!Remark command activity
+![Remark command activity](images/RemarkCommandActivityDiagram.png)
 
 The activity diagram shows the user's journey: the tutor provides the student index and the remark text, the system validates the input, and then updates the student's remark in the model before confirming success.
 
-#### Parsing pipeline
-
-!Remark command parser sequence
-
-The sequence diagram shows how `AddressBookParser` delegates to `RemarkCommandParser`. The parser:
-
-1.  Parses the `INDEX` from the command's preamble.
-2.  Extracts all `REMARK` text from one or more `r/` prefixes and joins them.
-3.  Uses `ParserUtil` to construct an `Index` object and a `Remark` object.
-4.  Instantiates and returns a fully initialised `RemarkCommand`.
-
-Key classes: `RemarkCommandParser`, `ParserUtil`, `Remark`.
-
 #### Execution behaviour
 
-!Remark command execution sequence
+![Remark command execution sequence](images/EditCommandSequence.png)
 
 The sequence diagram documents the runtime checks when `RemarkCommand#execute(Model)` is invoked. The command:
 
@@ -459,17 +419,9 @@ Deletion is the simplest command flow: parse the index, resolve it against the f
 
 The activity diagram highlights the single decision point—whether the supplied index is valid.
 
-#### Parsing pipeline
-
-![Delete command parser sequence](images/DeleteCommandParserSequence.png)
-
-The sequence diagram  shows the brief parser interaction: `requireSingleIndex`, `parseIndex`, then creation of a `DeleteCommand`.
-
-Key classes: `DeleteCommandParser`, `ParserUtil`.
-
 #### Execution behaviour
 
-![Delete command execution sequence](images/DeleteCommandExecuteSequence.png)
+![Delete command execution sequence](images/DeleteCommandSequence.png)
 
 The sequence diagram  depicts the execution: retrieve the filtered list, guard against invalid indices, remove the student through `model.deletePerson`, and format a confirmation message with `Messages.format`. Key classes: `DeleteCommand`, `Model`, `Messages`.
 
@@ -497,26 +449,13 @@ The `mark` command follows the standard command pattern of *parse → construct 
 
 #### High-level flow
 
-!Mark command activity
+![Mark command activity](images/MarkCommandActivityDiagram.png)
 
 The activity diagram shows the user's journey: the tutor provides the student and lesson indices, the system validates them, checks if the lesson is already marked, and then updates the attendance status before confirming success.
 
-#### Parsing pipeline
-
-!Mark command parser sequence
-
-The sequence diagram shows how `AddressBookParser` delegates to `MarkCommandParser`. The parser:
-
-1.  Tokenises the arguments to find the person `INDEX` and the `lesson/LESSON_INDEX`.
-2.  Uses `ParserUtil` to parse both indices into `Index` objects.
-3.  Ensures both indices are present and valid.
-4.  Instantiates and returns a fully initialised `MarkCommand`.
-
-Key classes: `MarkCommandParser`, `ParserUtil`.
-
 #### Execution behaviour
 
-!Mark command execution sequence
+![Mark command execution sequence](images/MarkCommandSequence.png)
 
 The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
 
@@ -561,26 +500,13 @@ The `unmark` command is the direct counterpart to the `mark` command and follows
 
 #### High-level flow
 
-!Unmark command activity
+![Unmark command activity](images/UnmarkCommandActivityDiagram.png)
 
 The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
 
-#### Parsing pipeline
-
-!Unmark command parser sequence
-
-The sequence diagram shows `AddressBookParser` delegating to `UnmarkCommandParser`. The parser:
-
-1.  Parses the person `INDEX` from the preamble.
-2.  Parses the `lesson/LESSON_INDEX` from the prefixed arguments.
-3.  Uses `ParserUtil` to validate and create `Index` objects for both.
-4.  Constructs and returns an `UnmarkCommand` with the parsed indices.
-
-Key classes: `UnmarkCommandParser`, `ParserUtil`.
-
 #### Execution behaviour
 
-!Unmark command execution sequence
+![Unmark command execution sequence](images/UnmarkCommandSequence.png)
 
 The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
 
@@ -628,26 +554,16 @@ The `grade` command follows the standard command pattern of *parse → construct
 
 #### High-level flow
 
+![Grade command activity](images/GradeCommandActivityDiagram.png)
+
 1. User provides student index and one or more grade triplets.
 2. System validates index and parses each grade triplet.
 3. System detects and prevents duplicate subject-assessment pairs within the same command.
 4. System updates the student's grade list and confirms success.
 
-#### Parsing pipeline
-
-`AddressBookParser` delegates `grade` commands to `GradeCommandParser`. The parser:
-
-1. Tokenises arguments using the `sub/` prefix to extract all grade triplets.
-2. For each triplet, splits by `/` to separate subject, assessment, and score.
-3. Validates each component (non-empty, proper format).
-4. Tracks seen subject-assessment pairs using a `HashSet` to detect duplicates within the command.
-5. Throws `ParseException` if duplicates are detected or if validation fails.
-6. Parses the student index from the preamble.
-7. Constructs `Grade` objects and returns a `GradeCommand` with the index and set of grades.
-
-Key classes: `GradeCommandParser`, `ParserUtil`, `Grade`.
-
 #### Execution behaviour
+
+![Grade command execution sequence](images/GradeCommandSequence.png)
 
 When `GradeCommand#execute(Model)` is invoked, the command:
 
@@ -694,24 +610,16 @@ The `delgrade` command follows the standard command pattern of *parse → constr
 
 #### High-level flow
 
+![Delete Grade command activity](images/DeleteGradeCommandActivityDiagram.png)
+
 1. User provides student index and subject-assessment identifier.
 2. System validates index and parses the subject-assessment pair.
 3. System checks if the grade exists for the student.
 4. System removes the grade and confirms success.
 
-#### Parsing pipeline
-
-`AddressBookParser` delegates `delgrade` commands to `DeleteGradeCommandParser`. The parser:
-
-1. Tokenises arguments using the `sub/` prefix.
-2. Extracts the index from the preamble.
-3. Splits the `sub/` value by `/` to separate subject and assessment.
-4. Validates that both subject and assessment are non-empty.
-5. Constructs and returns a `DeleteGradeCommand` with the index, subject, and assessment.
-
-Key classes: `DeleteGradeCommandParser`, `ParserUtil`.
-
 #### Execution behaviour
+
+![Delete Grade command execution sequence](images/DeleteGradeCommandSequence.png)
 
 When `DeleteGradeCommand#execute(Model)` is invoked, the command:
 
@@ -759,26 +667,16 @@ The `filter` command follows the standard command pattern of *parse → construc
 
 #### High-level flow
 
+![Filter command activity](images/FilterCommandActivityDiagram.png)
+
 1. User provides one or more attribute filters.
 2. System parses each filter, extracting keys and values.
 3. System constructs an `AttributeContainsPredicate` with the filter criteria.
 4. System applies the predicate to the filtered list and displays matching students with a count.
 
-#### Parsing pipeline
-
-`AddressBookParser` delegates `filter` commands to `FilterCommandParser`. The parser:
-
-1. Tokenises arguments using the `attr/` prefix to extract all attribute filters.
-2. For each filter, splits by `=` to separate key and value(s).
-3. Validates that the key is non-empty.
-4. Splits comma-separated values and adds them to a set for the corresponding key.
-5. Validates that at least one value exists for each key.
-6. Constructs an `AttributeContainsPredicate` with the parsed attribute filters.
-7. Returns a `FilterCommand` with the predicate.
-
-Key classes: `FilterCommandParser`, `AttributeContainsPredicate`.
-
 #### Execution behaviour
+
+![Filter command execution sequence](images/FilterCommandSequence.png)
 
 When `FilterCommand#execute(Model)` is invoked, the command:
 
