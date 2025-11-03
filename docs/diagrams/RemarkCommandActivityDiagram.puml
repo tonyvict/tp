@@ -4,8 +4,8 @@ skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
 
 start
-:User enters remark command;
-:Execute remark command;
+:User enters command to add a remark;
+:Execute add remark command;
 
 if () then ([invalid index])
   :Display invalid index error;
@@ -14,10 +14,12 @@ else ([valid index])
 endif
 
 if () then ([empty remark])
-  :Clear remark for selected person;
+  :Display invalid command format;
+  stop
 else ([non-empty remark])
-  :Add or update remark for selected person;
 endif
+
+:Add or update remark for selected person;
 :Show updated contact list;
 :Display success message to user;
 stop

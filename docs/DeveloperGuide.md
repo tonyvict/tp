@@ -151,234 +151,107 @@ This section describes some noteworthy details on how certain features are imple
 
 ### Help Command
 
-**What it does**
+#### What it does
 
 Shows the in-app help window with a curated command summary so tutors can quickly recall syntax without leaving the application.
 
-**Parameters**
+#### Execution walkthrough
 
-`help`
+When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The command returns a `CommandResult` that sets the `showHelp` flag to `true`, instructing the UI to open (or refocus) the help window. The textual summary displayed comes from `HelpCommand.SHOWING_HELP_MESSAGE`.
 
-- `help` — opens or refocuses the help window; no additional arguments are accepted.
+#### Design considerations
 
-**Overview**
-
-`LogicManager` parses the `help` keyword, instantiates `HelpCommand`, and returns a `CommandResult` with the `showHelp` flag set so the UI surfaces the help window.
-
-**High-level flow**
-
-Linear flow: tutor enters `help` → logic returns `CommandResult(showHelp=true)` → UI opens or refocuses the help window.
-
-**Execution behaviour**
-
-1. `LogicManager` delegates parsing to `HelpCommandParser`.
-2. The parser constructs a `HelpCommand` instance.
-3. Executing the command returns `CommandResult(SHOWING_HELP_MESSAGE, showHelp=true)`.
-4. The UI observes the flag and renders or focuses the help window.
-
-**Validation and error handling**
-
-- No user parameters means the command always succeeds; there are no validation failures.
-
-**Design considerations**
-
-- Keep help content in code so the window works offline.
-- Repeat invocations are idempotent and simply refocus the existing stage.
-- The `CommandResult` flag keeps UI behaviour loosely coupled to the logic layer.
+- Keep help content in code to guarantee the window works even when offline.
+- The window opens idempotently—the same command simply refocuses the existing help stage instead of spawning duplicates.
+- The `CommandResult` flagging approach keeps UI behaviour configurable without introducing UI dependencies into the logic layer.
 
 ### List Command
 
-**What it does**
+#### What it does
 
 Resets the student list back to the full roster after filters, searches, or attribute-based queries.
 
-**Parameters**
+#### Execution walkthrough
 
-`list`
+`ListCommand#execute(Model)` invokes `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`, restoring the observable list that backs the UI. The command then returns a simple confirmation message; no data is mutated.
 
-- `list` — restores the full roster; no prefixes or additional arguments are required.
+#### Design considerations
 
-**Overview**
-
-The command updates the model predicate to show every student, ensuring the observable list (and therefore the UI) reflects the complete dataset.
-
-**High-level flow**
-
-Linear flow: tutor enters `list` → predicate resets to `Model.PREDICATE_SHOW_ALL_PERSONS` → UI refreshes with the full roster.
-
-**Execution behaviour**
-
-1. Parser instantiates `ListCommand`.
-2. `ListCommand#execute(Model)` calls `model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS)`.
-3. The command returns a confirmation message without mutating stored data.
-
-**Validation and error handling**
-
-- There are no parameters to validate; the command always succeeds.
-
-**Design considerations**
-
-- Runs in O(n) by reusing the observable list without cloning the backing store.
-- Keeps display logic in the UI while logic only adjusts predicates.
-- Returns an explicit acknowledgement so tutors know the reset completed.
+- The command runs in O(n) because the filtered list wraps the master list—no deep copies are made.
+- Display logic stays in the UI; `ListCommand` only manipulates the predicate to maintain separation of concerns.
+- Returning an explicit acknowledgement helps the user confirm that the reset completed.
 
 ### Open Command
 
-**What it does**
+#### What it does
 
 Expands a student's card in the UI so tutors can inspect lessons, grades, tags, and other extended details.
 
-**Parameters**
+#### Execution walkthrough
 
-`open INDEX`
+`OpenCommand` resolves the target index against the current filtered list. It ensures the index is valid and that the card is not already expanded, then toggles the `Person`'s `expandedProperty` to `true`. The bound UI updates automatically and the command returns a confirmation message.
 
-- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+#### Design considerations
 
-**Overview**
-
-The command validates the supplied index, ensures the card is not already open, and flips the student's `expandedProperty` to reveal detailed information.
-
-**High-level flow**
-
-Tutor enters `open INDEX` → logic validates the index and current expansion state → UI updates to show the expanded card.
-
-**Execution behaviour**
-
-1. Parse and resolve the `INDEX` against the filtered list.
-2. Reject invalid indices via `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-3. Reject already-open cards via `OpenCommand.MESSAGE_CARD_ALREADY_OPEN`.
-4. Toggle the student's `expandedProperty` to `true` and return a confirmation message.
-
-**Validation and error handling**
-
-- Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-- Attempting to open an already expanded card throws `OpenCommand.MESSAGE_CARD_ALREADY_OPEN`.
-
-**Design considerations**
-
-- Store expansion state on the `Person` so it persists across filtering and sorting.
-- Guard clauses prevent redundant state changes and surface clear error messages.
-- Operations remain synchronous; no additional UI events are required.
+- Expansion state lives on the `Person` object, keeping UI behaviour consistent even when the list is resorted or filtered.
+- Guard clauses prevent redundant state flips and provide clear error messages when the card is already open.
+- Operations stay synchronous; no additional events or asynchronous callbacks are required.
 
 ### Close Command
 
-**What it does**
+#### What it does
 
 Collapses an expanded student card to restore the compact list view.
 
-**Parameters**
+#### Execution walkthrough
 
-`close INDEX`
+Similar to `OpenCommand`, `CloseCommand` validates the index, checks that the card is currently open, and flips the `expandedProperty` to `false`. A confirmation message indicates success; otherwise a descriptive error is thrown.
 
-- `INDEX` — required, 1-based. Identifies the student in the filtered list.
+#### Design considerations
 
-**Overview**
-
-The command mirrors `open`, validating the index and current state before toggling the student's `expandedProperty` to hide extended details.
-
-**High-level flow**
-
-Tutor enters `close INDEX` → logic validates the index and expansion state → UI collapses the student card.
-
-**Execution behaviour**
-
-1. Parse and resolve the `INDEX` against the filtered list.
-2. Reject invalid indices via `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-3. Reject already-collapsed cards via `CloseCommand.MESSAGE_CARD_ALREADY_CLOSED`.
-4. Toggle the student's `expandedProperty` to `false` and emit a success message.
-
-**Validation and error handling**
-
-- Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-- Attempting to close an already collapsed card throws `CloseCommand.MESSAGE_CARD_ALREADY_CLOSED`.
-
-**Design considerations**
-
-- Reuses the same expansion flag as `open`, keeping behaviour symmetrical.
-- Shared validation messages maintain a consistent error vocabulary.
-- Prevents unnecessary model updates by blocking no-op requests.
+- Mirroring the open logic keeps the commands complementary and predictable.
+- Using the same `expandedProperty` ensures toggling works regardless of how the card was opened (command or future UI triggers).
+- Input validation reuses `Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`, maintaining a consistent error vocabulary across commands.
 
 ### Clear Command
 
-**What it does**
+#### What it does
 
 Wipes the entire roster, removing every stored student and resetting the dataset to a blank state.
 
-**Parameters**
+#### Execution walkthrough
 
-`clear`
+`ClearCommand#execute(Model)` constructs a new empty `AddressBook` instance and passes it to `model.setAddressBook(...)`. Because the model exposes an observable list, the UI immediately reflects the cleared roster. A confirmation message is returned to the user.
 
-- `clear` — removes all students; no additional arguments are supported.
+#### Design considerations
 
-**Overview**
-
-`ClearCommand` replaces the stored address book with a fresh empty instance and updates the model so the UI reflects the cleared roster.
-
-**High-level flow**
-
-Tutor enters `clear` → logic swaps in an empty address book → UI refreshes to show an empty list.
-
-**Execution behaviour**
-
-1. Parser instantiates `ClearCommand`.
-2. `ClearCommand#execute(Model)` constructs an empty `AddressBook`.
-3. The command calls `model.setAddressBook(...)` and returns a success message.
-
-**Validation and error handling**
-
-- No parameters to validate; the command always succeeds.
-- Tutors should confirm before running because the action cannot be undone without undo support.
-
-**Design considerations**
-
-- Uses a fresh `AddressBook` instance to avoid mutating existing collections.
-- Observable lists propagate the cleared state to the UI automatically.
-- Keeps the command surface minimal, avoiding optional flags that could surprise users.
+- The operation is destructive; users should be advised to back up data before running it. Undo is not available.
+- Creating a fresh `AddressBook` is simpler than iterating through students, keeping the command O(1) relative to roster size.
+- By reusing the setter in `Model`, storage and persistence layers automatically pick up the new state on the next save cycle.
 
 ### Exit Command
 
-**What it does**
+#### What it does
 
 Terminates the application gracefully after acknowledging the user's request.
 
-**Parameters**
+#### Execution walkthrough
 
-`exit`
+`ExitCommand` returns a `CommandResult` with the `exit` flag set to `true`. `LogicManager` forwards this to the UI, which listens for the flag and triggers application shutdown while allowing final persistence tasks (e.g., saving preferences) to complete.
 
-- `exit` — requests application shutdown; no additional arguments are accepted.
+#### Design considerations
 
-**Overview**
-
-Executing the command sets the `exit` flag on `CommandResult`, signalling the UI to start its shutdown sequence (saving preferences, closing windows, etc.).
-
-**High-level flow**
-
-Tutor enters `exit` → logic returns `CommandResult(exit=true)` → UI performs shutdown routines.
-
-**Execution behaviour**
-
-1. Parser instantiates `ExitCommand`.
-2. `ExitCommand#execute(Model)` returns a `CommandResult` with `exit=true`.
-3. `LogicManager` propagates the result to the UI.
-4. UI listeners detect the flag and complete shutdown tasks.
-
-**Validation and error handling**
-
-- No parameters to validate; the command always succeeds.
-
-**Design considerations**
-
-- Delegates shutdown to the UI layer so resources close in the correct order.
-- Uses `CommandResult` flags to avoid coupling logic with platform-specific UI code.
-- Returns a final confirmation message so users understand why the application closes.
+- The command never throws; exiting is always considered successful.
+- Using flags in `CommandResult` keeps lifecycle management in the UI layer, avoiding logic-to-UI coupling.
+- Any cleanup (saving logs, closing windows) can be centralised in the UI's response to the flag rather than scattered across commands.
 
 ### Add Student Command
 
-**What it does**
+#### What it does
 
 Registers a new student in the roster. The created `Person` initially has empty remark, grade, and lesson lists; tags may be provided to group students immediately.
 
-**Parameters**
+#### Parameters
 
 `add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...`
 
@@ -390,17 +263,17 @@ Registers a new student in the roster. The created `Person` initially has empty 
 
 The command rejects missing mandatory prefixes, duplicate occurrences of the same mandatory prefix, and malformed values.
 
-**Overview**
+#### Overview
 
 The `add` command follows the standard command pattern of *parse → construct command → execute on the model*.
 
-**High-level flow**
+#### High-level flow
 
 ![Add command activity](images/AddCommandActivityDiagram.png)
 
 The activity diagram captures the user journey: the tutor submits the command, the system validates the input, and either reports a duplicate or persists the new student before confirming success.
 
-**Execution behaviour**
+#### Execution behaviour
 
 ![Add command execution sequence](images/AddCommandSequence.png)
 
@@ -412,26 +285,26 @@ The sequence diagram documents the runtime checks when `AddCommand#execute(Model
 
 Key classes: `AddCommand`, `Model`, `Messages`.
 
-**Validation and error handling**
+#### Validation and error handling
 
 - Missing or repeated mandatory prefixes trigger `ParseException` with usage guidance.
 - Invalid value formats (e.g., phone, email) are rejected by the respective domain constructors inside `ParserUtil`.
 - Duplicate students—based on the `Person#isSamePerson` identity definition—are blocked during execution.
-- Phone numbers with alphabetic or special characters emit a warning so tutors can double-check the intended value.
+- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters.
 
-**Design considerations**
+#### Design considerations
 
-- **Input validation**: Happens during parsing so tutors see errors before the model is mutated.
-- **Duplicate detection**: Prevents adding multiple entries that represent the same student identity.
-- **Flexibility**: Allows descriptive phone values (e.g., `(Home) 1234 (Office) 3456`) so tutors can capture multiple contact points in a single field.
+- **Input validation**: Happens during parsing so users see errors before the model is mutated.
+- **Duplicate detection**: Ensures no two students with the same name can be added into the program.
+- **Flexibility**: Phone field allows alphanumeric values and special characters to allow users to add multiple phone numbers and organise them like: (Home) 1234 (Office) 3456. 
 
 ### Edit Student Command
 
-**What it does**
+#### What it does
 
 Updates selected fields of an existing student without replacing the whole entry. Fields omitted from the command remain unchanged.
 
-**Parameters**
+#### Parameters
 
 `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]... [attr/KEY=VALUE]...`
 
@@ -442,21 +315,21 @@ Updates selected fields of an existing student without replacing the whole entry
 
 At least one field beyond the index must be provided; otherwise the command rejects the input.
 
-**Overview**
+#### Overview
 
 The edit command follows the same *parse → command → execute* pattern as other logic features.
 
-**High-level flow**
+#### High-level flow
 
 ![Edit command activity](images/EditCommandActivityDiagram.png)
 
 The activity diagram illustrates the conditional checks: field presence, index validation, duplicate detection, and final update.
 
-**Execution behaviour**
+#### Execution behaviour
 
 ![Edit command execution sequence](images/EditCommandSequence.png)
 
-The sequence diagram captures the runtime flow:
+The sequence diagram  captures the runtime flow:
 
 1. Fetch the targeted student from the filtered list and guard against invalid indices.
 2. Produce an edited `Person` by merging descriptor values with the original.
@@ -465,100 +338,101 @@ The sequence diagram captures the runtime flow:
 
 Key classes: `EditCommand`, `Model`, `Messages`.
 
-**Validation and error handling**
+#### Validation and error handling
 
 - Missing optional fields trigger `MESSAGE_NOT_EDITED`.
 - Invalid indices reuse the shared index error message.
 - Identity conflicts are blocked before the model is mutated.
 
-**Design considerations**
+#### Design considerations
 
-- **Descriptor pattern**: `EditPersonDescriptor` aggregates optional field updates, keeping parser and command logic cohesive while preventing partial mutations.
-- **Immutability**: Rather than mutating the existing `Person`, the command constructs a new instance so defensive copies (e.g., tags, attributes) remain isolated.
-- **Filter preservation**: After applying edits, the command refreshes the current predicate instead of forcing a full list reset, preserving the tutor's filtered context.
+- **Descriptor pattern**: The `EditPersonDescriptor` aggregates optional field updates, keeping parser and command logic cohesive while preventing partial mutations.
+- **Immutability**: Rather than mutating the existing `Person`, the command constructs a new instance, ensuring defensive copies (e.g., tags, attributes) remain isolated.
+- **Filter preservation**: After applying edits, the command refreshes the current predicate instead of forcing a full list reset, preserving the user's filtered context.
 
 ### Remark Command
 
-**What it does**
+#### What it does
 
-Adds contextual notes to a student or clears all existing remarks when an empty remark is supplied.
+Appends a new remark to a student's existing remarks. Remarks are short, free-text notes that allow tutors to record important details, such as a student's progress or learning style. This command can also be used to clear all remarks.
 
-**Parameters**
+#### Parameters
 
 `remark INDEX r/REMARK [r/REMARK2]...`
 
-- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
-- `REMARK` — required. Text to append. Multiple `r/` prefixes are concatenated with spaces. Supplying a single empty `r/` clears the student's remark.
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `REMARK` — required. The text of the remark to add. Multiple `r/` prefixes can be used, and they will be joined together. If a single, empty `r/` is provided, all existing remarks for the student will be cleared.
 
-**Overview**
+#### Overview
 
-The `remark` command follows the standard *parse → construct command → execute* pattern, providing a focused way to manage free-form notes without editing the full student record.
+The `remark` command follows the standard command pattern of *parse → construct command → execute on the model*. It provides a dedicated and straightforward way to manage textual notes for a student.
 
-**High-level flow**
+#### High-level flow
 
 ![Remark command activity](images/RemarkCommandActivityDiagram.png)
 
-The activity diagram highlights the decision branch: when the supplied remark content is empty, the existing remark is cleared; otherwise the new text is merged into the student's note.
+The activity diagram shows the user's journey: the tutor provides the student index and the remark text, the system validates the input, and then updates the student's remark in the model before confirming success.
 
-**Execution behaviour**
+#### Execution behaviour
 
 ![Remark command execution sequence](images/RemarkCommandSequence.png)
 
-Runtime steps:
+The sequence diagram documents the runtime checks when `RemarkCommand#execute(Model)` is invoked. The command:
 
-1. Resolve the student by `INDEX`; invalid indices raise `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-2. Build the remark text from all `r/` prefixes.
-3. If the resulting text is empty, clear the student's remark; otherwise append the new content to the existing remark (separated by a comma).
-4. Create a new `Person` instance with the updated remark and replace the old entry through `model.setPerson(...)`.
-5. Return a `CommandResult` with a success message.
+1.  Retrieves the target `Person` from the filtered list using the person index.
+2.  Guards against an invalid index by throwing a `CommandException`.
+3.  Appends the new remark text to the existing remark, separated by a comma. If the existing remark is empty, it simply sets the new remark.
+4.  Creates a new `Person` object with the combined `Remark`.
+4.  Calls `model.setPerson(...)` to replace the old person object with the new one.
+5.  Returns a `CommandResult` with a success message.
 
 Key classes: `RemarkCommand`, `Model`, `Person`, `Remark`.
 
-**Validation and error handling**
+#### Validation and error handling
 
-- Missing or invalid `INDEX` values throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
-- Missing `r/` prefixes trigger `ParseException` with usage guidance.
+-   Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Missing `r/` prefix throws a `ParseException` with usage guidance.
 
-**Design considerations**
+#### Design Considerations
 
-- **Immutability**: Creates a new `Person` with the updated remark, preserving defensive copies.
-- **Append-by-default**: Concatenates remarks so tutors can keep a running narrative without overwriting history.
-- **Explicit clear**: Accepting an empty `r/` provides a lightweight way to remove remarks without adding a separate command.
+-   **Immutability**: The command creates a new `Person` object with the updated `Remark` instead of mutating the existing one. This aligns with the functional programming paradigm and ensures predictable state management.
+-   **Append-by-Default**: The command appends new remarks by default. This design choice makes it easy to add running notes over time without accidentally overwriting previous entries.
+-   **Explicit Clear**: The ability to clear all remarks is handled by providing an empty `r/` prefix. This provides an intuitive and explicit way to remove notes, which is more user-friendly than requiring a separate `clear-remark` command.
 
 ### Delete Student Command
 
-**What it does**
+#### What it does
 
 Removes a student from the roster using their displayed index.
 
-**Parameters**
+#### Parameters
 
 `delete INDEX`
 
 - `INDEX` — required, 1-based. Must reference an entry in the current filtered list.
 
-**Overview**
+#### Overview
 
 Deletion is the simplest command flow: parse the index, resolve it against the filtered list, and delete the matching person.
 
-**High-level flow**
+#### High-level flow
 
 ![Delete command activity](images/DeleteCommandActivityDiagram.png)
 
 The activity diagram highlights the single decision point—whether the supplied index is valid.
 
-**Execution behaviour**
+#### Execution behaviour
 
 ![Delete command execution sequence](images/DeleteCommandSequence.png)
 
 The sequence diagram  depicts the execution: retrieve the filtered list, guard against invalid indices, remove the student through `model.deletePerson`, and format a confirmation message with `Messages.format`. Key classes: `DeleteCommand`, `Model`, `Messages`.
 
-**Validation and error handling**
+#### Validation and error handling
 
 - Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - Because the command is irreversible, consider pairing it with undo when available.
 
-**Design considerations**
+#### Design considerations
 
 - **Minimal surface area**: The command only operates on the index and does not expose extra options, reducing accidental deletions.
 - **No-op avoidance**: Invalid indices abort before mutating state, ensuring that errors never partially modify the model.
@@ -566,11 +440,11 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 
 ### Schedule Lesson Command
 
-**What it does**
+#### What it does
 
 Adds a lesson block to a student, supporting both same-day and cross-day sessions. Optional grade/attendance data remain untouched.
 
-**Parameters**
+#### Parameters
 
 `schedule INDEX start/START_TIME end/END_TIME date/START_DATE [date2/END_DATE] sub/SUBJECT`
 
@@ -580,17 +454,17 @@ Adds a lesson block to a student, supporting both same-day and cross-day session
 - `date2/` — optional. When supplied, indicates the lesson ends on a different date; otherwise the start date is reused.
 - `sub/` — required. Free-form subject label.
 
-**Overview**
+#### Overview
 
 The command mirrors the typical *parse → instantiate command → execute on model* pipeline, extending lesson creation to overnight slots.
 
-**High-level flow**
+#### High-level flow
 
 ![Schedule command activity](images/ScheduleCommandActivityDiagram.png)
 
 The diagram shows the tutor supplying index/time/date information, with validation of both indices and temporal overlap before committing the change.
 
-**Execution behaviour**
+#### Execution behaviour
 
 ![Schedule command execution sequence](images/ScheduleCommandSequence.png)
 
@@ -604,13 +478,13 @@ Runtime steps:
 
 Key classes: `ScheduleCommand`, `Lesson`, `LessonList`, `Model`, `Messages`.
 
-**Validation and error handling**
+#### Validation and error handling
 
 - Invalid student indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - End date/time must be strictly after the start; violations throw `ScheduleCommandParser.MESSAGE_END_BEFORE_START`.
 - Duplicate or overlapping lessons throw `MESSAGE_DUPLICATE_LESSON` / `MESSAGE_OVERLAPPING_LESSON` respectively.
 
-**Design considerations**
+#### Design considerations
 
 - **Cross-day support**: The optional `date2/` parameter allows overnight lessons without complicating same-day usage.
 - **Immutable updates**: A new `Person` with an updated `LessonList` is created, preserving snapshot-based reasoning.
@@ -1556,7 +1430,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC13: Close a student's contact card**
+### **UC-13: Close a student's contact card**
 
 **System**: ClassRosterPro\
 **Use Case**: UC13 - Open Student Contact Card\
@@ -1841,7 +1715,7 @@ This section provides guidance to manually verify the new or modified features o
 
 ## **Appendix: Planned Enhancements**
 
-**Team Size : 5**
+### Team Size : 5
 
 1. Make quick search result ordering deterministic: Right now, search results can appear in different orders between keystrokes. We plan to stabilise the ordering so prefix matches surface first and other matches follow consistently.
 
