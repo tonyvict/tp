@@ -1,0 +1,75 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UnmarkCommandParser" as UnmarkCommandParser LOGIC_COLOR
+participant "u:UnmarkCommand" as UnmarkCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("unmark 1 lesson/2")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("unmark ...")
+activate AddressBookParser
+
+create UnmarkCommandParser
+AddressBookParser -> UnmarkCommandParser
+activate UnmarkCommandParser
+UnmarkCommandParser --> AddressBookParser
+deactivate UnmarkCommandParser
+
+AddressBookParser -> UnmarkCommandParser : parse(arguments)
+activate UnmarkCommandParser
+
+create UnmarkCommand
+UnmarkCommandParser -> UnmarkCommand
+activate UnmarkCommand
+UnmarkCommand --> UnmarkCommandParser : u
+deactivate UnmarkCommand
+
+UnmarkCommandParser --> AddressBookParser : u
+deactivate UnmarkCommandParser
+UnmarkCommandParser -[hidden]-> AddressBookParser
+destroy UnmarkCommandParser
+
+AddressBookParser --> LogicManager : u
+deactivate AddressBookParser
+
+LogicManager -> UnmarkCommand : execute(model)
+activate UnmarkCommand
+
+UnmarkCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> UnmarkCommand
+
+alt invalid student index
+  UnmarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else invalid lesson index
+  UnmarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)
+else already unmarked
+  UnmarkCommand --> LogicManager : throw CommandException(MESSAGE_LESSON_ALREADY_UNMARKED)
+else allowed
+  UnmarkCommand -> Model : setPerson(personToUnmark, updatedPerson)
+  Model --> UnmarkCommand
+
+  create CommandResult
+  UnmarkCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> UnmarkCommand
+  deactivate CommandResult
+
+  UnmarkCommand --> LogicManager : result
+  deactivate UnmarkCommand
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
