@@ -109,6 +109,18 @@ public class EditCommandTest {
     }
 
     @Test
+    public void execute_duplicatePersonNameDifferentCaseAndWhitespace_failure() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        String nameWithDifferentCaseAndWhitespace = firstPerson.getName().fullName.replaceAll("\\s+", "").toLowerCase();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withName(nameWithDifferentCaseAndWhitespace).build();
+        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
+    }
+
+    @Test
     public void execute_duplicatePersonFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
