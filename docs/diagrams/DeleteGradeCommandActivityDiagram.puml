@@ -1,0 +1,25 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters command to delete a grade;
+:Logic parses index and subject-assessment;
+:Create and execute DeleteGradeCommand;
+if (Valid person index?) then (no)
+  :Display invalid index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+if (Grade exists?) then (no)
+  :Display grade not found error;
+  stop
+else (yes)
+  :Remove grade from person's grade list;
+  :Update person with modified grade list;
+  :Display success to user;
+  stop
+endif
+@enduml
+

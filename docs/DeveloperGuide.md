@@ -628,10 +628,9 @@ The `grade` command follows the standard command pattern of *parse → construct
 
 #### High-level flow
 
-1. User provides student index and one or more grade triplets.
-2. System validates index and parses each grade triplet.
-3. System detects and prevents duplicate subject-assessment pairs within the same command.
-4. System updates the student's grade list and confirms success.
+![Grade command activity](images/GradeCommandActivityDiagram.png)
+
+The activity diagram shows the user's journey: the tutor provides the student index and grade triplets, the system validates and checks for duplicates, then updates the grade list before confirming success.
 
 #### Parsing pipeline
 
@@ -647,9 +646,11 @@ The `grade` command follows the standard command pattern of *parse → construct
 
 Key classes: `GradeCommandParser`, `ParserUtil`, `Grade`.
 
-#### Execution behaviour
+![Grade command sequence](images/GradeCommandSequence.png)
 
-When `GradeCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `GradeCommandParser`, which validates and constructs the command.
+
+#### Execution behaviour
 
 1. Retrieves the target `Person` from the filtered list using the index.
 2. Guards against invalid indices by throwing `CommandException` if out of bounds.
@@ -694,10 +695,9 @@ The `delgrade` command follows the standard command pattern of *parse → constr
 
 #### High-level flow
 
-1. User provides student index and subject-assessment identifier.
-2. System validates index and parses the subject-assessment pair.
-3. System checks if the grade exists for the student.
-4. System removes the grade and confirms success.
+![Delete grade command activity](images/DeleteGradeCommandActivityDiagram.png)
+
+The activity diagram illustrates the flow for deleting a grade: validate index and format, check if grade exists, then remove and confirm.
 
 #### Parsing pipeline
 
@@ -711,9 +711,11 @@ The `delgrade` command follows the standard command pattern of *parse → constr
 
 Key classes: `DeleteGradeCommandParser`, `ParserUtil`.
 
-#### Execution behaviour
+![Delete grade command sequence](images/DeleteGradeCommandSequence.png)
 
-When `DeleteGradeCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `DeleteGradeCommandParser`, which validates and constructs the command.
+
+#### Execution behaviour
 
 1. Retrieves the target `Person` from the filtered list using the index.
 2. Guards against invalid indices by throwing `CommandException` if out of bounds.
@@ -759,10 +761,9 @@ The `filter` command follows the standard command pattern of *parse → construc
 
 #### High-level flow
 
-1. User provides one or more attribute filters.
-2. System parses each filter, extracting keys and values.
-3. System constructs an `AttributeContainsPredicate` with the filter criteria.
-4. System applies the predicate to the filtered list and displays matching students with a count.
+![Filter command activity](images/FilterCommandActivityDiagram.png)
+
+The activity diagram shows the user's journey: the tutor provides attribute filters, the system parses and validates them, then applies the predicate to display matching students.
 
 #### Parsing pipeline
 
@@ -778,9 +779,11 @@ The `filter` command follows the standard command pattern of *parse → construc
 
 Key classes: `FilterCommandParser`, `AttributeContainsPredicate`.
 
-#### Execution behaviour
+![Filter command sequence](images/FilterCommandSequence.png)
 
-When `FilterCommand#execute(Model)` is invoked, the command:
+The sequence diagram shows how control moves from `LogicManager` to `AddressBookParser` and finally to `FilterCommandParser`, which constructs the predicate and command.
+
+#### Execution behaviour
 
 1. Updates the filtered list predicate via `model.updateFilteredPersonList(predicate)`.
 2. Retrieves the filtered list size.
