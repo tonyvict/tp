@@ -59,6 +59,7 @@ else already unmarked
 else allowed
   UnmarkCommand -> Model : setPerson(personToUnmark, updatedPerson)
   Model --> UnmarkCommand
+  deactivate Model
 
   create CommandResult
   UnmarkCommand -> CommandResult

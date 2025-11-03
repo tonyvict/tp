@@ -59,6 +59,7 @@ else already marked
 else allowed
   MarkCommand -> Model : setPerson(personToMark, updatedPerson)
   Model --> MarkCommand
+  deactivate Model
 
   create CommandResult
   MarkCommand -> CommandResult
