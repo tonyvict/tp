@@ -1,0 +1,30 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters "unmark" command with indices;
+:Logic parses arguments into person and lesson indices;
+:Create and execute UnmarkCommand;
+if (Valid person index?) then (no)
+  :Display invalid person index error;
+  stop
+else (yes)
+  :Retrieve target person;
+endif
+if (Valid lesson index?) then (no)
+  :Display invalid lesson index error;
+  stop
+else (yes)
+  :Retrieve target lesson;
+endif
+if (Lesson already unmarked?) then (yes)
+  :Display "already unmarked" error;
+  stop
+else (no)
+  :Update lesson attendance in model;
+  :Format success message;
+  :Display success to user;
+  stop
+endif
+@enduml

@@ -169,22 +169,6 @@ When a user enters `help`, `LogicManager` instantiates `HelpCommand`. The comman
 - The window opens idempotently—the same command simply refocuses the existing help stage instead of spawning duplicates.
 - The `CommandResult` flagging approach keeps UI behaviour configurable without introducing UI dependencies into the logic layer.
 
-### Add Command
-
-#### What it does
-
-Creates a new student entry with core contact information and optional tags. This is the primary way tutors build the roster.
-
-#### Execution walkthrough
-
-`AddressBookParser` delegates `add` commands to `AddCommandParser`, which tokenises by CLI prefixes, validates each mandatory field, and constructs a `Person`. `AddCommand#execute(Model)` then checks for duplicates via `model.hasPerson`; if none are found, `model.addPerson` is called and a success message is returned.
-
-#### Design considerations
-
-- Input validation happens during parsing so users see errors before the model is mutated.
-- Duplicate detection relies on `Person#isSamePerson`, ensuring identity rules stay centralised in the model.
-- For a detailed diagrammatic breakdown, see the subsequent **Add Student Command** section.
-
 ### List Command
 
 #### What it does
@@ -323,6 +307,13 @@ Key classes: `AddCommand`, `Model`, `Messages`.
 - Missing or repeated mandatory prefixes trigger `ParseException` with usage guidance.
 - Invalid value formats (e.g., phone, email) are rejected by the respective domain constructors inside `ParserUtil`.
 - Duplicate students—based on the `Person#isSamePerson` identity definition—are blocked during execution.
+- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters excluding common characters like +, - and ().
+
+#### Design considerations
+
+- **Input validation**: Happens during parsing so users see errors before the model is mutated.
+- **Duplicate detection**: Ensures no two students with the same name can be added into the program.
+- **Flexibility**: Phone field allows alphanumeric values and special characters to allow users to add multiple phone numbers and organise them like: (Home) 1234 (Office) 3456. 
 
 ### Edit Student Command
 
@@ -383,6 +374,68 @@ Key classes: `EditCommand`, `Model`, `Messages`.
 - Missing optional fields trigger `MESSAGE_NOT_EDITED`.
 - Invalid indices reuse the shared index error message.
 - Identity conflicts are blocked before the model is mutated.
+
+### Remark Command
+
+#### What it does
+
+Appends a new remark to a student's existing remarks. Remarks are short, free-text notes that allow tutors to record important details, such as a student's progress or learning style. This command can also be used to clear all remarks.
+
+#### Parameters
+
+`remark INDEX r/REMARK [r/REMARK2]...`
+
+-   `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+-   `REMARK` — required. The text of the remark to add. Multiple `r/` prefixes can be used, and they will be joined together. If a single, empty `r/` is provided, all existing remarks for the student will be cleared.
+
+#### Overview
+
+The `remark` command follows the standard command pattern of *parse → construct command → execute on the model*. It provides a dedicated and straightforward way to manage textual notes for a student.
+
+#### High-level flow
+
+!Remark command activity
+
+The activity diagram shows the user's journey: the tutor provides the student index and the remark text, the system validates the input, and then updates the student's remark in the model before confirming success.
+
+#### Parsing pipeline
+
+!Remark command parser sequence
+
+The sequence diagram shows how `AddressBookParser` delegates to `RemarkCommandParser`. The parser:
+
+1.  Parses the `INDEX` from the command's preamble.
+2.  Extracts all `REMARK` text from one or more `r/` prefixes and joins them.
+3.  Uses `ParserUtil` to construct an `Index` object and a `Remark` object.
+4.  Instantiates and returns a fully initialised `RemarkCommand`.
+
+Key classes: `RemarkCommandParser`, `ParserUtil`, `Remark`.
+
+#### Execution behaviour
+
+!Remark command execution sequence
+
+The sequence diagram documents the runtime checks when `RemarkCommand#execute(Model)` is invoked. The command:
+
+1.  Retrieves the target `Person` from the filtered list using the person index.
+2.  Guards against an invalid index by throwing a `CommandException`.
+3.  Appends the new remark text to the existing remark, separated by a comma. If the existing remark is empty, it simply sets the new remark.
+4.  Creates a new `Person` object with the combined `Remark`.
+4.  Calls `model.setPerson(...)` to replace the old person object with the new one.
+5.  Returns a `CommandResult` with a success message.
+
+Key classes: `RemarkCommand`, `Model`, `Person`, `Remark`.
+
+#### Validation and error handling
+
+-   Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+-   Missing `r/` prefix throws a `ParseException` with usage guidance.
+
+#### Design Considerations
+
+-   **Immutability**: The command creates a new `Person` object with the updated `Remark` instead of mutating the existing one. This aligns with the functional programming paradigm and ensures predictable state management.
+-   **Append-by-Default**: The command appends new remarks by default. This design choice makes it easy to add running notes over time without accidentally overwriting previous entries.
+-   **Explicit Clear**: The ability to clear all remarks is handled by providing an empty `r/` prefix. This provides an intuitive and explicit way to remove notes, which is more user-friendly than requiring a separate `clear-remark` command.
 
 ### Delete Student Command
 
@@ -1417,7 +1470,22 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The score for MATH/WA1 updates to 90.
 
-### 6. Open and Close Student Cards
+### 6. Add/Clear Remarks
+
+**Command name**: `remark`
+
+**Purpose**: Add, append, or clear remarks for a student.
+
+**Steps to test**:
+1. Add an initial remark to the first student:
+   - `remark 1 r/Needs extra help with algebra`
+2. . Clear the remark for the same student:
+    - `remark 1 r/`
+
+**Expected**: The remark "Needs extra help with algebra" appears under the student's card. After clear remark, the remark for the student is cleared and no longer visible.
+
+
+### 7. Open and Close Student Cards
 
 **Command name**: `open` and `close`
 
@@ -1429,7 +1497,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
-### 7. Delete Attributes
+### 8. Delete Attributes
 
 **Command name**: `delattr`
 
@@ -1443,7 +1511,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: Only the `level` attribute is removed; `subject=Math` remains.
 
-### 8. Data Persistence Verification
+### 9. Data Persistence Verification
 
 **Purpose**: Confirm that data modifications are saved correctly after closing and reopening the application.
 
