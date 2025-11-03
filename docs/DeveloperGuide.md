@@ -1030,271 +1030,446 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-Each use case describes the internal control flow once a tutor submits a command via the CLI. Steps focus on interactions within the `Logic` and `Model` layers rather than user-visible messaging.
+### **UC01: Add attributes to a student**
 
-### **UC01: Enrich a student with attributes**
+**System:** ClassRosterPro\
+**Use Case:** UC01 - Add attributes to students\
+**Actor:** Tutor\
+**Preconditions:** None\
+**Guarantees:**
+  - Student is added to roster if all fields are valid and no duplicate exists
+  - Attributes are added to student if index is valid and attribute format is correct
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `addattr INDEX attr/KEY=VALUE...`.
+**MSS:**
 
-**Preconditions:**
-- `INDEX` resolves to an entry in the current filtered person list.
-- Each attribute string conforms to `key=value[,value2]...` validation rules.
-
-**Main Success Scenario:**
-1. `LogicManager` forwards the raw command string to `AddressBookParser`.
-2. `AddressBookParser` instantiates `TagCommandParser`, which tokenises the `attr/` prefixes and validates that at least one attribute was supplied.
-3. The parser builds a `TagCommand` containing the resolved `Index` and a set of `Attribute` objects.
-4. `TagCommand#execute(Model)` retrieves the filtered person list via `Model#getFilteredPersonList()` and resolves `INDEX`.
-5. The command merges the incoming attributes (overriding existing entries with the same key) and constructs a new immutable `Person`.
-6. `Model#setPerson(...)` persists the replacement, `Model#updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` refreshes the listing, and a success `CommandResult` is returned.
+1. Tutor enters add command with student details.
+2. ClassRosterPro validates all fields and adds the student.
+3. Tutor enters addattr command with index and attribute.
+4. ClassRosterPro adds the new attribute values to the student.\
+   Use case ends.
 
 **Extensions:**
-- 2a. Missing or malformed `attr/` prefixes → `TagCommandParser` raises `ParseException` with usage guidance.
-- 4a. `INDEX` is out of bounds → `TagCommand` raises `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)` and aborts.
+
+* 1a. Tutor enters invalid email/phone number.
+  * 1a1. ClassRosterPro shows error message and rejects the command.\
+    Use case ends.
+* 1b. Tutor enters duplicate contact.
+  * 1b1. ClassRosterPro shows error "This person already exists in the address book".\
+    Use case ends.
+* 3a. Tutor enters invalid index.
+  * 3a1. ClassRosterPro shows "The person index provided is invalid".\
+    Use case ends.
+* 3b.  Tutor enters invalid attribute format.
+  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.\
+    Use case ends.
+* a. At any time, Tutor enters exit command.
+    * a1. ClassRosterPro saves data and exits.\
+    Use case ends.
+---
+
+### **UC02 - Schedule Lesson for Student**
+
+**System:** ClassRosterPro\
+**Use Case:** UC02 - Schedule Lesson for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
+**Guarantees:** Lesson is scheduled if no overlaps/duplicates and all validations pass
+
+**MSS:**
+
+1. Tutor enters schedule command with lesson details.
+2. ClassRosterPro validates index, time format, date format, and time validity.
+3. ClassRosterPro checks for overlapping lessons on the same date.
+4. ClassRosterPro saves and confirms the lesson.\
+   Use case ends.
+
+**Extensions:**
+
+* 2a. ClassRosterPro detects invalid time format.
+  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".\
+    Use case ends.
+* 2b. ClassRosterPro detects invalid time values.
+  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".\
+    Use case ends.
+* 2c. ClassRosterPro detects invalid date format.
+   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".\
+     Use case ends.
+* 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
+   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".\
+     Use case ends.
+* 2e. ClassRosterPro detects end time ≤ start time.
+   * 2e1. ClassRosterPro shows "End time must be after start time".\
+     Use case ends.
+* 2f. ClassRosterPro detects missing required fields.
+   * 2f1. ClassRosterPro shows error message indicating which fields are missing.\
+     Use case ends.
+* 3a. ClassRosterPro detects lesson overlaps with existing lesson.
+   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".\
+     Use case ends.
+* 3b. ClassRosterPro detects duplicate lesson (exact match).
+   * 3b1. ClassRosterPro shows "This lesson already exists".\
+     Use case ends.
+---
+
+### **UC03 - Record Attendance for Lesson**
+
+**System:** ClassRosterPro\
+**Use Case:** UC03 - Record Attendance for Lesson\
+**Actor:** Tutor\
+**Preconditions:** Student exists with at least one scheduled lesson\
+**Guarantees:** Attendance is recorded if both indices are valid and lesson isn't already marked
+
+**MSS:**
+
+1. Tutor enters mark command with student index and lesson index.
+2. ClassRosterPro validates both indices.
+3. ClassRosterPro marks the lesson as attended.
+4. ClassRosterPro updates attendance count and confirms.\
+   Use case ends.
+
+**Extensions:**
+* 2a. ClassRosterPro detects invalid student index.
+  * 2a1. ClassRosterPro shows "Invalid person index".\
+    Use case ends.
+* 2b. ClassRosterPro detects invalid lesson index.
+  * 2b1. ClassRosterPro shows "Invalid lesson index".\
+    Use case ends.
+* 2c. ClassRosterPro detects lesson already marked.
+  * 2c1. ClassRosterPro shows "This lesson has already been marked".\
+    Use case ends.
 
 ---
 
-### **UC02: Schedule a lesson**
+### **UC04 - Record Grades for Student**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `schedule INDEX start/... end/... date/... [date2/...] sub/...`.
+**System:** ClassRosterPro\
+**Use Case:** UC04 - Record Grades for Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster\
+**Guarantees:**
+- Grades are saved with proper validation
+- Existing subject-assessment records are overwritten with new scores
+- Data integrity is maintained
 
-**Preconditions:**
-- `INDEX` refers to a `Person` in the current filtered list.
-- Time and date tokens conform to parser syntax.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` routes the command string to `AddressBookParser`.
-2. `AddressBookParser` constructs a `ScheduleCommandParser`, which tokenises required prefixes (`start/`, `end/`, `date/`, `sub/`) and validates optional `date2/`.
-3. The parser builds a `ScheduleCommand` containing the resolved `Index` and a `Lesson` built from the parsed values.
-4. `ScheduleCommand#execute(Model)` fetches the filtered list, resolves the target `Person`, and retrieves the `LessonList`.
-5. The command rejects duplicates via `LessonList#hasDuplicates` and overlapping intervals via `LessonList#hasOverlappingLesson`.
-6. A new `Person` with the appended lesson is created; `Model#setPerson` commits it and `Model#updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` resets the view.
-7. `ScheduleCommand` formats the success message using `Messages.format` and returns the `CommandResult`.
+1. Tutor enters grade command with student index and grade details.
+2. ClassRosterPro validates index and grade format.
+3. ClassRosterPro saves grades and confirms.\
+  Use case ends.
 
 **Extensions:**
-- 2a. Missing mandatory prefixes → `ScheduleCommandParser` throws `ParseException(MESSAGE_INVALID_COMMAND_FORMAT)`.
-- 3a. Invalid time/date tokens → parser raises the specific validation message (e.g., `MESSAGE_INVALID_START_TIME_FORMAT`).
-- 5a. Duplicate lesson detected → `CommandException(MESSAGE_DUPLICATE_LESSON)`.
-- 5b. Overlapping lesson detected → `CommandException(MESSAGE_OVERLAPPING_LESSON)`.
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid grade format.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
+* 2c. ClassRosterPro detects subject/assessment/score empty.
+   * 2c1. ClassRosterPro shows error message indicating missing components.\
+     Use case ends.
+* 2d. ClassRosterPro detects duplicate subject-assessment in command.
+   * 2d1. ClassRosterPro shows error message indicating duplicate grade detected.\
+     Use case ends.
+* 2e. ClassRosterPro detects invalid score value.
+   * 3a1. ClassRosterPro shows "Error saving grade data".\
+     Use case ends.
 
 ---
 
-### **UC03: Mark attendance for a lesson**
+### **UC04a - Delete Grade from Student**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `mark INDEX lesson/LESSON_INDEX`.
+**System:** ClassRosterPro\
+**Use Case:** UC04a - Delete Grade from Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster with at least one grade\
+**Guarantees:**
+- Grade is removed if index and subject-assessment are valid
+- Data integrity is maintained
+- Error message displayed if grade does not exist
 
-**Preconditions:**
-- The targeted student has at least one scheduled lesson.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` sends the command to `AddressBookParser`, which selects `MarkCommandParser` and resolves person/lesson indices.
-2. `MarkCommand#execute(Model)` retrieves the filtered list and resolves `INDEX`.
-3. The command fetches the student’s `LessonList`, resolves `LESSON_INDEX`, and confirms the lesson is currently unmarked.
-4. A new `Lesson` instance with `isPresent = true` is created, replacing the original lesson in a copied `LessonList`.
-5. A new `Person` containing the updated `LessonList` is constructed, `Model#setPerson` saves it, and a success `CommandResult` is emitted.
+1. Tutor enters delgrade command with student index and subject-assessment identifier.
+2. ClassRosterPro validates index and subject-assessment format.
+3. ClassRosterPro checks if the grade exists.
+4. ClassRosterPro removes the grade and confirms.\
+  Use case ends.
 
 **Extensions:**
-- 1a. Parser detects a missing `lesson/` prefix → `ParseException` terminates the flow.
-- 2a. Invalid student index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 3a. Invalid or out-of-range lesson index → `CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)`.
-- 3b. Lesson already marked → `CommandException(MESSAGE_LESSON_ALREADY_MARKED)`.
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid format (missing subject or assessment).
+   * 2b1. ClassRosterPro shows "Use sub/SUBJECT/ASSESSMENT".\
+     Use case ends.
+* 3a. ClassRosterPro detects grade does not exist.
+   * 3a1. ClassRosterPro shows "Grade not found".\
+     Use case ends.
+* 4a. ClassRosterPro encounters storage error during removal.
+   * 4a1. ClassRosterPro shows "Error removing grade data".\
+     Use case ends.
 
 ---
 
-### **UC04: Record grades for a student**
+### **UC05 - Unschedule Lesson**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [...]`.
+**System**: ClassRosterPro\
+**Use Case**: UC05 - Unschedule Lesson\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one scheduled lesson\
+**Guarantees**:
+- Lesson is removed if both indices are valid
+- Attendance records for the lesson are also removed
+- Data consistency is maintained
 
-**Preconditions:**
-- Grade tokens satisfy subject, assessment, and score validation rules.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` hands the raw input to `AddressBookParser`, which delegates to `GradeCommandParser`.
-2. The parser tokenises every `sub/` value, validates subject/assessment/score semantics, rejects duplicates within the command, and constructs a `GradeCommand`.
-3. `GradeCommand#execute(Model)` retrieves the filtered list, resolves `INDEX`, and produces a new `GradeList` by adding/updating each specified grade.
-4. A new `Person` containing the updated `GradeList` is created, `Model#setPerson` persists it, `Model#updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` resets the list, and the formatted result is returned.
+1. Tutor lists/filters students.
+2. Tutor enters unschedule command with student index and lesson index.
+3. ClassRosterPro validates both indices.
+4. ClassRosterPro removes the lesson and confirms.\
+  Use case ends.
 
 **Extensions:**
-- 2a. Any token fails validation (empty segments, invalid score, duplicate key) → parser raises `ParseException` with a targeted message.
-- 3a. Invalid `INDEX` → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
+
+* 1a. Tutor cannot find desired student in current view.
+   * 1a1. Tutor uses find or filter commands to locate student.\
+     Use case resumes from step 1.
+* 2a. Tutor enters invalid command format.
+   * 2a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 3a. ClassRosterPro detects student index out of bounds.
+   * 3a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3b. ClassRosterPro detects lesson index out of bounds.
+   * 3b1. ClassRosterPro shows "Invalid lesson index".\
+     Use case ends.
+* 3c. ClassRosterPro detects student has no lessons.
+   * 3c1. ClassRosterPro shows "The selected person has no lessons scheduled".\
+     Use case ends.
+* 4a. ClassRosterPro encounters data corruption in lesson records.
+   * 4a1. ClassRosterPro shows "Error accessing lesson data".\
+     Use case ends.
+* 4b. ClassRosterPro fails to remove lesson due to storage error.
+   * 4b1. ClassRosterPro shows "Error removing lesson data".\
+     Use case ends.
 
 ---
 
-### **UC05: Delete a recorded grade**
+### **UC06 - Delete Attributes from Student**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `delgrade INDEX sub/SUBJECT/ASSESSMENT`.
+**System**: ClassRosterPro\
+**Use Case**: UC06 - Delete Attributes from Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one attribute\
+**Guarantees**:
+- Specified attributes are removed if they exist
+- Non-existent attributes are ignored
+- Data integrity is maintained
 
-**Preconditions:**
-- The student identified by `INDEX` has the specified subject/assessment combination recorded.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` routes the command to `AddressBookParser`, which instantiates `DeleteGradeCommand`.
-2. `DeleteGradeCommand#execute(Model)` retrieves the filtered list and resolves `INDEX`.
-3. The command verifies that the grade exists via `GradeList#hasGrade`.
-4. A new `Person` is created with the grade removed, `Model#setPerson` saves it, and the success message is returned.
+1. Tutor enters delattr command with student index and attribute keys.
+2. ClassRosterPro validates index and attribute keys.
+3. ClassRosterPro removes the specified attributes and confirms.\
+   Use case ends.
 
 **Extensions:**
-- 2a. Invalid `INDEX` → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 3a. Requested grade not present → `CommandException(MESSAGE_GRADE_NOT_FOUND)`.
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects attribute doesn't exist.
+   * 2b1. ClassRosterPro shows "No matching attributes found".\
+     Use case ends.
+* 2c. ClassRosterPro detects multiple attributes specified.
+   * 2c1. ClassRosterPro removes all valid attributes and proceeds.\
+     Use case ends.
+* 2d. ClassRosterPro detects no attributes specified.
+   * 2d1. ClassRosterPro shows error "No attributes specified for deletion".\
+     Use case ends.
+* 3a. ClassRosterPro encounters storage error during removal.
+    * 3a1. ClassRosterPro shows "Error removing attribute data".\
+     Use case ends.
+---
+
+### **UC07 - Filter Students by Attributes**
+
+**System**: ClassRosterPro\
+**Use Case**: UC07 - Filter Students by Attributes\
+**Actor**: Tutor\
+**Preconditions**: None\
+**Guarantees**: Students matching filter criteria are displayed with count
+
+**MSS:**
+
+1. Tutor enters filter command with attribute criteria.
+2. ClassRosterPro applies filters using AND logic between attributes and OR logic within same attribute.
+3. ClassRosterPro displays filtered list with count.\
+   Use case ends.
+
+**Extensions:**
+
+* 1a. No students match filter criteria.
+   * 1a1. ClassRosterPro displays "0 students listed".\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid age value (non-integer).
+    * 2a1. ClassRosterPro shows error message.\
+     Use case ends.
+* 2b. ClassRosterPro detects no attr/ prefix provided.
+   * 2b1. ClassRosterPro shows "Incorrect format".\
+     Use case ends.
 
 ---
 
-### **UC06: Unschedule a lesson**
+### **UC08 - Search Student**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `unschedule INDEX lesson/LESSON_INDEX`.
+**System**: ClassRosterPro\
+**Use Case**: UC08 - Search Student\
+**Actor**: Tutor\
+**Preconditions**: None\
+**Guarantees**: Students matching search criteria in name, phone, or email are displayed
 
-**Preconditions:**
-- Target student has at least one scheduled lesson.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` forwards the command to `AddressBookParser`, which selects `UnscheduleCommandParser` and constructs an `UnscheduleCommand`.
-2. `UnscheduleCommand#execute(Model)` fetches the filtered list, resolves `INDEX`, and retrieves the student’s `LessonList`.
-3. The command confirms the lesson list is non-empty, resolves `LESSON_INDEX`, and removes the specified `Lesson`.
-4. A replacement `Person` is produced, `Model#setPerson` commits it, `Model#updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)` resets the list, and a success `CommandResult` is returned.
+1. Tutor types search query in search box.
+2. ClassRosterPro searches name, phone, and email fields in real-time.
+3. ClassRosterPro displays matching results.\
+   Use case ends.
 
 **Extensions:**
-- 2a. Invalid student index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 3a. Lesson list empty → `CommandException(MESSAGE_NO_LESSONS)`.
-- 3b. Invalid lesson index → `CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)`.
+
+* 1a. No matches found.
+   * 1a1. ClassRosterPro displays empty list.\
+     Use case ends.
+* 2a. Search query is cleared.
+   * 2a1. ClassRosterPro returns to full list.\
+     Use case ends.
 
 ---
 
-### **UC07: Remove attributes from a student**
+### **UC09 - Delete Student**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `delattr INDEX attr/KEY [...]`.
+**System**: ClassRosterPro\
+**Use Case**: UC09 - Delete Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster\
+**Guarantees**: Student is permanently removed from roster
 
-**Preconditions:**
-- Student has at least one attribute recorded.
+**MSS:**
 
-**Main Success Scenario:**
-1. `LogicManager` dispatches the command to `AddressBookParser`, which instantiates `DeleteAttributeCommandParser` (via the shared mechanism).
-2. The resulting `DeleteAttributeCommand` obtains the filtered list and resolves `INDEX`.
-3. Matched attribute keys are collected; a new `Person` without those attributes is constructed.
-4. `Model#setPerson` saves the replacement and a `CommandResult` summarises the removed keys.
+1. Tutor lists/filters students.
+2. Tutor enters delete command with student index.
+3. ClassRosterPro validates index and removes the contact.
+4. ClassRosterPro confirms deletion.\
+   Use case ends.
 
 **Extensions:**
-- 2a. Invalid `INDEX` → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 3a. No keys match → `CommandException(MESSAGE_NO_ATTRIBUTES_REMOVED)`.
+
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects index not a positive integer.
+   * 2b1. ClassRosterPro shows error message.\
+     Use case ends.
+
+---
+### **UC10 - Unmark Attendance for Lesson**
+
+**System**: ClassRosterPro\
+**Use Case**: UC10 - Unmark Attendance for Lesson\
+**Actor**: Tutor\
+**Preconditions**: Student exists with at least one scheduled lesson\
+**Guarantees**: Attendance record is updated to not attended
+
+**MSS:**
+
+1. Tutor filters/finds the student if needed.
+2. Tutor enters unmark command with student index and lesson index.
+3. ClassRosterPro validates both indices and marks the lesson as not attended.
+4. ClassRosterPro updates attendance count and confirms.
+   Use case ends.
+
+**Extensions:**
+
+* 2a. ClassRosterPro detects invalid student index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid lesson index.
+   * 2b1. ClassRosterPro shows "Invalid lesson index".\
+     Use case ends.
+* 2c. ClassRosterPro detects lesson already marked as not present.
+   * 2c1. ClassRosterPro shows "This lesson is already marked as not present".\
+     Use case ends.
 
 ---
 
-### **UC08: Filter students by attributes**
+### **UC11 - Open Student Contact Card**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `filter attr/KEY=VALUE [...]`.
+**System**: ClassRosterPro\
+**Use Case**: UC11 - Open Student Contact Card\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster with student card closed\
+**Guarantees**: Student card expands to show all details
 
-**Preconditions:**
-- At least one `attr/` prefix is supplied.
+**MSS:**
 
-**Main Success Scenario:**
-1. `AddressBookParser` recognises the `filter` command and builds an `AttributeContainsPredicate`.
-2. `FilterCommand#execute(Model)` calls `Model#updateFilteredPersonList(predicate)`.
-3. The filtered list now exposes only students matching the predicate and the command returns the count.
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters open command with student index.
+3. ClassRosterPro validates the index.
+4. ClassRosterPro expands the student card to show all details.\
+   Use case ends.
 
 **Extensions:**
-- 1a. No `attr/` prefixes detected → `ParseException(MESSAGE_INVALID_COMMAND_FORMAT)`.
+
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3a. ClassRosterPro detects student card is already open.
+   * 3a1. ClassRosterPro shows "Card is already open".\
+     Use case ends.
 
 ---
 
-### **UC09: Perform a quick search**
+### **UC-12: Close a student's contact card**
 
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `search KEYWORD [...]`.
+**System**: ClassRosterPro\
+**Use Case**: UC11 - Open Student Contact Card\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster with student card open\
+**Guarantees**:  Student card collapses to summary view
 
-**Preconditions:**
-- None (blank predicates are handled by the command).
+**MSS:**
 
-**Main Success Scenario:**
-1. `AddressBookParser` constructs a `PersonContainsKeywordPredicate` based on the supplied tokens.
-2. `SearchCommand#execute(Model)` applies the predicate via `Model#updateFilteredPersonList(predicate)`.
-3. The command inspects the resulting list size and returns either `MESSAGE_SEARCH_SUCCESS` or `MESSAGE_SEARCH_EMPTY`.
+1. Tutor lists/filters students to find the desired student.
+2. Tutor enters close command with student index.
+3. ClassRosterPro validates the index of the open card.
+4. ClassRosterPro collapses the student card to its summary view.\
+   Use case ends.
 
 **Extensions:**
-- None beyond the predicate returning zero matches (already handled in step 3).
+
+* 2a. ClassRosterPro detects index out of bounds.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 3a. ClassRosterPro detects student card is already closed.
+   * 3a1. ClassRosterPro shows "Card is already closed".\
+     Use case ends.
 
 ---
 
-### **UC10: Delete a student**
-
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `delete INDEX`.
-
-**Preconditions:**
-- `INDEX` refers to an entry in the current filtered list.
-
-**Main Success Scenario:**
-1. `AddressBookParser` instantiates `DeleteCommand` with the resolved index.
-2. `DeleteCommand#execute(Model)` fetches the filtered list, removes the targeted `Person` via `Model#deletePerson`, and returns a success message.
-
-**Extensions:**
-- 2a. Invalid index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-
----
-
-### **UC11: Unmark attendance for a lesson**
-
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `unmark INDEX lesson/LESSON_INDEX`.
-
-**Preconditions:**
-- Lesson exists and is currently marked as attended.
-
-**Main Success Scenario:**
-1. `AddressBookParser` produces an `UnmarkCommand`.
-2. The command resolves both indices via `Model#getFilteredPersonList()` and the student’s `LessonList`.
-3. The target lesson is replaced with a copy whose attendance flag is cleared.
-4. `Model#setPerson` stores the updated `Person` and a success `CommandResult` is returned.
-
-**Extensions:**
-- 2a. Invalid student index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 2b. Invalid lesson index → `CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)`.
-- 3a. Lesson already unmarked → `CommandException(MESSAGE_LESSON_ALREADY_UNMARKED)` (or equivalent constant).
-
----
-
-### **UC12: Open a student card**
-
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `open INDEX`.
-
-**Preconditions:**
-- Student card is currently collapsed.
-
-**Main Success Scenario:**
-1. `AddressBookParser` creates an `OpenCommand`.
-2. `OpenCommand#execute(Model)` resolves `INDEX` from the filtered list and checks the `expandedProperty`.
-3. When the card is closed, the command toggles the property to `true` and returns a success `CommandResult`.
-
-**Extensions:**
-- 2a. Invalid index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 2b. Card already open → `CommandException(MESSAGE_CARD_ALREADY_OPEN)`.
-
----
-
-### **UC13: Close a student card**
-
-**Primary Actor:** Tutor  
-**Trigger:** Submission of `close INDEX`.
-
-**Preconditions:**
-- Student card is currently expanded.
-
-**Main Success Scenario:**
-1. `AddressBookParser` instantiates `CloseCommand`.
-2. `CloseCommand#execute(Model)` resolves `INDEX`, verifies the card is open, flips the `expandedProperty` to `false`, and returns the result.
-
-**Extensions:**
-- 2a. Invalid index → `CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)`.
-- 2b. Card already closed → `CommandException(MESSAGE_CARD_ALREADY_CLOSED)`.
-
----
 ## **4. Non-Functional Requirements (NFRs)**
 
 | Category               | Requirement                                                                                                      |
