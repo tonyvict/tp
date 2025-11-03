@@ -57,13 +57,14 @@ public class PhoneTest {
 
     @Test
     public void containsNonStandardChars() {
-        // Only standard characters (digits, spaces, + - ( ) ) -> returns false
+        // Only digits -> returns false
         assertFalse(Phone.containsNonStandardChars("911"));
-        assertFalse(Phone.containsNonStandardChars("9312 1534"));
-        assertFalse(Phone.containsNonStandardChars("+65 12345678"));
-        assertFalse(Phone.containsNonStandardChars("(65) 1234-5678"));
+        assertFalse(Phone.containsNonStandardChars("1234567890"));
+        assertFalse(Phone.containsNonStandardChars("9312 1534")); // space
 
-        // Contains non-standard characters -> returns true
+        // Contains non-digit characters -> returns true
+        assertTrue(Phone.containsNonStandardChars("+6512345678")); // +
+        assertTrue(Phone.containsNonStandardChars("(911)")); // ()
         assertTrue(Phone.containsNonStandardChars("phone")); // alphabets
         assertTrue(Phone.containsNonStandardChars("9011p041")); // alphabet within digits
         assertTrue(Phone.containsNonStandardChars("911#")); // special character #
