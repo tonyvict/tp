@@ -442,6 +442,103 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 - **No-op avoidance**: Invalid indices abort before mutating state, ensuring that errors never partially modify the model.
 - **Filter awareness**: Deletion relies on the currently filtered list; the command intentionally removes the entry without resetting filters so tutors can continue working within the same subset.
 
+### Schedule Lesson Command
+
+#### What it does
+
+Adds a lesson block to a student, supporting both same-day and cross-day sessions. Optional grade/attendance data remain untouched.
+
+#### Parameters
+
+`schedule INDEX start/START_TIME end/END_TIME date/START_DATE [date2/END_DATE] sub/SUBJECT`
+
+- `INDEX` — required, 1-based. Refers to the student in the current filtered list.
+- `start/`, `end/` — required. 24-hour `HH:mm` start and end times.
+- `date/` — required. ISO `YYYY-MM-DD` start date.
+- `date2/` — optional. When supplied, indicates the lesson ends on a different date; otherwise the start date is reused.
+- `sub/` — required. Free-form subject label.
+
+#### Overview
+
+The command mirrors the typical *parse → instantiate command → execute on model* pipeline, extending lesson creation to overnight slots.
+
+#### High-level flow
+
+![Schedule command activity](images/ScheduleCommandActivityDiagram.png)
+
+The diagram shows the tutor supplying index/time/date information, with validation of both indices and temporal overlap before committing the change.
+
+#### Execution behaviour
+
+![Schedule command execution sequence](images/ScheduleCommandExecuteSequence.png)
+
+Runtime steps:
+
+1. Retrieve the filtered student list and validate the `INDEX`.
+2. Reject duplicates via `LessonList#hasDuplicates`.
+3. Reject overlapping intervals via `LessonList#hasOverlappingLesson` (across start/end dates).
+4. Append the new `Lesson`, update the `Person`, and reset the filtered list to show all students.
+5. Format a success message through `Messages.format`.
+
+Key classes: `ScheduleCommand`, `Lesson`, `LessonList`, `Model`, `Messages`.
+
+#### Validation and error handling
+
+- Invalid student indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- End date/time must be strictly after the start; violations throw `ScheduleCommandParser.MESSAGE_END_BEFORE_START`.
+- Duplicate or overlapping lessons throw `MESSAGE_DUPLICATE_LESSON` / `MESSAGE_OVERLAPPING_LESSON` respectively.
+
+#### Design considerations
+
+- **Cross-day support**: The optional `date2/` parameter allows overnight lessons without complicating same-day usage.
+- **Immutable updates**: A new `Person` with an updated `LessonList` is created, preserving snapshot-based reasoning.
+- **Global visibility**: The command intentionally resets the listing to ensure the newly scheduled lesson is visible even if the tutor was previously filtering the roster.
+
+### Unschedule Lesson Command
+
+#### What it does
+
+Removes a specific lesson from a student, identified via the current filtered list and lesson index.
+
+#### Parameters
+
+`unschedule INDEX lesson/LESSON_INDEX`
+
+- `INDEX` — required, 1-based student index within the filtered view.
+- `lesson/` — required, 1-based index into the student's lesson list.
+
+#### Overview
+
+The command follows the same three-phase architecture—parsing, command creation, model mutation—as other list-manipulation commands.
+
+#### High-level flow
+
+![Unschedule command activity](images/UnscheduleCommandActivityDiagram.png)
+
+The activity diagram shows the tutor supplying the student and lesson indices, the system validating both, and the lesson removal that follows when the indices are valid.
+
+#### Execution behaviour
+
+1. Resolve the student by `INDEX`, throwing `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX` on failure.
+2. Resolve the lesson by `LESSON_INDEX`; invalid values trigger `MESSAGE_INVALID_LESSON_DISPLAYED_INDEX`.
+3. Remove the lesson via `LessonList#remove(...)` and construct a replacement `Person`.
+4. Call `model.setPerson(...)`, reset the filtered list, and emit a success message.
+
+![Unschedule command execution sequence](images/UnscheduleCommandSequence.png)
+
+Key classes: `UnscheduleCommand`, `LessonList`, `Model`, `Messages`.
+
+#### Validation and error handling
+
+- Out-of-range student or lesson indices produce the shared index error messages.
+- Attempting to unschedule when the student has no lessons results in `MESSAGE_NO_LESSONS`.
+
+#### Design considerations
+
+- **Symmetry with scheduling**: Shares the same lesson resolution and immutability patterns, keeping the mental model consistent.
+- **Safety checks**: Defensive guards ensure lessons cannot be removed from students lacking any scheduled sessions.
+- **Global visibility**: Resets the predicate after removal so tutors can immediately see the updated roster without hidden state.
+
 ### Mark Student Attendance Command
 
 #### What it does
@@ -735,6 +832,8 @@ It uses a dedicated predicate, `PersonContainsKeywordPredicate`, which encapsula
 
 #### High-level flow
 
+![Search command activity](images/SearchCommandActivityDiagram.png)
+
 1. The tutor enters a `search` command with one or more keywords in the Command Box.
 2. `LogicManager` forwards the input string to `AddressBookParser` for processing.
 3. `AddressBookParser` identifies the command word `search` and delegates parsing to `SearchCommandParser`.
@@ -746,6 +845,8 @@ It uses a dedicated predicate, `PersonContainsKeywordPredicate`, which encapsula
 9. The command returns a `CommandResult` summarising how many students were found.
 
 #### Execution behaviour
+
+![Search command execution sequence](images/SearchCommandSequence.png)
 
 The sequence diagram captures the flow of `SearchCommand#execute(Model)`:
 
