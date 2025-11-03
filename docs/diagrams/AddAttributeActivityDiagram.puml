@@ -1,0 +1,22 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User enters command to add attribute;
+:Execute add attribute command;
+if () then ([invalid index])
+:Display invalid index error;
+stop
+else ([valid index])
+endif
+if () then ([invalid command format])
+:Display invalid command format;
+stop
+else ([valid command format])
+endif
+:Add or override new attribute(s);
+:Show updated contact list;
+:Display success message to user;
+stop
+@enduml

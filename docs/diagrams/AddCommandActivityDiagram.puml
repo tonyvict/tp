@@ -3,13 +3,13 @@ skin rose
 skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
 start
-:User enters "add" command;
+:User enters command to add person;
 :Logic parses arguments into Person;
 :Create and execute AddCommand;
-if (Duplicate person?) then (yes)
+if () then ([isDuplicatePerson])
   :Display duplicate person error;
   stop
-else (no)
+else ([else])
   :Add person to model;
   :Format success message;
   :Display success to user;

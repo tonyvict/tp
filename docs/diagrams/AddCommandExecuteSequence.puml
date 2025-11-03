@@ -1,31 +1,35 @@
 @startuml
-' Add command execution sequence
-' Mirrors code in
-' - src/main/java/seedu/address/logic/LogicManager.java
-' - src/main/java/seedu/address/logic/commands/AddCommand.java
-' - src/main/java/seedu/address/model/Model.java
+!include ./style.puml
+skinparam ArrowFontStyle plain
 
-skinparam monochrome true
-skinparam shadowing false
-skinparam sequenceArrowThickness 1
-skinparam sequenceParticipant underline
 
-participant "Logic\\n(LogicManager)" as LM
-participant "AddCommand" as AC <<command>>
-participant Model as M
-participant Messages as MSG
+Participant ":LogicManager" as logic LOGIC_COLOR
+Participant ":AddressBookParser" as abp LOGIC_COLOR
+Participant "command:AddCommandParser" as acp LOGIC_COLOR
+Participant "command:AddCommand" as ac LOGIC_COLOR
+Participant ":Model" as model MODEL_COLOR
 
-LM -> AC : execute(model)
-activate AC
-AC -> AC : requireNonNull(model)
-AC -> M : hasPerson(toAdd)
-M --> AC : true/false
+
+[-> logic : execute
+activate logic
+logic -> abp ++: parseCommand(commandText)
+create acp
+abp -> acp ++
+create ac
+acp -> ac
+activate ac
+
+
 alt duplicate person
-  AC --> LM : throw CommandException("This person already exists...")
+ac --> abp : throw CommandException
 else not duplicate
-  AC -> M : addPerson(toAdd)
-  AC -> MSG : format(toAdd)
-  MSG --> AC : formatted string
-  AC --> LM : CommandResult("New person added: %1$s")
+ac -> model : addPerson(toAdd)
+ac -> ac : formatResult(toAdd)
+ac --> acp --
+acp --> abp --
+abp --> logic -- : command
 end
+destroy ac
+destroy acp
+
 @enduml

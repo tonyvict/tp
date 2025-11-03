@@ -1,0 +1,27 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:User enters command to add a remark;
+:Execute add remark command;
+
+if () then ([invalid index])
+  :Display invalid index error;
+  stop
+else ([valid index])
+endif
+
+if () then ([empty remark])
+  :Display invalid command format;
+  stop
+else ([non-empty remark])
+endif
+
+:Add or update remark for selected person;
+:Show updated contact list;
+:Display success message to user;
+stop
+
+@enduml

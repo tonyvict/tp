@@ -1,0 +1,45 @@
+@startuml
+!include ./style.puml
+skinparam ArrowFontStyle plain
+
+
+Participant ":LogicManager" as logic LOGIC_COLOR
+Participant ":AddressBookParser" as abp LOGIC_COLOR
+Participant "command:TagCommandParser" as tcp LOGIC_COLOR
+Participant "command:TagCommand" as tc LOGIC_COLOR
+Participant ":Model" as model MODEL_COLOR
+
+
+[-> logic : execute
+activate logic
+logic -> abp ++: parseCommand(commandText)
+create tcp
+abp -> tcp ++: parse(arguments)
+create tc
+tcp -> tc
+activate tc
+
+
+tc -> model : getFilteredPersonList()
+model --> tc -- : List<Person>
+
+
+alt invalid index
+tc --> abp : throw CommandException
+else valid index
+tc -> tc : createTaggedPerson(personToEdit, attributesToAdd)
+note right of tc
+For each Attribute key:
+- update existing key if present
+- add new key,value(s) if absent
+end note
+tc -> model : setPerson(personToEdit, editedPerson)
+tc -> model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+tc --> tcp --
+tcp --> abp --
+abp --> logic -- : command
+end
+destroy tc
+destroy tcp
+
+@enduml

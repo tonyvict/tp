@@ -1,0 +1,44 @@
+@startuml
+!include ./style.puml
+skinparam ArrowFontStyle plain
+
+
+Participant ":LogicManager" as logic LOGIC_COLOR
+Participant ":AddressBookParser" as abp LOGIC_COLOR
+Participant "command:RemarkCommandParser" as rcp LOGIC_COLOR
+Participant "command:RemarkCommand" as rc LOGIC_COLOR
+Participant ":Model" as model MODEL_COLOR
+
+
+[-> logic : execute
+activate logic
+logic -> abp ++: parseCommand(commandText)
+create rcp
+abp -> rcp ++: parse(arguments)
+create rc
+rcp -> rc
+activate rc
+
+
+' Fetch list and validate index
+rc -> model : getFilteredPersonList()
+model --> rc -- : List<Person>
+
+
+
+alt invalid index
+rc --> abp  : throw CommandException
+else valid index
+rc -> rc : personToEdit = list.get(index)
+rc -> rc : editedPerson = createPersonWithNewRemark(personToEdit, remark)
+rc -> model : setPerson(personToEdit, editedPerson)
+rc -> model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+rc -> rc : formatResult(editedPerson)
+rc --> rcp --
+rcp --> abp --
+end
+abp --> logic -- : command
+destroy rc
+destroy rcp
+
+@enduml

@@ -3,24 +3,24 @@ skin rose
 skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
 start
-:User enters "edit" command;
+:User enters command to edit person;
 :Logic parses index and optional fields;
-if (Any field provided?) then (no)
+if () then ([empty fiield])
   :Display error about missing fields;
   stop
-else (yes)
+else ([non-empty field])
   :Create and execute EditCommand;
 endif
-if (Valid person index?) then (no)
+if () then ([invalid person index])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid person index])
   :Retrieve target person;
 endif
-if (Duplicate identity after edits?) then (yes)
+if () then ([is duplicate person])
   :Display duplicate person error;
   stop
-else (no)
+else ([else])
   :Apply edits and refresh list;
   :Display success to user;
   stop
