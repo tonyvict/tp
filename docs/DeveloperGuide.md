@@ -1,13 +1,11 @@
 ---
 layout: page
-title: Developer Guide
----
----
-layout: page
 title: ClassRosterPro Developer Guide
 ---
+
 * Table of Contents
 {:toc}
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
