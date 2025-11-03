@@ -1684,9 +1684,10 @@ This section provides guidance to manually verify the new or modified features o
   - `schedule 1 start/23:00 end/01:00 date/2025-11-02 date2/2025-11-03 sub/Science`
 
 **Expected**: A cross-day lesson entry appears after scheduling command in the expanded student card.
+
 ---
 
-## Appendix: Planned Enhancements
+## **Appendix: Planned Enhancements**
 
 ### Team Size : 5
 
@@ -1704,9 +1705,15 @@ This section provides guidance to manually verify the new or modified features o
 
 7. Preserve search results across commands: Executing follow-up commands such as `edit` or `schedule` resets the roster to show all students. We plan to retain the active predicate so tutors stay within their filtered context.
 
+8. Redesign the grade command syntax so each element uses a dedicated prefix (e.g., `subject/`, `assessment/`, `score/`). This will simplify parsing, reduce delimiter bugs, and make future validation clearer.
+
+9. Tighten grade score validation (e.g., reject negative or out-of-range values) so that only sensible numeric scores are persisted.
+
+10. Relax the current identity rule that treats names as unique. Allow tutors to add students who share the same name but differ in other identifying fields (phone/email), while ensuring downstream features continue to resolve identity correctly.
+
 ---
 
-## Appendix: Effort
+## **Appendix: Effort**
 
 **Difficulty relative to AB3**: ClassRosterPro extends beyond the single-entity focus of AB3 (persons) by layering additional aggregates—lessons, attendance, grades, attributes, and remarks—onto each student record. Every command must resolve and update nested structures while preserving immutability, which increases cognitive load and testing effort. Features such as cross-day scheduling, contextual filtering, and bulk attribute manipulation required more complex validation and data transformations than AB3’s straightforward CRUD operations.
 
