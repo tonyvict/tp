@@ -1,0 +1,86 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GradeCommandParser" as GradeCommandParser LOGIC_COLOR
+participant "g:GradeCommand" as GradeCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("grade 1 sub/MATH/WA1/89...")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("grade 1 sub/MATH/WA1/89...")
+activate AddressBookParser
+
+create GradeCommandParser
+AddressBookParser -> GradeCommandParser
+activate GradeCommandParser
+GradeCommandParser --> AddressBookParser
+deactivate GradeCommandParser
+
+AddressBookParser -> GradeCommandParser : parse("1 sub/MATH/WA1/89...")
+activate GradeCommandParser
+
+alt duplicate grade detected
+  GradeCommandParser --> LogicManager : throw ParseException("Duplicate grade detected...")
+  deactivate GradeCommandParser
+else invalid format
+  GradeCommandParser --> LogicManager : throw ParseException("Incorrect format...")
+  deactivate GradeCommandParser
+else valid
+  create GradeCommand
+  GradeCommandParser -> GradeCommand
+  activate GradeCommand
+  GradeCommand --> GradeCommandParser : g
+  deactivate GradeCommand
+
+  GradeCommandParser --> AddressBookParser : g
+  deactivate GradeCommandParser
+  'Hidden arrow to position the destroy marker below the end of the activation bar.
+  GradeCommandParser -[hidden]-> AddressBookParser
+  destroy GradeCommandParser
+
+  AddressBookParser --> LogicManager : g
+  deactivate AddressBookParser
+
+  LogicManager -> GradeCommand : execute(m)
+  activate GradeCommand
+
+  GradeCommand -> Model : getFilteredPersonList()
+  activate Model
+  Model --> GradeCommand
+
+  alt invalid index
+    GradeCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+    deactivate GradeCommand
+  else valid
+    GradeCommand -> Model : setPerson(personToEdit, editedPerson)
+    Model --> GradeCommand
+
+    GradeCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+    Model --> GradeCommand
+    deactivate Model
+
+    create CommandResult
+    GradeCommand -> CommandResult
+    activate CommandResult
+    CommandResult --> GradeCommand
+    deactivate CommandResult
+
+    GradeCommand --> LogicManager : r
+    deactivate GradeCommand
+  end
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
+
