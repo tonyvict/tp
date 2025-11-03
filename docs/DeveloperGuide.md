@@ -1026,41 +1026,33 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **3. Representative Use Cases**
 
-### **UC01: Add attributes to a student**
+### **UC01: Add a student**
 
 **System:** ClassRosterPro\
-**Use Case:** UC01 - Add attributes to students\
+**Use Case:** UC01 - Add student\
 **Actor:** Tutor\
 **Preconditions:** None\
 **Guarantees:**
   - Student is added to roster if all fields are valid and no duplicate exists
-  - Attributes are added to student if index is valid and attribute format is correct
 
 **MSS:**
 
 1. Tutor enters command to add student with corresponding student details.
-2. ClassRosterPro validates all fields and adds the student.
-3. Tutor enters command to add attribute with corresponding key and values.
-4. ClassRosterPro adds the new attribute values to the student successfully.\
+2. ClassRosterPro adds the student successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 1a. Tutor enters invalid email/phone number.
-  * 1a1. ClassRosterPro shows error message and rejects the command.\
-    Use case ends.
-* 1b. Tutor enters duplicate contact.
+* 1a. ClassRosterPro detects invalid index.
+    * 1a1. ClassRosterPro shows error message for invalid index\
+      Use case ends.
+* 1b. ClassRosterPro detects invalid student details.
   * 1b1. ClassRosterPro shows error message.\
     Use case ends.
-* 3a. Tutor enters invalid index.
-  * 3a1. ClassRosterPro shows error message for invalid index\
+* 1c. ClassRosterPro detects duplicate contact.
+  * 1c1. ClassRosterPro shows error message.\
     Use case ends.
-* 3b.  Tutor enters invalid attribute format.
-  * 3b1. ClassRosterPro shows error message for incorrect format.\
-    Use case ends.
-* a. At any time, Tutor enters command to exit.
-    * a1. ClassRosterPro saves data and exits.\
-    Use case ends.
+
 ---
 
 ### **UC02 - Schedule Lesson for Student**
@@ -1074,36 +1066,34 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters command to schedule lesson with corresponding lesson details.
-2. ClassRosterPro validates input parameters.
-3. ClassRosterPro checks for overlapping lessons on the same date.
-4. ClassRosterPro schedules the lesson successfully.\
+2. ClassRosterPro schedules the lesson successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 2a. ClassRosterPro detects invalid time format.
-  * 2a1. ClassRosterPro shows error message for incorrect format.\
+* 1a. ClassRosterPro detects invalid time format.
+  * 1a1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
-* 2b. ClassRosterPro detects invalid time values.
-  * 2b1. ClassRosterPro shows error message for incorrect format.\
+* 1b. ClassRosterPro detects invalid time values.
+  * 1b1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
-* 2c. ClassRosterPro detects invalid date format.
-   * 2c1. ClassRosterPro shows error message for incorrect format.\
+* 1c. ClassRosterPro detects invalid date format.
+   * 1c1. ClassRosterPro shows error message for incorrect format.\
      Use case ends.
-* 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
-   * 2d1. ClassRosterPro shows error message for invalid date.\
+* 1d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
+   * 1d1. ClassRosterPro shows error message for invalid date.\
      Use case ends.
-* 2e. ClassRosterPro detects end time ≤ start time.
-   * 2e1. ClassRosterPro shows error message for invalid end time.\
+* 1e. ClassRosterPro detects end time ≤ start time.
+   * 1e1. ClassRosterPro shows error message for invalid end time.\
      Use case ends.
-* 2f. ClassRosterPro detects missing required fields.
-   * 2f1. ClassRosterPro shows error message indicating which fields are missing.\
+* 1f. ClassRosterPro detects missing required fields.
+   * 1f1. ClassRosterPro shows error message indicating which fields are missing.\
      Use case ends.
-* 3a. ClassRosterPro detects lesson overlaps with existing lesson.
-   * 3a1. ClassRosterPro shows error message for lesson duplication.\
+* 1g. ClassRosterPro detects lesson overlaps with existing lesson.
+   * 1g1. ClassRosterPro shows error message for overlapping lesson.\
      Use case ends.
-* 3b. ClassRosterPro detects duplicate lesson (exact match).
-   * 3b1. ClassRosterPro shows error message for existing lesson.\
+* 1h. ClassRosterPro detects duplicate lesson.
+   * 1h1. ClassRosterPro shows error message for lesson duplication.\
      Use case ends.
 ---
 
@@ -1118,20 +1108,18 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters command to mark a lesson with the corresponding student index and lesson index.
-2. ClassRosterPro validates both indices.
-3. ClassRosterPro marks the lesson as attended.
-4. ClassRosterPro updates attendance count successfully.\
+2. ClassRosterPro updates attendance count successfully.\
    Use case ends.
 
 **Extensions:**
-* 2a. ClassRosterPro detects invalid student index.
-  * 2a1. ClassRosterPro shows error message for invalid index.\
+* 1a. ClassRosterPro detects invalid student index.
+  * 1a1. ClassRosterPro shows error message for invalid index.\
     Use case ends.
-* 2b. ClassRosterPro detects invalid lesson index.
-  * 2b1. ClassRosterPro shows error message for invalid index.\
+* 1b. ClassRosterPro detects invalid lesson index.
+  * 1b1. ClassRosterPro shows error message for invalid index.\
     Use case ends.
-* 2c. ClassRosterPro detects lesson already marked.
-  * 2c1. ClassRosterPro shows error message for marked lesson.\
+* 1c. ClassRosterPro detects lesson already marked.
+  * 1c1. ClassRosterPro shows error message for marked lesson.\
     Use case ends.
 
 ---
@@ -1150,8 +1138,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters command to record grade with corresponding student index and grade details.
-2. ClassRosterPro validates index and grade format.
-3. ClassRosterPro records grades successfully.\
+2. ClassRosterPro records grades successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1159,20 +1146,20 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 1a. Tutor enters invalid command format.
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
-* 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows error message for invalid index.\
+* 1b. ClassRosterPro detects invalid index.
+   * 1b1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
-* 2b. ClassRosterPro detects invalid grade format.
-   * 2b1. ClassRosterPro shows error message for invalid format.\
+* 1c. ClassRosterPro detects invalid grade format.
+   * 1c1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
-* 2c. ClassRosterPro detects invalid subject-assessment format.
-   * 2c1. ClassRosterPro shows error message indicating missing components.\
+* 1d. ClassRosterPro detects invalid subject-assessment format.
+   * 1d1. ClassRosterPro shows error message indicating missing components.\
      Use case ends.
-* 2d. ClassRosterPro detects duplicate subject-assessment in command.
-   * 2d1. ClassRosterPro shows error message indicating duplicate grade detected.\
+* 1e. ClassRosterPro detects duplicate subject-assessment in command.
+   * 1e1. ClassRosterPro shows error message indicating duplicate grade detected.\
      Use case ends.
-* 2e. ClassRosterPro detects invalid score value.
-   * 2e1. ClassRosterPro shows error message for invalid score value.\
+* 1f. ClassRosterPro detects invalid score value.
+   * 1f1. ClassRosterPro shows error message for invalid score value.\
      Use case ends.
 
 ---
@@ -1191,9 +1178,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters command to delete grade with corresponding student index and subject-assessment details.
-2. ClassRosterPro validates index and subject-assessment format.
-3. ClassRosterPro checks if the grade exists.
-4. ClassRosterPro removes the grade successfully.\
+2. ClassRosterPro removes the grade successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1201,17 +1186,14 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 1a. Tutor enters invalid command format.
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
-* 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows error message for invalid index.\
+* 1b. ClassRosterPro detects invalid index.
+   * 1b1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
-* 2b. ClassRosterPro detects invalid format (missing subject or assessment).
-   * 2b1. ClassRosterPro shows error message for invalid format.\
+* 1c. ClassRosterPro detects invalid subject-assessment format.
+   * 1c1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
-* 3a. ClassRosterPro detects grade does not exist.
-   * 3a1. ClassRosterPro shows error message for grade not found.\
-     Use case ends.
-* 4a. ClassRosterPro encounters storage error during removal.
-   * 4a1. ClassRosterPro shows error message for removing grade data.\
+* 1d. ClassRosterPro detects grade does not exist.
+   * 1d1. ClassRosterPro shows error message for grade not found.\
      Use case ends.
 
 ---
@@ -1229,10 +1211,9 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor views list of students.
+1. Tutor enters command to view list of students.
 2. Tutor enters command to unschedule lesson with corresponding student index and lesson index.
-3. ClassRosterPro validates both indices.
-4. ClassRosterPro removes the lesson successfully.\
+3. ClassRosterPro removes the lesson successfully.\
   Use case ends.
 
 **Extensions:**
@@ -1240,31 +1221,59 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 1a. Tutor cannot find desired student in current view.
    * 1a1. Tutor uses find or filter commands to locate student.\
      Use case resumes from step 1.
-* 2a. Tutor enters invalid command format.
+* 2a. ClassRosterPro detects invalid command format.
    * 2a1. ClassRosterPro shows correct usage format.\
      Use case ends.
-* 3a. ClassRosterPro detects invalid student index.
-   * 3a1. ClassRosterPro shows error message for invalid student index.\
+* 2b. ClassRosterPro detects invalid student index.
+   * 2b1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
-* 3b. ClassRosterPro detects invalid lesson index.
-   * 3b1. ClassRosterPro shows error message for invalid lesson index.\
+* 2c. ClassRosterPro detects invalid lesson index.
+   * 2c1. ClassRosterPro shows error message for invalid lesson index.\
      Use case ends.
-* 3c. ClassRosterPro detects student has no lessons.
-   * 3c1. ClassRosterPro shows error message for no lessons scheduled.\
+* 2d. ClassRosterPro detects student has no lessons.
+   * 2d1. ClassRosterPro shows error message for no lessons scheduled.\
      Use case ends.
-* 4a. ClassRosterPro encounters data corruption in lesson records.
-   * 4a1. ClassRosterPro shows error message for accessing lesson data.\
-     Use case ends.
-* 4b. ClassRosterPro fails to remove lesson due to storage error.
-   * 4b1. ClassRosterPro shows error message for removing lesson data.\
-     Use case ends.
+
+
 
 ---
 
-### **UC06 - Delete Attributes from Student**
+### **UC06 - Add Attributes to Student**
 
 **System**: ClassRosterPro\
-**Use Case**: UC06 - Delete Attributes from Student\
+**Use Case**: UC06 - Add Attributes to Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists in the roster\
+**Guarantees**:
+- Specified attributes are added or updated for the selected student.
+- If the same key already exists, its values are replaced with the new ones.
+- Data integrity is maintained
+
+**MSS:**
+
+1. Tutor enters the command to add attributes to a student with the corresponding index and attribute details.
+2. ClassRosterPro adds or updates the attributes for the student successfully.\
+   Use case ends.
+
+**Extensions:**
+
+* 1a. Tutor enters invalid command format.
+    * 1a1. ClassRosterPro shows correct usage format.\
+      Use case ends.
+* 1b. ClassRosterPro detects invalid index.
+    * 1b1. ClassRosterPro shows error message for invalid index.\
+      Use case ends.
+* 1c. ClassRosterPro detects no attributes specified.
+    * 1c1. ClassRosterPro shows error message for no attributes specified.\
+      Use case ends.
+
+
+---
+
+### **UC07 - Delete Attributes from Student**
+
+**System**: ClassRosterPro\
+**Use Case**: UC07 - Delete Attributes from Student\
 **Actor**: Tutor\
 **Preconditions**: Student exists with at least one attribute\
 **Guarantees**:
@@ -1274,9 +1283,8 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters command to delete attribute with corresponding student index and attribute keys.
-2. ClassRosterPro validates index and attribute keys.
-3. ClassRosterPro removes the specified attributes successfully.\
+1. Tutor enters command to delete student's attribute with corresponding student index and attribute keys.
+2. ClassRosterPro removes the specified attributes successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1284,27 +1292,25 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 1a. Tutor enters invalid command format.
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
-* 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows error message for invalid index.\
+* 1b. ClassRosterPro detects invalid index.
+   * 1b1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
-* 2b. ClassRosterPro detects attribute doesn't exist.
-   * 2b1. ClassRosterPro shows error message for no matching attributes found.\
+* 1c. ClassRosterPro detects attribute doesn't exist.
+   * 1c1. ClassRosterPro shows error message for no matching attributes found.\
      Use case ends.
-* 2c. ClassRosterPro detects multiple attributes specified.
-   * 2c1. ClassRosterPro removes all valid attributes and proceeds.\
+* 1d. ClassRosterPro detects multiple attributes specified.
+   * 1d1. ClassRosterPro removes all valid attributes and proceeds.\
      Use case ends.
-* 2d. ClassRosterPro detects no attributes specified.
-   * 2d1. ClassRosterPro shows error message for no attributes specified.\
+* 1e. ClassRosterPro detects no attributes specified.
+   * 1e1. ClassRosterPro shows error message for no attributes specified.\
      Use case ends.
-* 3a. ClassRosterPro encounters storage error during removal.
-    * 3a1. ClassRosterPro shows error message for removing attribute data.\
-     Use case ends.
+  
 ---
 
-### **UC07 - Filter Students by Attributes**
+### **UC08 - Filter Students by Attributes**
 
 **System**: ClassRosterPro\
-**Use Case**: UC07 - Filter Students by Attributes\
+**Use Case**: UC08 - Filter Students by Attributes\
 **Actor**: Tutor\
 **Preconditions**: None\
 **Guarantees**: Students matching filter criteria are displayed with count
@@ -1312,28 +1318,24 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters command to filter with corresponding attribute criteria.
-2. ClassRosterPro applies filters and validates input parameters.
-3. ClassRosterPro displays filtered list successfully.\
+2. ClassRosterPro applies filter and displays filtered list successfully.\
    Use case ends.
 
 **Extensions:**
+* 1a. ClassRosterPro detects no attribute provided.
+    * 1a1. ClassRosterPro shows error message for invalid format.\
+      Use case ends.
 
-* 1a. No students match filter criteria.
-   * 1a1. ClassRosterPro displays empty list.\
-     Use case ends.
-* 2a. ClassRosterPro detects invalid age value (non-integer).
-    * 2a1. ClassRosterPro shows error message for invalid age value.\
-     Use case ends.
-* 2b. ClassRosterPro detects no attr/ prefix provided.
-   * 2b1. ClassRosterPro shows error message for invalid format.\
+* 2a. No students match filter criteria.
+   * 2a1. ClassRosterPro displays empty list.\
      Use case ends.
 
 ---
 
-### **UC08 - Search Student**
+### **UC09 - Search Student**
 
 **System**: ClassRosterPro\
-**Use Case**: UC08 - Search Student\
+**Use Case**: UC09 - Search Student\
 **Actor**: Tutor\
 **Preconditions**: None\
 **Guarantees**: Students matching search criteria in name, phone, or email are displayed
@@ -1341,8 +1343,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor types command to search with corresponding matching details.
-2. ClassRosterPro validates input parameters and searches accordingly.
-3. ClassRosterPro displays matching results successfully.\
+2. ClassRosterPro displays matching results successfully.\
    Use case ends.
 
 **Extensions:**
@@ -1350,87 +1351,77 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 * 1a. No matches found.
    * 1a1. ClassRosterPro displays empty list.\
      Use case ends.
-* 2a. Search query is cleared.
-   * 2a1. ClassRosterPro returns to full list.\
-     Use case ends.
 
 ---
 
-### **UC09 - Delete Student**
+### **UC10 - Delete Student**
 
 **System**: ClassRosterPro\
-**Use Case**: UC09 - Delete Student\
+**Use Case**: UC10 - Delete Student\
 **Actor**: Tutor\
 **Preconditions**: Student exists in roster\
 **Guarantees**: Student is permanently removed from roster
 
 **MSS:**
 
-1. Tutor lists/filters students.
-2. Tutor enters delete command with student index.
-3. ClassRosterPro validates index and removes the contact.
-4. ClassRosterPro confirms deletion.\
+1. Tutor enters command to delete student with corresponding student index.
+2. ClassRosterPro deletes student successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 2a. ClassRosterPro detects index out of bounds.
-   * 2a1. ClassRosterPro shows error message for invalid index.\
+* 1a. ClassRosterPro detects invalid index.
+   * 1a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
-* 2b. ClassRosterPro detects index not a positive integer.
-   * 2b1. ClassRosterPro shows error message.\
-     Use case ends.
+
 
 ---
-### **UC10 - Unmark Attendance for Lesson**
+### **UC11 - Unmark Attendance for Lesson**
 
 **System**: ClassRosterPro\
-**Use Case**: UC10 - Unmark Attendance for Lesson\
+**Use Case**: UC11 - Unmark Attendance for Lesson\
 **Actor**: Tutor\
 **Preconditions**: Student exists with at least one scheduled lesson\
 **Guarantees**: Attendance record is updated to not attended
 
 **MSS:**
 
-1. Tutor filters/finds the student if needed.
-2. Tutor enters unmark command with student index and lesson index.
-3. ClassRosterPro validates both indices and marks the lesson as not attended.
-4. ClassRosterPro updates attendance count and confirms.
+1. Tutor enters command to unmark with corresponding student index and lesson index.
+2. ClassRosterPro marks the lesson as not attended successfully.
    Use case ends.
 
 **Extensions:**
 
-* 2a. ClassRosterPro detects invalid student index.
-   * 2a1. ClassRosterPro shows error message for invalid student index.\
+* 1a. ClassRosterPro detects invalid student index.
+   * 1a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
-* 2b. ClassRosterPro detects invalid lesson index.
-   * 2b1. ClassRosterPro shows error message for invalid lesson index.\
+* 1b. ClassRosterPro detects invalid lesson index.
+   * 1b1. ClassRosterPro shows error message for invalid lesson index.\
      Use case ends.
-* 2c. ClassRosterPro detects lesson already marked as not present.
-   * 2c1. ClassRosterPro shows error message.\
+* 1c. ClassRosterPro detects lesson already unmarked.
+   * 1c1. ClassRosterPro shows error message.\
      Use case ends.
 
 ---
 
-### **UC11 - Open Student Contact Card**
+### **UC12 - Open Student Contact Card**
 
 **System**: ClassRosterPro\
-**Use Case**: UC11 - Open Student Contact Card\
+**Use Case**: UC12 - Open Student Contact Card\
 **Actor**: Tutor\
 **Preconditions**: Student exists in roster with student card closed\
 **Guarantees**: Student card expands to show all details
 
 **MSS:**
 
-1. Tutor lists/filters students to find the desired student.
-2. Tutor enters open command with student index.
-3. ClassRosterPro validates the index.
-4. ClassRosterPro expands the student card to show all details.\
+1. Tutor enters command to view list of students.
+2. Tutor enters open command with corresponding student index.
+3. ClassRosterPro expands student card successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 2a. ClassRosterPro detects index out of bounds.
+* 2a. ClassRosterPro detects invalid index.
    * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 3a. ClassRosterPro detects student card is already open.
@@ -1439,29 +1430,28 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC-12: Close a student's contact card**
+### **UC-13: Close a student's contact card**
 
 **System**: ClassRosterPro\
-**Use Case**: UC11 - Open Student Contact Card\
+**Use Case**: UC13 - Open Student Contact Card\
 **Actor**: Tutor\
 **Preconditions**: Student exists in roster with student card open\
 **Guarantees**:  Student card collapses to summary view
 
 **MSS:**
 
-1. Tutor lists/filters students to find the desired student.
-2. Tutor enters close command with student index.
-3. ClassRosterPro validates the index of the open card.
-4. ClassRosterPro collapses the student card to its summary view.\
+1. Tutor enters command to view list of students.
+2. Tutor enters close command with corresponding student index.
+3. ClassRosterPro collapses the student card successfully.\
    Use case ends.
 
 **Extensions:**
 
-* 2a. ClassRosterPro detects index out of bounds.
+* 2a. ClassRosterPro detects invalid index.
    * 2a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
-* 3a. ClassRosterPro detects student card is already closed.
-   * 3a1. ClassRosterPro shows error message.\
+* 2b. ClassRosterPro detects student card is already closed.
+   * 2b1. ClassRosterPro shows error message.\
      Use case ends.
 
 ---
