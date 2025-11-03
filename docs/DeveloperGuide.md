@@ -959,12 +959,12 @@ The sequence diagram captures the flow of `SearchCommand#execute(Model)`:
 - The command is resilient to malformed input such as mixed spacing or special characters in keywords.
 
 #### Design Considerations
-- **Search Scope**: Includes name, email, address, and tags | Provides flexibility and matches user expectations of a global search |
-- **Case Sensitivity**:  Case-insensitive | Reduces user friction; tutors do not need to match exact capitalization |
-- **Partial Match**: Substring-based | Enables fast, natural filtering without requiring exact terms |
-- **Predicate Reuse**: Uses `PersonContainsKeywordPredicate` | Keeps filtering logic encapsulated and testable |
-- **Performance**: Uses JavaFX `FilteredList` | Efficient, as no deep copies or re-parsing occur |
-- **User Experience**:  Command mirrors Quick Search bar | Provides both CLI and UI pathways for filtering |
+- **Search Scope**: Includes name, email, address, and tags. Provides flexibility and matches user expectations of a global search
+- **Case Sensitivity**:  Case-insensitive.  Reduces user friction; tutors do not need to match exact capitalization
+- **Partial Match**: Substring-based. Enables fast, natural filtering without requiring exact terms
+- **Predicate Reuse**: Uses `PersonContainsKeywordPredicate`. Keeps filtering logic encapsulated and testable 
+- **Performance**: Uses JavaFX `FilteredList`. Efficient, as no deep copies or re-parsing occur
+- **User Experience**:  Command mirrors Quick Search bar. Provides both CLI and UI pathways for filtering.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1054,13 +1054,13 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
   * 1a1. ClassRosterPro shows error message and rejects the command.\
     Use case ends.
 * 1b. Tutor enters duplicate contact.
-  * 1b1. ClassRosterPro shows error "This person already exists in the address book".\
+  * 1b1. ClassRosterPro shows error message.\
     Use case ends.
 * 3a. Tutor enters invalid index.
-  * 3a1. ClassRosterPro shows "The person index provided is invalid".\
+  * 3a1. ClassRosterPro shows error message for invalid index\
     Use case ends.
 * 3b.  Tutor enters invalid attribute format.
-  * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.\
+  * 3b1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
 * a. At any time, Tutor enters exit command.
     * a1. ClassRosterPro saves data and exits.\
@@ -1086,28 +1086,28 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 2a. ClassRosterPro detects invalid time format.
-  * 2a1. ClassRosterPro shows "Invalid start/end time format. Use HH:mm".\
+  * 2a1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
 * 2b. ClassRosterPro detects invalid time values.
-  * 2b1. ClassRosterPro shows "Invalid time. Hours must be 00-23 and minutes must be 00-59".\
+  * 2b1. ClassRosterPro shows error message for incorrect format.\
     Use case ends.
 * 2c. ClassRosterPro detects invalid date format.
-   * 2c1. ClassRosterPro shows "Invalid date format. Use YYYY-MM-DD".\
+   * 2c1. ClassRosterPro shows error message for incorrect format.\
      Use case ends.
 * 2d. ClassRosterPro detects invalid date values (e.g., 2025-11-31).
-   * 2d1. ClassRosterPro shows "Invalid date. Ensure the day is valid for the given month and year".\
+   * 2d1. ClassRosterPro shows error message for invalid date.\
      Use case ends.
 * 2e. ClassRosterPro detects end time ≤ start time.
-   * 2e1. ClassRosterPro shows "End time must be after start time".\
+   * 2e1. ClassRosterPro shows error message for invalid end time.\
      Use case ends.
 * 2f. ClassRosterPro detects missing required fields.
    * 2f1. ClassRosterPro shows error message indicating which fields are missing.\
      Use case ends.
 * 3a. ClassRosterPro detects lesson overlaps with existing lesson.
-   * 3a1. ClassRosterPro shows "This lesson overlaps with an existing lesson".\
+   * 3a1. ClassRosterPro shows error message for lesson duplication.\
      Use case ends.
 * 3b. ClassRosterPro detects duplicate lesson (exact match).
-   * 3b1. ClassRosterPro shows "This lesson already exists".\
+   * 3b1. ClassRosterPro shows error message for existing lesson.\
      Use case ends.
 ---
 
@@ -1129,13 +1129,13 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **Extensions:**
 * 2a. ClassRosterPro detects invalid student index.
-  * 2a1. ClassRosterPro shows "Invalid person index".\
+  * 2a1. ClassRosterPro shows error message for invalid index.\
     Use case ends.
 * 2b. ClassRosterPro detects invalid lesson index.
-  * 2b1. ClassRosterPro shows "Invalid lesson index".\
+  * 2b1. ClassRosterPro shows error message for invalid index.\
     Use case ends.
 * 2c. ClassRosterPro detects lesson already marked.
-  * 2c1. ClassRosterPro shows "This lesson has already been marked".\
+  * 2c1. ClassRosterPro shows error message for marked lesson.\
     Use case ends.
 
 ---
@@ -1164,10 +1164,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
 * 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 2b. ClassRosterPro detects invalid grade format.
-   * 2b1. ClassRosterPro shows "Incorrect format".\
+   * 2b1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
 * 2c. ClassRosterPro detects subject/assessment/score empty.
    * 2c1. ClassRosterPro shows error message indicating missing components.\
@@ -1176,7 +1176,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 2d1. ClassRosterPro shows error message indicating duplicate grade detected.\
      Use case ends.
 * 2e. ClassRosterPro detects invalid score value.
-   * 3a1. ClassRosterPro shows "Error saving grade data".\
+   * 2e1. ClassRosterPro shows error message for invalid score value.\
      Use case ends.
 
 ---
@@ -1206,16 +1206,16 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
 * 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 2b. ClassRosterPro detects invalid format (missing subject or assessment).
-   * 2b1. ClassRosterPro shows "Use sub/SUBJECT/ASSESSMENT".\
+   * 2b1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
 * 3a. ClassRosterPro detects grade does not exist.
-   * 3a1. ClassRosterPro shows "Grade not found".\
+   * 3a1. ClassRosterPro shows error message for grade not found.\
      Use case ends.
 * 4a. ClassRosterPro encounters storage error during removal.
-   * 4a1. ClassRosterPro shows "Error removing grade data".\
+   * 4a1. ClassRosterPro shows error message for removing grade data.\
      Use case ends.
 
 ---
@@ -1248,19 +1248,19 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 2a1. ClassRosterPro shows correct usage format.\
      Use case ends.
 * 3a. ClassRosterPro detects student index out of bounds.
-   * 3a1. ClassRosterPro shows "Invalid person index".\
+   * 3a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
 * 3b. ClassRosterPro detects lesson index out of bounds.
-   * 3b1. ClassRosterPro shows "Invalid lesson index".\
+   * 3b1. ClassRosterPro shows error message for invalid lesson index.\
      Use case ends.
 * 3c. ClassRosterPro detects student has no lessons.
-   * 3c1. ClassRosterPro shows "The selected person has no lessons scheduled".\
+   * 3c1. ClassRosterPro shows error message for no lessons scheduled.\
      Use case ends.
 * 4a. ClassRosterPro encounters data corruption in lesson records.
-   * 4a1. ClassRosterPro shows "Error accessing lesson data".\
+   * 4a1. ClassRosterPro shows error message for accessing lesson data.\
      Use case ends.
 * 4b. ClassRosterPro fails to remove lesson due to storage error.
-   * 4b1. ClassRosterPro shows "Error removing lesson data".\
+   * 4b1. ClassRosterPro shows error message for removing lesson data.\
      Use case ends.
 
 ---
@@ -1289,19 +1289,19 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 1a1. ClassRosterPro shows correct usage format.\
      Use case ends.
 * 2a. ClassRosterPro detects invalid index.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 2b. ClassRosterPro detects attribute doesn't exist.
-   * 2b1. ClassRosterPro shows "No matching attributes found".\
+   * 2b1. ClassRosterPro shows error message for no matching attributes found.\
      Use case ends.
 * 2c. ClassRosterPro detects multiple attributes specified.
    * 2c1. ClassRosterPro removes all valid attributes and proceeds.\
      Use case ends.
 * 2d. ClassRosterPro detects no attributes specified.
-   * 2d1. ClassRosterPro shows error "No attributes specified for deletion".\
+   * 2d1. ClassRosterPro shows error message for no attributes specified.\
      Use case ends.
 * 3a. ClassRosterPro encounters storage error during removal.
-    * 3a1. ClassRosterPro shows "Error removing attribute data".\
+    * 3a1. ClassRosterPro shows error message for removing attribute data.\
      Use case ends.
 ---
 
@@ -1323,13 +1323,13 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 1a. No students match filter criteria.
-   * 1a1. ClassRosterPro displays "0 students listed".\
+   * 1a1. ClassRosterPro displays empty list.\
      Use case ends.
 * 2a. ClassRosterPro detects invalid age value (non-integer).
-    * 2a1. ClassRosterPro shows error message.\
+    * 2a1. ClassRosterPro shows error message for invalid age value.\
      Use case ends.
 * 2b. ClassRosterPro detects no attr/ prefix provided.
-   * 2b1. ClassRosterPro shows "Incorrect format".\
+   * 2b1. ClassRosterPro shows error message for invalid format.\
      Use case ends.
 
 ---
@@ -1379,7 +1379,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 2a. ClassRosterPro detects index out of bounds.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 2b. ClassRosterPro detects index not a positive integer.
    * 2b1. ClassRosterPro shows error message.\
@@ -1405,13 +1405,13 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 2a. ClassRosterPro detects invalid student index.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
 * 2b. ClassRosterPro detects invalid lesson index.
-   * 2b1. ClassRosterPro shows "Invalid lesson index".\
+   * 2b1. ClassRosterPro shows error message for invalid lesson index.\
      Use case ends.
 * 2c. ClassRosterPro detects lesson already marked as not present.
-   * 2c1. ClassRosterPro shows "This lesson is already marked as not present".\
+   * 2c1. ClassRosterPro shows error message.\
      Use case ends.
 
 ---
@@ -1435,10 +1435,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 2a. ClassRosterPro detects index out of bounds.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid index.\
      Use case ends.
 * 3a. ClassRosterPro detects student card is already open.
-   * 3a1. ClassRosterPro shows "Card is already open".\
+   * 3a1. ClassRosterPro shows error message.\
      Use case ends.
 
 ---
@@ -1462,10 +1462,10 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **Extensions:**
 
 * 2a. ClassRosterPro detects index out of bounds.
-   * 2a1. ClassRosterPro shows "Invalid person index".\
+   * 2a1. ClassRosterPro shows error message for invalid student index.\
      Use case ends.
 * 3a. ClassRosterPro detects student card is already closed.
-   * 3a1. ClassRosterPro shows "Card is already closed".\
+   * 3a1. ClassRosterPro shows error message.\
      Use case ends.
 
 ---
