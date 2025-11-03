@@ -810,6 +810,67 @@ Key classes: `TagCommand`, `Model`, `Person`, `Attribute`.
 - **Deterministic ordering**: Using an insertion-ordered map during parsing keeps attribute application predictable and stable for testing.
 
 
+### Delete Attribute Command
+
+#### What it does
+
+Removes attribute keys (and their values) from a student so tutors can retire outdated metadata such as old subjects, levels, or preferences. If none of the requested keys exist, the command stops and informs the tutor.
+
+#### Parameters
+
+`delattr INDEX attr/KEY [attr/KEY2]...`
+
+- `INDEX` — required, 1-based. Targets a student in the current filtered list.
+- `attr/KEY` — required, at least one occurrence. Each prefix designates an attribute key to remove; values are omitted.
+
+#### Overview
+
+`delattr` follows the usual *parse → construct command → execute on the model* pattern. It locates the target student, filters their attribute set, and persists the updated `Person`.
+
+#### High-level flow
+
+1. Tutor issues `delattr` with the index and one or more keys.
+2. Parser validates the index and normalises each provided key.
+3. Command determines which of those keys exist on the student.
+4. Model replaces the student with a new instance without the matched keys and returns a confirmation message.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates to `DeleteAttributeCommandParser`, which:
+
+1. Tokenises arguments using the `attr/` prefix while keeping the index in the preamble.
+2. Requires exactly one index in the preamble and checks it is not mistaken for a prefix.
+3. Trims, lowercases, and deduplicates each key, discarding blanks.
+4. Throws a `ParseException` with usage guidance if no valid keys remain.
+5. Instantiates `DeleteAttributeCommand` with the parsed `Index` and key set.
+
+Key classes: `DeleteAttributeCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+When `DeleteAttributeCommand#execute(Model)` runs, it:
+
+1. Retrieves the filtered list and validates the index, throwing `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX` if out of range.
+2. Computes the intersection between requested keys and the student's existing attribute keys.
+3. Throws `CommandException` with `MESSAGE_NO_ATTRIBUTES_REMOVED` when no keys match to avoid silent no-ops.
+4. Builds a new `Person` without those attributes, preserving tags, lessons, grades, remarks, and expansion state.
+5. Calls `model.setPerson(...)` to persist and returns a message listing the removed keys.
+
+Key classes: `DeleteAttributeCommand`, `Model`, `Person`, `Attribute`.
+
+#### Validation and error handling
+
+- Missing index or `attr/` prefixes triggers a `ParseException` with `DeleteAttributeCommand.MESSAGE_USAGE`.
+- Blank keys (after trimming) cause the parser to reject the command.
+- Out-of-bounds indices throw `CommandException` with `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Attempting to delete non-existent keys throws `CommandException` with `MESSAGE_NO_ATTRIBUTES_REMOVED`.
+
+#### Design Considerations
+
+- **Case insensitivity**: Normalising keys during parsing keeps behaviour aligned with how attributes are stored and filtered.
+- **Immutable updates**: Creating a new `Person` maintains the project's immutable model discipline and eases future undo/redo support.
+
+
 
 ### Filter Command
 
