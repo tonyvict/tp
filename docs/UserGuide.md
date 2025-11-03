@@ -215,7 +215,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG] [attr/KEY=V
 * When editing tags, the existing tags of the student will be removed i.e adding of tags is not cumulative.
 * When editing attributes, the existing values of the student's attribute will be overriden.
 * You can remove all the person’s tags by typing `t/` without specifying any tags after it.
-* * You can remove all the person’s attributes by typing `attr/` without specifying any key-value pairs after it.
+* You can remove all the person’s attributes by typing `attr/` without specifying any key-value pairs after it.
 
 Examples:
 * `edit 1 p/91234567 e/johndoe@example.com`
