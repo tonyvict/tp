@@ -827,22 +827,22 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 **MSS:**
 
-1. Tutor enters add command with student details. 
+1. Tutor enters add command with student details.
 2. ClassRosterPro validates all fields and adds the student.
 3. Tutor enters addattr command with index and attribute.
 4. ClassRosterPro adds the new attribute values to the student.\
-   Use case ends. 
+   Use case ends.
 
 **Extensions:**
 
-* 1a. Tutor enters invalid email/phone number. 
+* 1a. Tutor enters invalid email/phone number.
   * 1a1. ClassRosterPro shows error message and rejects the command.\
     Use case ends.
 * 1b. Tutor enters duplicate contact.
   * 1b1. ClassRosterPro shows error "This person already exists in the address book".\
     Use case ends.
 * 3a. Tutor enters invalid index.
-  * 3a1. ClassRosterPro shows "The person index provided is invalid".\  
+  * 3a1. ClassRosterPro shows "The person index provided is invalid".\
     Use case ends.
 * 3b.  Tutor enters invalid attribute format.
   * 3b1. ClassRosterPro shows "Incorrect format for attributes" with usage example.\
@@ -939,7 +939,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 **MSS:**
 
 1. Tutor enters grade command with student index and grade details.
-2. ClassRosterPro validates index and grade format. 
+2. ClassRosterPro validates index and grade format.
 3. ClassRosterPro saves grades and confirms.\
   Use case ends.
 
@@ -1327,7 +1327,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **7. Architecture Overview**
 
-ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
+ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.
 Each major layer has a distinct responsibility:
 - **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`, `QuickSearchBox`).
 - **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
@@ -1391,7 +1391,7 @@ This section provides guidance to manually verify the new or modified features o
 **Purpose**: Mark and unmark lesson attendance.
 
 **Steps to test**:
-1. Ensure a student has a scheduled lesson (see previous test). 
+1. Ensure a student has a scheduled lesson (see previous test).
 2. Mark attendance:
    - `mark 1 lesson/1`
 3. Unmark attendance:
