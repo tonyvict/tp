@@ -24,6 +24,7 @@ This guide is designed to help you, a private tutor, efficiently manage all your
   section to get set up and run your first command in just 5 minutes
 * If you are an experienced user, jump directly to the "Features" section for a complete list of commands.
 * Look out for Tips and Common Mistakes icons to help you use ClassRosterPro more effectively.
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## Quick start
