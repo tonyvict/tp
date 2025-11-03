@@ -552,6 +552,205 @@ Key classes: `UnmarkCommand`, `Model`, `Person`, `Lesson`, `LessonList`.
 -   **Error-Correction Focus**: This command serves as a simple and direct way to correct errors, which is a critical usability feature for data entry applications.
 -   **State-Awareness**: By checking if the lesson is already unmarked, the command avoids unnecessary model updates and provides precise feedback, preventing user confusion about the state of the data.
 -   **Flexibility**: Mirroring the `mark` command, `unmark` also works on past, present, and future lessons. This is crucial for correcting historical attendance errors or adjusting plans for future lessons.
+
+### Grade Command
+
+#### What it does
+
+Adds or updates grades for a student by subject and assessment. This enables tutors to maintain a detailed grade book per student, tracking performance across different subjects and assessment types over time.
+
+#### Parameters
+
+`grade INDEX sub/SUBJECT/ASSESSMENT/SCORE [sub/SUBJECT2/ASSESSMENT2/SCORE2]…`
+
+- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+- `sub/SUBJECT/ASSESSMENT/SCORE` — required, at least one. Each triplet specifies a grade entry:
+  - `SUBJECT` — subject name (e.g., MATH, SCIENCE); validated for format.
+  - `ASSESSMENT` — assessment type (e.g., WA1, Quiz1); validated for format.
+  - `SCORE` — numeric score; validated to be a valid score value.
+
+#### Overview
+
+The `grade` command follows the standard command pattern of *parse → construct command → execute on the model*. It supports adding or updating multiple grades in a single command. If a subject-assessment combination already exists for the student, the new score overwrites the existing one.
+
+#### High-level flow
+
+1. User provides student index and one or more grade triplets.
+2. System validates index and parses each grade triplet.
+3. System detects and prevents duplicate subject-assessment pairs within the same command.
+4. System updates the student's grade list and confirms success.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates `grade` commands to `GradeCommandParser`. The parser:
+
+1. Tokenises arguments using the `sub/` prefix to extract all grade triplets.
+2. For each triplet, splits by `/` to separate subject, assessment, and score.
+3. Validates each component (non-empty, proper format).
+4. Tracks seen subject-assessment pairs using a `HashSet` to detect duplicates within the command.
+5. Throws `ParseException` if duplicates are detected or if validation fails.
+6. Parses the student index from the preamble.
+7. Constructs `Grade` objects and returns a `GradeCommand` with the index and set of grades.
+
+Key classes: `GradeCommandParser`, `ParserUtil`, `Grade`.
+
+#### Execution behaviour
+
+When `GradeCommand#execute(Model)` is invoked, the command:
+
+1. Retrieves the target `Person` from the filtered list using the index.
+2. Guards against invalid indices by throwing `CommandException` if out of bounds.
+3. Iterates through the grades to add, calling `GradeList#addGrade` for each.
+4. Creates a new `Person` with the updated `GradeList`.
+5. Updates the model via `model.setPerson(...)` and returns a success message with the updated grades.
+
+Key classes: `GradeCommand`, `Model`, `Person`, `GradeList`, `Grade`.
+
+#### Validation and error handling
+
+- Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Missing or malformed grade triplets (missing parts, wrong format) throw `ParseException` with specific guidance.
+- Duplicate subject-assessment pairs within the same command throw `ParseException` with a descriptive error message.
+- Invalid subject, assessment, or score formats throw `ParseException` during parsing.
+
+#### Design Considerations
+
+- **Duplicate Prevention**: Duplicate detection at the parser level prevents ambiguous behavior and provides immediate feedback before model mutation.
+- **Overwrite Behavior**: Existing grades with the same subject-assessment combination are overwritten, following the principle that the latest data is authoritative.
+- **Immutability**: The command creates new `GradeList` and `Person` objects, maintaining immutability and predictable state management.
+- **Batch Operations**: Supporting multiple grades per command improves efficiency when recording several assessments at once.
+
+### Delete Grade Command
+
+#### What it does
+
+Removes a specific grade entry (identified by subject and assessment) from a student's grade list. This enables tutors to correct mistakes, such as accidentally recording a grade for a test a student did not take.
+
+#### Parameters
+
+`delgrade INDEX sub/SUBJECT/ASSESSMENT`
+
+- `INDEX` — required, 1-based. Identifies the student in the current filtered list.
+- `sub/SUBJECT/ASSESSMENT` — required. Specifies which grade to remove:
+  - `SUBJECT` — subject name (must match exactly).
+  - `ASSESSMENT` — assessment type (must match exactly).
+
+#### Overview
+
+The `delgrade` command follows the standard command pattern of *parse → construct command → execute on the model*. It is the inverse operation to the `grade` command, allowing tutors to maintain accurate grade records by removing erroneous entries.
+
+#### High-level flow
+
+1. User provides student index and subject-assessment identifier.
+2. System validates index and parses the subject-assessment pair.
+3. System checks if the grade exists for the student.
+4. System removes the grade and confirms success.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates `delgrade` commands to `DeleteGradeCommandParser`. The parser:
+
+1. Tokenises arguments using the `sub/` prefix.
+2. Extracts the index from the preamble.
+3. Splits the `sub/` value by `/` to separate subject and assessment.
+4. Validates that both subject and assessment are non-empty.
+5. Constructs and returns a `DeleteGradeCommand` with the index, subject, and assessment.
+
+Key classes: `DeleteGradeCommandParser`, `ParserUtil`.
+
+#### Execution behaviour
+
+When `DeleteGradeCommand#execute(Model)` is invoked, the command:
+
+1. Retrieves the target `Person` from the filtered list using the index.
+2. Guards against invalid indices by throwing `CommandException` if out of bounds.
+3. Checks if the grade exists using `GradeList#hasGrade(subject, assessment)`.
+4. Throws `CommandException` with `MESSAGE_GRADE_NOT_FOUND` if the grade does not exist.
+5. Creates a new `Person` with the grade removed via `GradeList#removeGrade(subject, assessment)`.
+6. Updates the model via `model.setPerson(...)` and returns a success message.
+
+Key classes: `DeleteGradeCommand`, `Model`, `Person`, `GradeList`.
+
+#### Validation and error handling
+
+- Invalid or missing student `INDEX` throws `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Missing or malformed `sub/` prefix throws `ParseException` with usage guidance.
+- Empty subject or assessment throws `ParseException`.
+- Non-existent grade throws `CommandException` with `MESSAGE_GRADE_NOT_FOUND`.
+
+#### Design Considerations
+
+- **Error Prevention**: Checking for grade existence before removal provides clear feedback and prevents silent failures.
+- **Immutability**: The command creates new `GradeList` and `Person` objects, maintaining immutability consistent with other commands.
+- **Precision**: Requiring exact subject-assessment match ensures tutors remove the intended grade without ambiguity.
+- **Symmetry**: The command complements the `grade` command, providing complete CRUD operations for grade management.
+
+### Filter Command
+
+#### What it does
+
+Filters and displays students whose attributes match specified criteria. This enables tutors to quickly find students matching specific attributes, such as all students in a particular subject or age group, using AND logic between different attributes and OR logic within the same attribute.
+
+#### Parameters
+
+`filter attr/KEY=VALUE[,VALUE2]… [attr/KEY2=VALUE2]…`
+
+- `attr/KEY=VALUE` — required, at least one. Specifies an attribute filter:
+  - `KEY` — attribute key (e.g., subject, age); case-insensitive.
+  - `VALUE` — attribute value(s); multiple values separated by commas; case-insensitive.
+- Multiple `attr/` prefixes can be provided for AND logic between different keys.
+
+#### Overview
+
+The `filter` command follows the standard command pattern of *parse → construct command → execute on the model*. It updates the filtered list predicate without mutating the underlying data, allowing the UI to display only matching students.
+
+#### High-level flow
+
+1. User provides one or more attribute filters.
+2. System parses each filter, extracting keys and values.
+3. System constructs an `AttributeContainsPredicate` with the filter criteria.
+4. System applies the predicate to the filtered list and displays matching students with a count.
+
+#### Parsing pipeline
+
+`AddressBookParser` delegates `filter` commands to `FilterCommandParser`. The parser:
+
+1. Tokenises arguments using the `attr/` prefix to extract all attribute filters.
+2. For each filter, splits by `=` to separate key and value(s).
+3. Validates that the key is non-empty.
+4. Splits comma-separated values and adds them to a set for the corresponding key.
+5. Validates that at least one value exists for each key.
+6. Constructs an `AttributeContainsPredicate` with the parsed attribute filters.
+7. Returns a `FilterCommand` with the predicate.
+
+Key classes: `FilterCommandParser`, `AttributeContainsPredicate`.
+
+#### Execution behaviour
+
+When `FilterCommand#execute(Model)` is invoked, the command:
+
+1. Updates the filtered list predicate via `model.updateFilteredPersonList(predicate)`.
+2. Retrieves the filtered list size.
+3. Returns a success message with the count of matching students.
+
+Key classes: `FilterCommand`, `Model`, `AttributeContainsPredicate`.
+
+#### Validation and error handling
+
+- Missing `attr/` prefix throws `ParseException` with usage guidance.
+- Malformed attribute format (missing `=`) throws `ParseException`.
+- Empty attribute key throws `ParseException`.
+- Empty attribute values (after trimming and filtering) throws `ParseException`.
+- At least one `attr/` prefix must be provided.
+
+#### Design Considerations
+
+- **Predicate-Based Filtering**: Using a predicate allows the filtered list to automatically update when underlying data changes, maintaining consistency.
+- **AND/OR Logic**: AND logic between different attribute keys and OR logic within the same key provides intuitive filtering behavior for tutors.
+- **Case Insensitivity**: Both keys and values are matched case-insensitively, reducing user frustration from capitalization mismatches.
+- **No Data Mutation**: The command only updates the view predicate; no student data is modified, making it safe and reversible via the `list` command.
+- **Performance**: Filtering is efficient as it leverages JavaFX `FilteredList`, which wraps the master list without creating deep copies.
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -759,10 +958,49 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
    * 2c1. ClassRosterPro shows error message indicating missing components.\
      Use case ends.
 * 2d. ClassRosterPro detects duplicate subject-assessment in command.
-   * 2d1. ClassRosterPro uses last occurrence and proceeds without warning.\
+   * 2d1. ClassRosterPro shows error message indicating duplicate grade detected.\
      Use case ends.
 * 2e. ClassRosterPro detects invalid score value.
    * 3a1. ClassRosterPro shows "Error saving grade data".\
+     Use case ends.
+
+---
+
+### **UC04a - Delete Grade from Student**
+
+**System:** ClassRosterPro\
+**Use Case:** UC04a - Delete Grade from Student\
+**Actor:** Tutor\
+**Preconditions:** Student exists in the roster with at least one grade\
+**Guarantees:**
+- Grade is removed if index and subject-assessment are valid
+- Data integrity is maintained
+- Error message displayed if grade does not exist
+
+**MSS:**
+
+1. Tutor enters delgrade command with student index and subject-assessment identifier.
+2. ClassRosterPro validates index and subject-assessment format.
+3. ClassRosterPro checks if the grade exists.
+4. ClassRosterPro removes the grade and confirms.\
+  Use case ends.
+
+**Extensions:**
+
+* 1a. Tutor enters invalid command format.
+   * 1a1. ClassRosterPro shows correct usage format.\
+     Use case ends.
+* 2a. ClassRosterPro detects invalid index.
+   * 2a1. ClassRosterPro shows "Invalid person index".\
+     Use case ends.
+* 2b. ClassRosterPro detects invalid format (missing subject or assessment).
+   * 2b1. ClassRosterPro shows "Use sub/SUBJECT/ASSESSMENT".\
+     Use case ends.
+* 3a. ClassRosterPro detects grade does not exist.
+   * 3a1. ClassRosterPro shows "Grade not found".\
+     Use case ends.
+* 4a. ClassRosterPro encounters storage error during removal.
+   * 4a1. ClassRosterPro shows "Error removing grade data".\
      Use case ends.
 
 ---
