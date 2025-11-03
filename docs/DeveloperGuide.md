@@ -755,6 +755,99 @@ Key classes: `DeleteGradeCommand`, `Model`, `Person`, `GradeList`.
 - **Precision**: Requiring exact subject-assessment match ensures tutors remove the intended grade without ambiguity.
 - **Symmetry**: The command complements the `grade` command, providing complete CRUD operations for grade management.
 
+
+### Add Attribute Command
+
+#### What it does
+
+Adds or updates custom key–value attributes for a student so tutors can capture metadata such as subjects, school level, or age. Reusing a key replaces the previous values for that key.
+
+#### Parameters
+
+`addattr INDEX attr/KEY=VALUE[,VALUE2]... [attr/KEY2=VALUE2]...`
+
+- `INDEX` — required, 1-based. Targets a student in the currently shown list.
+- `attr/KEY=VALUE[,VALUE2]...` — required, at least one occurrence. Each prefix defines a key and one or more comma-separated values.
+- Additional `attr/` prefixes apply AND semantics: every listed key/value set is attached to the student.
+
+#### Overview
+
+`addattr` follows the standard *parse → build command → execute on the model* pipeline. It enriches the `Person`'s attribute set without affecting other fields, replacing existing entries that share the same key.
+
+#### High-level flow
+
+![Add Attribute command activity](images/AddAttributeActivityDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. We plan to rename them to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
+#### Execution behaviour
+
+![Add Attribute command execution sequence](images/AddAttributeSequence.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. We plan to rename them to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
+#### Validation and error handling
+
+- Missing `attr/` prefixes or index produces a `ParseException` with `TagCommand.MESSAGE_USAGE`.
+- Malformed segments without `=` trigger `ParseException` ("Incorrect format. Use attr/key=value[,value2]...").
+- Empty keys or values throw dedicated `ParseException`s ("Attribute key cannot be empty.", "Attribute must have at least one value.").
+- An index outside the displayed range throws `CommandException` with `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+
+#### Design Considerations
+
+- **Override semantics**: Removing existing attributes with the same key before adding new ones keeps the latest tutor input authoritative.
+- **Immutability**: The command constructs a new `Person` instance, aligning with the project's immutable model strategy and simplifying undo/redo in the future.
+- **Case insensitivity**: Lowercasing keys and values ensures consistent matching across commands such as `filter`, preventing duplicate attributes that differ only in casing.
+- **Deterministic ordering**: Using an insertion-ordered map during parsing keeps attribute application predictable and stable for testing.
+
+
+### Delete Attribute Command
+
+#### What it does
+
+Removes attribute keys (and their values) from a student so tutors can retire outdated metadata such as old subjects, levels, or preferences. If none of the requested keys exist, the command stops and informs the tutor.
+
+#### Parameters
+
+`delattr INDEX attr/KEY [attr/KEY2]...`
+
+- `INDEX` — required, 1-based. Targets a student in the current filtered list.
+- `attr/KEY` — required, at least one occurrence. Each prefix designates an attribute key to remove; values are omitted.
+
+#### Overview
+
+`delattr` follows the usual *parse → construct command → execute on the model* pattern. It locates the target student, filters their attribute set, and persists the updated `Person`.
+
+#### High-level flow
+
+![Delete Attribute command activity](images/DeleteAttributeActivityDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. We plan to rename them to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
+#### Execution behaviour
+
+![Delete Attribute command execution sequence](images/DeleteAttributeSequence.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. We plan to rename them to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
+#### Validation and error handling
+
+- Missing index or `attr/` prefixes triggers a `ParseException` with `DeleteAttributeCommand.MESSAGE_USAGE`.
+- Blank keys (after trimming) cause the parser to reject the command.
+- Out-of-bounds indices throw `CommandException` with `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+- Attempting to delete non-existent keys throws `CommandException` with `MESSAGE_NO_ATTRIBUTES_REMOVED`.
+
+#### Design Considerations
+
+- **Case insensitivity**: Normalising keys during parsing keeps behaviour aligned with how attributes are stored and filtered.
+- **Immutable updates**: Creating a new `Person` maintains the project's immutable model discipline and eases future undo/redo support.
+
+
+
 ### Filter Command
 
 #### What it does
@@ -1477,11 +1570,11 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
 
-### 2. Tag and Filter
+### 2. Add Attribute and Filter
 
 **Command name**: `addattr` and `filter`
 
-**Purpose**: Add attributes to students and filter the student list based on them.
+**Purpose**: Add attribute to students and filter the student list based on them.
 
 **Steps to test**:
 1. Tag a student with attributes:
@@ -1566,11 +1659,11 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
-### 8. Delete Attributes
+### 8. Add Attribute and Delete Attribute
 
 **Command name**: `delattr`
 
-**Purpose**: Remove specific attributes from a student.
+**Purpose**: Remove specific attribute from a student.
 
 **Steps to test**:
 1. Add attributes first (if not present):
