@@ -346,7 +346,7 @@ Searching for partial words - the filter only matches complete tag words.
 </div>
 
 ![Result of filtering students](images/filterUI.png)
-<p align="center"><em>Students with the attribute `Math` are displayed.</em></p>
+<p align="center"><em>Students with the attribute `age = 15, 16 or 17` are displayed.</em></p>
 
 ### Scheduling a lesson : `schedule`
 
@@ -374,7 +374,7 @@ Using 12-hour time format instead of 24-hour format or incorrect date format (mu
 </div>
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
-<p align="center"><em>Math lesson successfully scheduled for Bernice.</em></p>
+<p align="center"><em>Camp successfully scheduled for Bernice.</em></p>
 
 ### Unscheduling a lesson : `unschedule`
 
@@ -403,7 +403,7 @@ Using this command on a student who doesn't have any scheduled lessons - the com
 </div>
 
 ![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
-<p align="center"><em>Alex's Science lesson successfully removed</em></p>
+<p align="center"><em>Alex's camp successfully removed</em></p>
 
 ### Marking attendance : `mark`
 
@@ -468,7 +468,7 @@ students arriving early or last minute changes in lesson schedule.
 </div>
 
 ![result for 'unmark student at 1st index'](images/unmarkUI.png)
-<p align="center"><em>Bernice's attendance successfully unmarked as not present.</em></p>
+<p align="center"><em>Alex's attendance successfully unmarked as not present.</em></p>
 
 
 ### Quick Search : `search`
