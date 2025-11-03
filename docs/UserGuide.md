@@ -46,7 +46,7 @@ This guide is designed to help you, a private tutor, efficiently manage all your
 For example, typing **`help`** and pressing Enter will open the help window.<br>
 7. Try adding your first student using the command:
 
-   `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Math t/Grade10`
+   `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Friend t/Grade10`
 
    _This command adds a student named "John Doe" with his phone, email, address, and two tags indicating he's a Grade 10 Math student._
 
@@ -224,7 +224,7 @@ Assuming the index is based on the original list. Remember, it is based on the c
 </div>
 
 ![Result of editing a student](images/editUI.png)
-<p align="center"><em>Figure: Result of editing a student.</em></p>
+<p align="center"><em>Result of editing a student.</em></p>
 
 ### Deleting a student : `delete`
 
@@ -503,7 +503,7 @@ The Quick Search feature is ideal for quick lookups during lessons or when manag
 </div>
 
 ![quick search](images/searchUI.png)
-<p align="center"><em>Figure: Result of searching a student's name.</em></p>
+<p align="center"><em>Result of searching a student's name.</em></p>
 
 
 ### Recording student grades : `grade`
@@ -530,7 +530,7 @@ Examples:
 Records English Final score as 88 and History Midterm score as 92 for the 5th student
 
 ![Result of recording grades](images/GradesUi.png)
-<p align="center"><em>Figure: Result of recording grades for a student.</em></p>
+<p align="center"><em>Result of recording grades for a student.</em></p>
 
 
 ### Deleting student grades : `delgrade`
@@ -563,7 +563,7 @@ Using incorrect subject or assessment names - they must match exactly as they we
 </div>
 
 ![Result of deleting a grade](images/DeleteGradeUI.png)
-<p align="center"><em>Figure: Result of deleting a grade from a student.</em></p>
+<p align="center"><em>Result of deleting a grade from a student.</em></p>
 
 
 ### Recording student remarks : `remark`
@@ -585,7 +585,7 @@ Adds the remark “Excellent progress this term” to the 2nd student
 Clears the existing remark of the 1st student
 
 ![Result of adding remark](images/remarkUI.png)
-<p align="center"><em>Figure: Result of adding a remark for a student.</em></p>
+<p align="center"><em>Result of adding a remark for a student.</em></p>
 
 
 ### Clearing all entries : `clear`
