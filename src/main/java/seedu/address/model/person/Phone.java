@@ -46,7 +46,7 @@ public class Phone {
      * Returns true if the given string contains characters other than digits, spaces, and standard phone symbols.
      */
     public static boolean containsNonStandardChars(String test) {
-        return test.matches(".*[^0-9].*");
+        return test.matches(".*[^0-9\\s].*");
     }
 
     @Override

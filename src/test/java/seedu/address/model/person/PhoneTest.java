@@ -60,9 +60,9 @@ public class PhoneTest {
         // Only digits -> returns false
         assertFalse(Phone.containsNonStandardChars("911"));
         assertFalse(Phone.containsNonStandardChars("1234567890"));
+        assertFalse(Phone.containsNonStandardChars("9312 1534")); // space
 
         // Contains non-digit characters -> returns true
-        assertTrue(Phone.containsNonStandardChars("9312 1534")); // space
         assertTrue(Phone.containsNonStandardChars("+6512345678")); // +
         assertTrue(Phone.containsNonStandardChars("(911)")); // ()
         assertTrue(Phone.containsNonStandardChars("phone")); // alphabets
