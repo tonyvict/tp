@@ -100,6 +100,8 @@ Format: `help`
 ![help_window](images/helpWindow.png)
 <p align="center"><em>Pop-up window after entering the `help` command </em></p>
 
+
+
 ### Adding a student : `add`
 
 Adds a new student to your ClassRosterPro.
@@ -130,6 +132,8 @@ Ensure phone numbers are valid.
 ![Result of adding a student](images/addUI.png)
 <p align="center"><em>Success message displayed and new student added.</em></p>
 
+
+
 ### Listing all students : `list`
 
 Shows a list of all students in your roster.
@@ -138,6 +142,8 @@ Format: `list`
 
 ![Result of list command](images/listUI.png)
 <p align="center"><em>All students are displayed</em></p>
+
+
 
 ### Viewing full student details : `open`
 Expands a student's card to view all their details, including additional attributes and scheduled lessons.
@@ -166,6 +172,8 @@ Using an index that is out of range (e.g., open 0 or open 10 when there are only
 ![Result of toggling open a contact](images/OpenUI.png)
 <p align="center"><em>Alex's contact card expanded.</em></p>
 
+
+
 ### Collapsing a student card : `close`
 Collapses an expanded student card back to the compact view.
 
@@ -190,6 +198,7 @@ Trying to close a card that is already collapsed. The command will have no visib
 
 ![Result of toggling close a contact](images/closeUI.png)
 <p align="center"><em>Alex's contact card collapsed.</em></p>
+
 
 
 ### Editing a student : `edit`
@@ -226,6 +235,8 @@ Assuming the index is based on the original list. Remember, it is based on the c
 ![Result of editing a student](images/editUI.png)
 <p align="center"><em>Result of editing a student.</em></p>
 
+
+
 ### Deleting a student : `delete`
 
 Deletes the specified student from your roster.
@@ -251,6 +262,8 @@ Double-check the index before deleting, as this action cannot be undone.
 
 ![Result of deleting a student](images/deleteUI.png)
 <p align="center"><em>Betsy Crowe has been removed from the roster.</em></p>
+
+
 
 ### Adding attributes to a student : `addattr`
 
@@ -284,6 +297,8 @@ Using the same attribute key multiple times - duplicate keys will be ignored (on
 ![Result of adding attributes](images/tagUI.png)
 <p align="center"><em>Bernice now has 2 custom attributes.</em></p>
 
+
+
 ### Removing attributes from a student : `delattr`
 
 Removes one or more specific attributes from an existing student.
@@ -313,6 +328,7 @@ Use this when a student's status changes (e.g., they're no longer a "NewStudent"
 
 ![Result of deleting attributes](images/deltagUI.png)
 <p align="center"><em>Bernice's selected attributes have been removed.</em></p>
+
 
 
 ### Filtering students by attributes : `filter`
@@ -353,6 +369,8 @@ Searching for partial words - the filter only matches complete tag words.
 ![Result of filtering students](images/filterUI.png)
 <p align="center"><em>Students with the attribute `age = 15, 16 or 17` are displayed.</em></p>
 
+
+
 ### Scheduling a lesson : `schedule`
 
 Schedule a lesson for a student with date, time and duration.
@@ -380,6 +398,8 @@ Using 12-hour time format instead of 24-hour format or incorrect date format (mu
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
 <p align="center"><em>Math lesson successfully scheduled for Alex.</em></p>
+
+
 
 ### Unscheduling a lesson : `unschedule`
 
@@ -409,6 +429,8 @@ Using this command on a student who doesn't have any scheduled lessons - the com
 
 ![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
 <p align="center"><em>Alex's Math lesson successfully removed</em></p>
+
+
 
 ### Marking attendance : `mark`
 
@@ -441,6 +463,8 @@ catching up on old attendance records or pre-mark attendance for a known upcomin
 
 ![result for 'mark student at 1st index'](images/markUI.png)
 <p align="center"><em>Alex's attendance successfully marked as present.</em></p>
+
+
 
 ### Unmarking attendance : `unmark`
 
@@ -476,6 +500,7 @@ allows lessons in the future/past to be marked as not present, to accommodate
 <p align="center"><em>Alex's attendance successfully unmarked as not present.</em></p>
 
 
+
 ### Quick Search : `search`
 
 Allows tutors to instantly search for students by name, email or phone number.
@@ -506,6 +531,7 @@ The Quick Search feature is ideal for quick lookups during lessons or when manag
 <p align="center"><em>Result of searching a student's name.</em></p>
 
 
+
 ### Recording student grades : `grade`
 
 Records and updates subject-assessment-score pairs for a student so tutors can keep a detailed grade book per student.
@@ -531,6 +557,7 @@ Records English Final score as 88 and History Midterm score as 92 for the 5th st
 
 ![Result of recording grades](images/GradesUi.png)
 <p align="center"><em>Result of recording grades for a student.</em></p>
+
 
 
 ### Deleting student grades : `delgrade`
@@ -566,6 +593,7 @@ Using incorrect subject or assessment names - they must match exactly as they we
 <p align="center"><em>Result of deleting a grade from a student.</em></p>
 
 
+
 ### Recording student remarks : `remark`
 Format: `remark INDEX r/REMARK1 [r/REMARK2]…​`
 
@@ -586,6 +614,7 @@ Clears the existing remark of the 1st student
 
 ![Result of adding remark](images/remarkUI.png)
 <p align="center"><em>Result of adding a remark for a student.</em></p>
+
 
 
 ### Clearing all entries : `clear`
