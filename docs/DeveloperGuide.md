@@ -377,7 +377,7 @@ The activity diagram shows the user's journey: the tutor provides the student in
 
 #### Execution behaviour
 
-![Remark command execution sequence](images/EditCommandSequence.png)
+![Remark command execution sequence](images/RemarkCommandSequence.png)
 
 The sequence diagram documents the runtime checks when `RemarkCommand#execute(Model)` is invoked. The command:
 
@@ -468,7 +468,7 @@ The diagram shows the tutor supplying index/time/date information, with validati
 
 #### Execution behaviour
 
-![Schedule command execution sequence](images/ScheduleCommandExecuteSequence.png)
+![Schedule command execution sequence](images/ScheduleCommandSequence.png)
 
 Runtime steps:
 
@@ -562,8 +562,6 @@ The activity diagram shows the user's journey: the tutor provides the student an
 
 #### Execution behaviour
 
-![Mark command execution sequence](images/MarkCommandSequence.png)
-
 The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
 
 1.  Retrieves the target `Person` from the filtered list using the person index.
@@ -612,8 +610,6 @@ The `unmark` command is the direct counterpart to the `mark` command and follows
 The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
 
 #### Execution behaviour
-
-![Unmark command execution sequence](images/UnmarkCommandSequence.png)
 
 The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
 
@@ -923,7 +919,7 @@ It uses a dedicated predicate, `PersonContainsKeywordPredicate`, which encapsula
 
 #### High-level flow
 
-![Search command activity](images/SearchCommandActivityDiagram.png)
+![Search command activity](images/SearchCommmandActivityDiagram.png)
 
 1. The tutor enters a `search` command with one or more keywords in the Command Box.
 2. `LogicManager` forwards the input string to `AddressBookParser` for processing.
@@ -937,7 +933,7 @@ It uses a dedicated predicate, `PersonContainsKeywordPredicate`, which encapsula
 
 #### Execution behaviour
 
-![Search command execution sequence](images/SearchCommandSequence.png)
+![Search command execution sequence](images/SearchCommandSequenceDiagram.png)
 
 The sequence diagram captures the flow of `SearchCommand#execute(Model)`:
 
@@ -1522,15 +1518,6 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 ### **Email Format**
 - Must contain `@` symbol
 - Basic validation for common patterns
-
-### **Phone Number**
-- Must be numeric
-- Reasonable length constraints
-
-### **Attribute Keys and Values**
-- Case-insensitive matching
-- Multiple values separated by commas
-- Age values must be valid integers
 
 ### **Index Values**
 - Must be positive integers (1, 2, 3, ...)
