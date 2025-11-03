@@ -289,12 +289,8 @@ Examples:
 
 _Adds attributes `subject=math,science` and `age=16` to the 2nd student._
 
-<div markdown="span" class="alert alert-primary">:bulb: Tip:
-Use this command when you want to add additional attributes to a student without affecting their existing records.
-</div>
-
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Using the same attribute key multiple times - duplicate keys will be ignored (only the last one is used).
+Using the same attribute key multiple times in a single command - duplicate keys will be ignored (only the last one is used).
 </div>
 
 
