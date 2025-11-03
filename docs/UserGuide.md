@@ -379,7 +379,7 @@ Using 12-hour time format instead of 24-hour format or incorrect date format (mu
 </div>
 
 ![result for 'scheduling lesson for student at 2nd index'](images/scheduleLessonUI.png)
-<p align="center"><em>Camp successfully scheduled for Bernice.</em></p>
+<p align="center"><em>Lesson successfully scheduled for Bernice.</em></p>
 
 ### Unscheduling a lesson : `unschedule`
 
@@ -408,7 +408,7 @@ Using this command on a student who doesn't have any scheduled lessons - the com
 </div>
 
 ![result for 'unscheduling lesson from student at 1st index'](images/unscheduleLessonUI.png)
-<p align="center"><em>Alex's camp successfully removed</em></p>
+<p align="center"><em>Alex's lesson successfully removed</em></p>
 
 ### Marking attendance : `mark`
 
