@@ -1,44 +1,80 @@
 @startuml
-!include ./style.puml
+!include style.puml
 skinparam ArrowFontStyle plain
 
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":RemarkCommandParser" as RemarkCommandParser LOGIC_COLOR
+participant "r:RemarkCommand" as RemarkCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+participant "Messages" as Messages LOGIC_COLOR
+end box
 
-Participant ":LogicManager" as logic LOGIC_COLOR
-Participant ":AddressBookParser" as abp LOGIC_COLOR
-Participant "command:RemarkCommandParser" as rcp LOGIC_COLOR
-Participant "command:RemarkCommand" as rc LOGIC_COLOR
-Participant ":Model" as model MODEL_COLOR
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
 
+[-> LogicManager : execute("remark 1 r/...")
+activate LogicManager
 
-[-> logic : execute
-activate logic
-logic -> abp ++: parseCommand(commandText)
-create rcp
-abp -> rcp ++: parse(arguments)
-create rc
-rcp -> rc
-activate rc
+LogicManager -> AddressBookParser : parseCommand("remark 1 r/...")
+activate AddressBookParser
 
+create RemarkCommandParser
+AddressBookParser -> RemarkCommandParser
+activate RemarkCommandParser
+RemarkCommandParser --> AddressBookParser
+deactivate RemarkCommandParser
 
-' Fetch list and validate index
-rc -> model : getFilteredPersonList()
-model --> rc -- : List<Person>
+AddressBookParser -> RemarkCommandParser : parse(arguments)
+activate RemarkCommandParser
 
+create RemarkCommand
+RemarkCommandParser -> RemarkCommand
+activate RemarkCommand
+RemarkCommand --> RemarkCommandParser : r
+deactivate RemarkCommand
 
+RemarkCommandParser --> AddressBookParser : r
+deactivate RemarkCommandParser
+RemarkCommandParser -[hidden]-> AddressBookParser
+destroy RemarkCommandParser
+
+AddressBookParser --> LogicManager : r
+deactivate AddressBookParser
+
+LogicManager -> RemarkCommand : execute(model)
+activate RemarkCommand
+
+RemarkCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> RemarkCommand
+deactivate Model
 
 alt invalid index
-rc --> abp  : throw CommandException
+  RemarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
 else valid index
-rc -> rc : personToEdit = list.get(index)
-rc -> rc : editedPerson = createPersonWithNewRemark(personToEdit, remark)
-rc -> model : setPerson(personToEdit, editedPerson)
-rc -> model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
-rc -> rc : formatResult(editedPerson)
-rc --> rcp --
-rcp --> abp --
-end
-abp --> logic -- : command
-destroy rc
-destroy rcp
+  RemarkCommand -> Model : setPerson(personToEdit, editedPerson)
+  activate Model
+  Model --> RemarkCommand
+  deactivate Model
 
+  RemarkCommand -> Model : updateFilteredPersonList()
+  activate Model
+  Model --> RemarkCommand
+  deactivate Model
+
+  create CommandResult
+  RemarkCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> RemarkCommand
+  deactivate CommandResult
+
+  RemarkCommand --> LogicManager : result
+  deactivate RemarkCommand
+end
+
+[<-- LogicManager
+deactivate LogicManager
 @enduml

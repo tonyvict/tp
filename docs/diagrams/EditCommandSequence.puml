@@ -58,7 +58,7 @@ deactivate Model
 
 alt invalid index
   EditCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
-else allowed
+else valid index
     EditCommand -> Model : updateFilteredPersonList()
     activate Model
     Model --> EditCommand
