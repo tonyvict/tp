@@ -988,7 +988,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-## **2. User Stories (with MoSCoW Priorities)**
+## **2. User Stories**
 
 | Priority | As a …   | I want to …                                                                  | So that I can …                                                                                 |
 | -------- | -------- |------------------------------------------------------------------------------| ----------------------------------------------------------------------------------------------- |
@@ -1024,7 +1024,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-## **3. Representative Use Cases**
+## **3. Use Cases**
 
 ### **UC01: Add a student**
 
@@ -1526,45 +1526,6 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-## **6. Validation Rules**
-
-### **Time Format**
-- Pattern: `HH:mm` (24-hour format)
-- Valid hours: 00-23
-- Valid minutes: 00-59
-- Examples: `09:30`, `14:00`, `23:59`
-- Invalid: `24:00`, `14:60`, `9:30` (missing leading zero)
-
-### **Date Format**
-- Pattern: `YYYY-MM-DD` (ISO 8601)
-- Must be a valid calendar date
-- Examples: `2025-09-20`, `2024-02-29` (leap year)
-- Invalid: `2025-11-31` (November has 30 days), `2025-02-30`, `2023-02-29` (not leap year)
-
-### **Email Format**
-- Must contain `@` symbol
-- Basic validation for common patterns
-
-### **Index Values**
-- Must be positive integers (1, 2, 3, ...)
-- Must be within bounds of current displayed list
-
----
-
-## **7. Architecture Overview**
-
-ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
-Each major layer has a distinct responsibility:
-- **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`).
-- **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
-- **Model**: Manages in-memory data such as `Person`, `Lesson`, `Grade`, and `Tag`.
-- **Storage**: Reads and writes persistent data to local JSON files.
-- **Commons**: Contains shared utilities such as `Messages`, `LogsCenter`, and custom exceptions.
-
-This modular structure supports easy feature addition (e.g., new commands) with minimal changes to existing code.
-
----
-
 ## **Appendix: Instructions for Manual Testing**
 
 This section provides guidance to manually verify the new or modified features of ClassRosterPro. Each subsection gives a test path and copy‑pasteable inputs. Refer to the User Guide for full syntax. Ensure sample data in `data/addressbook.json` is loaded before testing.
@@ -1715,7 +1676,7 @@ This section provides guidance to manually verify the new or modified features o
 
 ## **Appendix: Planned Enhancements**
 
-### Team Size : 5
+**Team Size : 5**
 
 1. Make quick search result ordering deterministic: Right now, search results can appear in different orders between keystrokes. We plan to stabilise the ordering so prefix matches surface first and other matches follow consistently.
 
