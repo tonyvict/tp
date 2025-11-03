@@ -776,36 +776,14 @@ Adds or updates custom key–value attributes for a student so tutors can captur
 
 #### High-level flow
 
-1. Tutor issues `addattr` with an index and one or more `attr/` segments.
-2. Parser tokenises the input, validates the index, and converts each segment into `Attribute` objects.
-3. Command retrieves the targeted student and merges new attributes, overriding any with matching keys.
-4. Model persists the updated `Person` and refreshes the filtered list before returning a confirmation message.
-
-#### Parsing pipeline
-
-`AddressBookParser` routes `addattr` to `TagCommandParser`, which:
-
-1. Tokenises arguments on the `attr/` prefix while retaining the preamble for the index.
-2. Verifies each segment contains `key=value` syntax and trims whitespace.
-3. Normalises keys to lowercase and splits comma-separated values into a set, rejecting empty entries.
-4. Ensures at least one `attr/` segment exists, then requires exactly one index in the preamble.
-5. Constructs a `TagCommand` with the parsed `Index` and the deduplicated `Attribute` set.
-
-Key classes: `TagCommandParser`, `ParserUtil`, `Attribute`.
+![Add Attribute command activity](images/AddAttributeActivityDiagram.png)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
 </div>
 
 #### Execution behaviour
 
-When `TagCommand#execute(Model)` runs, it:
-
-1. Retrieves the filtered list and guards against an out-of-bounds index (throwing `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`).
-2. Creates a new `Person` with attributes merged via `createTaggedPerson`, replacing any existing attribute that shares a key.
-3. Calls `model.setPerson(...)` to persist the updated student and resets the filtered list to show all persons.
-4. Returns a `CommandResult` announcing the successful update.
-
-Key classes: `TagCommand`, `Model`, `Person`, `Attribute`.
+![Add Attribute command execution sequence](images/AddAttributeSequence.png)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
 </div>
@@ -844,34 +822,17 @@ Removes attribute keys (and their values) from a student so tutors can retire ou
 
 #### High-level flow
 
-1. Tutor issues `delattr` with the index and one or more keys.
-2. Parser validates the index and normalises each provided key.
-3. Command determines which of those keys exist on the student.
-4. Model replaces the student with a new instance without the matched keys and returns a confirmation message.
+![Delete Attribute command activity](images/DeleteAttributeActivityDiagram.png)
 
-#### Parsing pipeline
-
-`AddressBookParser` delegates to `DeleteAttributeCommandParser`, which:
-
-1. Tokenises arguments using the `attr/` prefix while keeping the index in the preamble.
-2. Requires exactly one index in the preamble and checks it is not mistaken for a prefix.
-3. Trims, lowercases, and deduplicates each key, discarding blanks.
-4. Throws a `ParseException` with usage guidance if no valid keys remain.
-5. Instantiates `DeleteAttributeCommand` with the parsed `Index` and key set.
-
-Key classes: `DeleteAttributeCommandParser`, `ParserUtil`.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
 
 #### Execution behaviour
 
-When `DeleteAttributeCommand#execute(Model)` runs, it:
+![Delete Attribute command execution sequence](images/DeleteAttributeSequence.png)
 
-1. Retrieves the filtered list and validates the index, throwing `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX` if out of range.
-2. Computes the intersection between requested keys and the student's existing attribute keys.
-3. Throws `CommandException` with `MESSAGE_NO_ATTRIBUTES_REMOVED` when no keys match to avoid silent no-ops.
-4. Builds a new `Person` without those attributes, preserving tags, lessons, grades, remarks, and expansion state.
-5. Calls `model.setPerson(...)` to persist and returns a message listing the removed keys.
-
-Key classes: `DeleteAttributeCommand`, `Model`, `Person`, `Attribute`.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
 
 #### Validation and error handling
 
@@ -1609,7 +1570,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The list updates instantly to show only contacts whose name, phone, or email contains "alex".
 
-### 2. Tag and Filter
+### 2. Add Attribute and Filter
 
 **Command name**: `addattr` and `filter`
 
@@ -1698,7 +1659,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
-### 8. Delete Attributes
+### 8. Add Attribute and Delete Attributes
 
 **Command name**: `delattr`
 
