@@ -792,6 +792,9 @@ When `TagCommand#execute(Model)` runs, it:
 
 Key classes: `TagCommand`, `Model`, `Person`, `Attribute`.
 
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
 #### Validation and error handling
 
 - Missing `attr/` prefixes or index produces a `ParseException` with `TagCommand.MESSAGE_USAGE`.
