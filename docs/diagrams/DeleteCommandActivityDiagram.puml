@@ -3,7 +3,7 @@ skin rose
 skinparam ActivityFontSize 15
 skinparam ArrowFontSize 12
 start
-:User enters "delete" command;
+:User enters command to delete a person
 :Logic parses target index;
 :Create and execute DeleteCommand;
 if (Valid person index?) then (no)

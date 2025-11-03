@@ -1,0 +1,76 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":RemarkCommandParser" as RemarkCommandParser LOGIC_COLOR
+participant "r:RemarkCommand" as RemarkCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("remark 1 r/...")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("remark 1 r/...")
+activate AddressBookParser
+
+create RemarkCommandParser
+AddressBookParser -> RemarkCommandParser
+activate RemarkCommandParser
+RemarkCommandParser --> AddressBookParser
+deactivate RemarkCommandParser
+
+AddressBookParser -> RemarkCommandParser : parse(arguments)
+activate RemarkCommandParser
+
+create RemarkCommand
+RemarkCommandParser -> RemarkCommand
+activate RemarkCommand
+RemarkCommand --> RemarkCommandParser : r
+deactivate RemarkCommand
+
+RemarkCommandParser --> AddressBookParser : r
+deactivate RemarkCommandParser
+RemarkCommandParser -[hidden]-> AddressBookParser
+destroy RemarkCommandParser
+
+AddressBookParser --> LogicManager : r
+deactivate AddressBookParser
+
+LogicManager -> RemarkCommand : execute(model)
+activate RemarkCommand
+
+RemarkCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> RemarkCommand
+
+
+alt invalid index
+  RemarkCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else valid index
+  RemarkCommand -> Model : setPerson(personToEdit, editedPerson)
+  Model --> RemarkCommand
+
+  RemarkCommand -> Model : updateFilteredPersonList()
+  Model --> RemarkCommand
+  deactivate Model
+
+  create CommandResult
+  RemarkCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> RemarkCommand
+  deactivate CommandResult
+
+  RemarkCommand --> LogicManager : result
+  deactivate RemarkCommand
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
