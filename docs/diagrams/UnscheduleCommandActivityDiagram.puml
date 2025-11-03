@@ -6,22 +6,22 @@ start
 :User enters command to unschedule a lesson;
 :Logic parses student index and lesson index;
 :Create and execute UnscheduleCommand;
-if (Valid person index?) then (no)
+if () then ([invalid person index])
   :Display invalid index error;
   stop
-else (yes)
+else ([valid person index])
   :Retrieve target person;
 endif
-if (Any lessons scheduled?) then (no)
+if () then ([no lessons scheduled])
   :Display "no lessons" error;
   stop
-else (yes)
+else ([lessons scheduled])
   :Validate lesson index;
 endif
-if (Valid lesson index?) then (no)
+if () then ([invalid lesson index])
   :Display invalid lesson index error;
   stop
-else (yes)
+else ([valid lesson index])
   :Remove lesson from schedule;
   :Update filtered list;
   :Display success to user;
