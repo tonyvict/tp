@@ -294,7 +294,7 @@ Key classes: `AddCommand`, `Model`, `Messages`.
 - Missing or repeated mandatory prefixes trigger `ParseException` with usage guidance.
 - Invalid value formats (e.g., phone, email) are rejected by the respective domain constructors inside `ParserUtil`.
 - Duplicate students—based on the `Person#isSamePerson` identity definition—are blocked during execution.
-- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters excluding common characters like +, - and ().
+- Warnings are given to warn users that phone number might be wrong when adding alphabets and special characters.
 
 #### Design considerations
 
