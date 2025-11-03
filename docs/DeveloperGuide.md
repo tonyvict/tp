@@ -1430,7 +1430,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC13: Close a student's contact card**
+### **UC-13: Close a student's contact card**
 
 **System**: ClassRosterPro\
 **Use Case**: UC13 - Open Student Contact Card\
@@ -1456,36 +1456,37 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ---
 
-### **UC14: Edit a student**
+### **UC14 - Edit Student**
 
-**System:** ClassRosterPro\
-**Use Case:** UC14 - Edit student\
-**Actor:** Tutor\
-**Preconditions:** The student exists in the roster.\
-**Guarantees:**
-- Student’s details are updated if all inputs are valid.
-- Fields omitted from the command remain unchanged.
+**System**: ClassRosterPro\
+**Use Case**: UC14 - Edit Student\
+**Actor**: Tutor\
+**Preconditions**: Student exists in roster\
+**Guarantees**:
+- Specified fields are updated when valid
+- Unspecified fields remain unchanged
+- Data integrity and uniqueness constraints are preserved
 
 **MSS:**
 
-1. Tutor enters the command to edit a student’s details with corresponding values.
-2. ClassRosterPro updates the student’s details accordingly.\
+1. Tutor enters command to edit the student with the corresponding student index and updated details.
+2. ClassRosterPro updates the student record successfully.\
    Use case ends.
 
 **Extensions:**
 
 * 1a. ClassRosterPro detects invalid index.
-    * 1a1. ClassRosterPro shows error message for invalid index\
-      Use case ends.
-* 1b. ClassRosterPro detects invalid student details.
-    * 1b1. ClassRosterPro shows error message.\
-      Use case ends.
-* 1c. ClassRosterPro detects invalid command format.
-    * 1c1. ClassRosterPro shows error message.\
-      Use case ends.
-* 1d. ClassRosterPro detects that the edited details would duplicate an existing student.
-    * 1d1. ClassRosterPro shows error message.\
-      Use case ends.
+   * 1a1. ClassRosterPro shows error message for invalid index.\
+     Use case ends.
+* 1b. ClassRosterPro detects no fields provided.
+   * 1b1. ClassRosterPro shows error message indicating required fields.\
+     Use case ends.
+* 1c. ClassRosterPro detects invalid detail value (e.g., malformed email or phone).
+   * 1c1. ClassRosterPro shows error message for invalid value.\
+     Use case ends.
+* 1d. ClassRosterPro detects the updated details would duplicate another student.
+   * 1d1. ClassRosterPro shows error message for duplicate student.\
+     Use case ends.
 
 ---
 
