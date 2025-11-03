@@ -562,6 +562,8 @@ The activity diagram shows the user's journey: the tutor provides the student an
 
 #### Execution behaviour
 
+![Mark command execution sequence](images/MarkCommandSequence.png)
+
 The sequence diagram documents the runtime checks when `MarkCommand#execute(Model)` is invoked. The command:
 
 1.  Retrieves the target `Person` from the filtered list using the person index.
@@ -610,6 +612,8 @@ The `unmark` command is the direct counterpart to the `mark` command and follows
 The activity diagram illustrates the flow for unmarking a lesson, which mirrors the `mark` command's logic: validate indices, check the current state, update the lesson, and confirm the change.
 
 #### Execution behaviour
+
+![Unmark command execution sequence](images/UnmarkCommandSequence.png)
 
 The sequence diagram captures the runtime flow of `UnmarkCommand#execute(Model)`. The command:
 
@@ -1527,7 +1531,7 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 
 ## **7. Architecture Overview**
 
-ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.
+ClassRosterPro follows a layered architecture adapted from AddressBook-Level3, ensuring high cohesion and low coupling across modules.  
 Each major layer has a distinct responsibility:
 - **UI**: Handles user interactions through JavaFX components and FXML layouts (e.g., `MainWindow`, `QuickSearchBox`).
 - **Logic**: Parses user commands and executes them, returning `CommandResult` objects to the UI.
@@ -1595,7 +1599,7 @@ This section provides guidance to manually verify the new or modified features o
 2. Mark attendance:
    - `mark 1 lesson/1`
 3. Unmark attendance:
-    - `unmark 1 lesson/1`
+- `unmark 1 lesson/1`
 
 **Expected**: The lesson is marked as "Present" after mark command and marked as "Not Present" after unmark command.
 
