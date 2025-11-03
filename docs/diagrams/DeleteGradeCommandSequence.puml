@@ -1,0 +1,83 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeleteGradeCommandParser" as DeleteGradeCommandParser LOGIC_COLOR
+participant "d:DeleteGradeCommand" as DeleteGradeCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("delgrade 1 sub/MATH/WA1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("delgrade 1 sub/MATH/WA1")
+activate AddressBookParser
+
+create DeleteGradeCommandParser
+AddressBookParser -> DeleteGradeCommandParser
+activate DeleteGradeCommandParser
+DeleteGradeCommandParser --> AddressBookParser
+deactivate DeleteGradeCommandParser
+
+AddressBookParser -> DeleteGradeCommandParser : parse("1 sub/MATH/WA1")
+activate DeleteGradeCommandParser
+
+alt invalid format
+  DeleteGradeCommandParser --> LogicManager : throw ParseException("Use sub/SUBJECT/ASSESSMENT")
+  deactivate DeleteGradeCommandParser
+else valid
+  create DeleteGradeCommand
+  DeleteGradeCommandParser -> DeleteGradeCommand
+  activate DeleteGradeCommand
+  DeleteGradeCommand --> DeleteGradeCommandParser : d
+  deactivate DeleteGradeCommand
+
+  DeleteGradeCommandParser --> AddressBookParser : d
+  deactivate DeleteGradeCommandParser
+  'Hidden arrow to position the destroy marker below the end of the activation bar.
+  DeleteGradeCommandParser -[hidden]-> AddressBookParser
+  destroy DeleteGradeCommandParser
+
+  AddressBookParser --> LogicManager : d
+  deactivate AddressBookParser
+
+  LogicManager -> DeleteGradeCommand : execute(m)
+  activate DeleteGradeCommand
+
+  DeleteGradeCommand -> Model : getFilteredPersonList()
+  activate Model
+  Model --> DeleteGradeCommand
+
+  alt invalid index
+    DeleteGradeCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+    deactivate DeleteGradeCommand
+  else grade not found
+    DeleteGradeCommand --> LogicManager : throw CommandException(MESSAGE_GRADE_NOT_FOUND)
+    deactivate DeleteGradeCommand
+  else valid
+    DeleteGradeCommand -> Model : setPerson(personToEdit, editedPerson)
+    Model --> DeleteGradeCommand
+    deactivate Model
+
+    create CommandResult
+    DeleteGradeCommand -> CommandResult
+    activate CommandResult
+    CommandResult --> DeleteGradeCommand
+    deactivate CommandResult
+
+    DeleteGradeCommand --> LogicManager : r
+    deactivate DeleteGradeCommand
+  end
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
+
