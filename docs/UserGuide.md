@@ -720,8 +720,10 @@ Action | Format, Examples
 **Unschedule Lesson** | `unschedule INDEX lesson/LESSON_INDEX`<br> e.g., `unschedule 1 lesson/1`
 **Mark Attendance** | `mark INDEX lesson/LESSON_INDEX`<br> e.g., `mark 1 lesson/1`
 **Unmark Attendance** | `unmark INDEX lesson/LESSON_INDEX`<br> e.g., `unmark 1 lesson/1`
+**Search** | `search KEYWORD`
 **Add Attributes** | `addattr INDEX attr/KEY=VALUE[,VALUE2]…​ [attr/KEY2=VALUE2]…​`<br> e.g., `addattr 2 attr/subject=math,science attr/age=16`
 **Delete Attributes** | `delattr INDEX attr/KEY [attr/KEY2]…​`<br> e.g., `delattr 2 attr/age attr/subject`
 **Remark** | `remark INDEX r/REMARK1 [r/REMARK2]…​`<br> e.g., `remark 2 r/Excellent progress this term`
 **List** | `list`
 **Help** | `help`
+
