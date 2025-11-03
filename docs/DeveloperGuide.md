@@ -1659,7 +1659,7 @@ This section provides guidance to manually verify the new or modified features o
 
 **Expected**: The first student's card expands to show all details (lessons, grades, tags) after open command and collapses back to its summary view after close command.
 
-### 8. Add Attribute and Delete Attributes
+### 8. Add Attribute and Delete Attribute
 
 **Command name**: `delattr`
 
