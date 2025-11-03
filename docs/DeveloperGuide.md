@@ -2,10 +2,12 @@
 layout: page
 title: Developer Guide
 ---
-
+---
+layout: page
+title: ClassRosterPro Developer Guide
+---
 * Table of Contents
 {:toc}
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
@@ -1518,15 +1520,6 @@ ClassRosterPro reduces tutors' admin load by consolidating contacts, tagging/fil
 ### **Email Format**
 - Must contain `@` symbol
 - Basic validation for common patterns
-
-### **Phone Number**
-- Must be numeric
-- Reasonable length constraints
-
-### **Attribute Keys and Values**
-- Case-insensitive matching
-- Multiple values separated by commas
-- Age values must be valid integers
 
 ### **Index Values**
 - Must be positive integers (1, 2, 3, ...)
