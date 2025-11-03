@@ -348,6 +348,12 @@ Key classes: `EditCommand`, `Model`, `Messages`.
 - Invalid indices reuse the shared index error message.
 - Identity conflicts are blocked before the model is mutated.
 
+#### Design considerations
+
+- **Descriptor pattern**: The `EditPersonDescriptor` aggregates optional field updates, keeping parser and command logic cohesive while preventing partial mutations.
+- **Immutability**: Rather than mutating the existing `Person`, the command constructs a new instance, ensuring defensive copies (e.g., tags, attributes) remain isolated.
+- **Filter preservation**: After applying edits, the command refreshes the current predicate instead of forcing a full list reset, preserving the user's filtered context.
+
 ### Remark Command
 
 #### What it does
@@ -429,6 +435,12 @@ The sequence diagram  depicts the execution: retrieve the filtered list, guard a
 
 - Invalid indices throw `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
 - Because the command is irreversible, consider pairing it with undo when available.
+
+#### Design considerations
+
+- **Minimal surface area**: The command only operates on the index and does not expose extra options, reducing accidental deletions.
+- **No-op avoidance**: Invalid indices abort before mutating state, ensuring that errors never partially modify the model.
+- **Filter awareness**: Deletion relies on the currently filtered list; the command intentionally removes the entry without resetting filters so tutors can continue working within the same subset.
 
 ### Mark Student Attendance Command
 
