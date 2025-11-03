@@ -738,6 +738,74 @@ Key classes: `DeleteGradeCommand`, `Model`, `Person`, `GradeList`.
 - **Precision**: Requiring exact subject-assessment match ensures tutors remove the intended grade without ambiguity.
 - **Symmetry**: The command complements the `grade` command, providing complete CRUD operations for grade management.
 
+
+### Add Attribute Command
+
+#### What it does
+
+Adds or updates custom key–value attributes for a student so tutors can capture metadata such as subjects, school level, or age. Reusing a key replaces the previous values for that key.
+
+#### Parameters
+
+`addattr INDEX attr/KEY=VALUE[,VALUE2]... [attr/KEY2=VALUE2]...`
+
+- `INDEX` — required, 1-based. Targets a student in the currently shown list.
+- `attr/KEY=VALUE[,VALUE2]...` — required, at least one occurrence. Each prefix defines a key and one or more comma-separated values.
+- Additional `attr/` prefixes apply AND semantics: every listed key/value set is attached to the student.
+
+#### Overview
+
+`addattr` follows the standard *parse → build command → execute on the model* pipeline. It enriches the `Person`'s attribute set without affecting other fields, replacing existing entries that share the same key.
+
+#### High-level flow
+
+1. Tutor issues `addattr` with an index and one or more `attr/` segments.
+2. Parser tokenises the input, validates the index, and converts each segment into `Attribute` objects.
+3. Command retrieves the targeted student and merges new attributes, overriding any with matching keys.
+4. Model persists the updated `Person` and refreshes the filtered list before returning a confirmation message.
+
+#### Parsing pipeline
+
+`AddressBookParser` routes `addattr` to `TagCommandParser`, which:
+
+1. Tokenises arguments on the `attr/` prefix while retaining the preamble for the index.
+2. Verifies each segment contains `key=value` syntax and trims whitespace.
+3. Normalises keys to lowercase and splits comma-separated values into a set, rejecting empty entries.
+4. Ensures at least one `attr/` segment exists, then requires exactly one index in the preamble.
+5. Constructs a `TagCommand` with the parsed `Index` and the deduplicated `Attribute` set.
+
+Key classes: `TagCommandParser`, `ParserUtil`, `Attribute`.
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The current implementation class is `TagCommand` along with `TagCommandParser`. It should be renamed to `AddAttributeCommand` and `AddAttributeCommandParser` to avoid confusion with person _tags_.  
+</div>
+
+#### Execution behaviour
+
+When `TagCommand#execute(Model)` runs, it:
+
+1. Retrieves the filtered list and guards against an out-of-bounds index (throwing `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`).
+2. Creates a new `Person` with attributes merged via `createTaggedPerson`, replacing any existing attribute that shares a key.
+3. Calls `model.setPerson(...)` to persist the updated student and resets the filtered list to show all persons.
+4. Returns a `CommandResult` announcing the successful update.
+
+Key classes: `TagCommand`, `Model`, `Person`, `Attribute`.
+
+#### Validation and error handling
+
+- Missing `attr/` prefixes or index produces a `ParseException` with `TagCommand.MESSAGE_USAGE`.
+- Malformed segments without `=` trigger `ParseException` ("Incorrect format. Use attr/key=value[,value2]...").
+- Empty keys or values throw dedicated `ParseException`s ("Attribute key cannot be empty.", "Attribute must have at least one value.").
+- An index outside the displayed range throws `CommandException` with `MESSAGE_INVALID_PERSON_DISPLAYED_INDEX`.
+
+#### Design Considerations
+
+- **Override semantics**: Removing existing attributes with the same key before adding new ones keeps the latest tutor input authoritative.
+- **Immutability**: The command constructs a new `Person` instance, aligning with the project's immutable model strategy and simplifying undo/redo in the future.
+- **Case insensitivity**: Lowercasing keys and values ensures consistent matching across commands such as `filter`, preventing duplicate attributes that differ only in casing.
+- **Deterministic ordering**: Using an insertion-ordered map during parsing keeps attribute application predictable and stable for testing.
+
+
+
 ### Filter Command
 
 #### What it does
