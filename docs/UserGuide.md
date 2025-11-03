@@ -13,7 +13,7 @@ While it has a clean Graphical User Interface (GUI), it is optimized for use via
 If you can type fast, you can manage your student **roster—finding,
 updating, and organizing** much faster than with a mouse.
 
-### Table of Contents 
+### Table of Contents
 * Table of Contents
 {:toc}
 
@@ -478,18 +478,18 @@ Allows tutors to instantly search for students by name, email or phone number.
 Format: `search [KEYWORD]`
 
 *   Shows all contacts with their name, email, or phone number having a partial match with `KEYWORD`
-*   The `KEYWORD` is case-insensitive 
+*   The `KEYWORD` is case-insensitive
 
 Examples:
 * `search alex`
 
  Displays contacts such as `Alex Yeoh`
 
-* `search 9876` 
+* `search 9876`
 
  Display contacts with phone number such as 9876123
 
-* `search john12` 
+* `search john12`
 
  Displays contacts with email `john123@yahoo.com`
 
@@ -542,7 +542,7 @@ Examples:
 
 Adds the remark “Excellent progress this term” to the 2nd student
 
-* `remark 1 r/` 
+* `remark 1 r/`
 
 Clears the existing remark of the 1st student
 
