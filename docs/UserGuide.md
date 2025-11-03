@@ -46,7 +46,7 @@ This guide is designed to help you, a private tutor, efficiently manage all your
 For example, typing **`help`** and pressing Enter will open the help window.<br>
 7. Try adding your first student using the command:
 
-   `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Friend t/Grade10`
+   `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 t/Math t/Grade10`
 
    _This command adds a student named "John Doe" with his phone, email, address, and two tags indicating he's a Grade 10 Math student._
 
