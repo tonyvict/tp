@@ -1,0 +1,79 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UnscheduleCommandParser" as UnscheduleCommandParser LOGIC_COLOR
+participant "u:UnscheduleCommand" as UnscheduleCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("unschedule 1 lesson/1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("unschedule 1 lesson/1")
+activate AddressBookParser
+
+create UnscheduleCommandParser
+AddressBookParser -> UnscheduleCommandParser
+activate UnscheduleCommandParser
+UnscheduleCommandParser --> AddressBookParser
+deactivate UnscheduleCommandParser
+
+AddressBookParser -> UnscheduleCommandParser : parse(arguments)
+activate UnscheduleCommandParser
+
+create UnscheduleCommand
+UnscheduleCommandParser -> UnscheduleCommand
+activate UnscheduleCommand
+UnscheduleCommand --> UnscheduleCommandParser : u
+deactivate UnscheduleCommand
+
+UnscheduleCommandParser --> AddressBookParser : u
+deactivate UnscheduleCommandParser
+UnscheduleCommandParser -[hidden]-> AddressBookParser
+destroy UnscheduleCommandParser
+
+AddressBookParser --> LogicManager : u
+deactivate AddressBookParser
+
+LogicManager -> UnscheduleCommand : execute(model)
+activate UnscheduleCommand
+
+UnscheduleCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> UnscheduleCommand
+
+alt invalid person index
+  UnscheduleCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
+else no lessons
+  UnscheduleCommand --> LogicManager : throw CommandException(MESSAGE_NO_LESSONS)
+else invalid lesson index
+  UnscheduleCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_LESSON_DISPLAYED_INDEX)
+else allowed
+  UnscheduleCommand -> Model : setPerson(personToEdit, editedPerson)
+  Model --> UnscheduleCommand
+
+  UnscheduleCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+  Model --> UnscheduleCommand
+  deactivate Model
+
+  create CommandResult
+  UnscheduleCommand -> CommandResult
+  activate CommandResult
+  CommandResult --> UnscheduleCommand
+  deactivate CommandResult
+
+  UnscheduleCommand --> LogicManager : result
+  deactivate UnscheduleCommand
+end
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

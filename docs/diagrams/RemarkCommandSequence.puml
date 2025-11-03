@@ -57,7 +57,7 @@ else valid index
   RemarkCommand -> Model : setPerson(personToEdit, editedPerson)
   Model --> RemarkCommand
 
-  RemarkCommand -> Model : updateFilteredPersonList()
+  RemarkCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
   Model --> RemarkCommand
   deactivate Model
 

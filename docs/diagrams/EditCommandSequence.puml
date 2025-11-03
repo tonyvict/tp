@@ -56,7 +56,7 @@ Model --> EditCommand
 alt invalid index
   EditCommand --> LogicManager : throw CommandException(MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
 else valid index
-    EditCommand -> Model : updateFilteredPersonList()
+    EditCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
     Model --> EditCommand
     deactivate Model
 
