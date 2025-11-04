@@ -77,10 +77,10 @@ Refer to the [Features](#features) below for details of each command.
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/Grade10` or as `n/John Doe`.
+  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/talkative` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used zero or multiple times.<br>
-  e.g. `[t/TAG]…​` can be used as `t/friend` or `t/friend t/family`
+  e.g. `[t/TAG]…​` can be used as `t/quiet` or `t/friendly t/slowlearner`
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER` then `p/PHONE_NUMBER n/NAME` is also acceptable.
