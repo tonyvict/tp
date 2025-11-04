@@ -323,7 +323,7 @@ _Deletes the attribute `subject` from the 1st student._
 _Deletes multiple attributes `age` and `subject` from the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:bulb: Tip:
-Use this when a student's attribute changes (e.g., they're no longer a "NewStudent" or have cleared their "BehindPayment" status).
+Use this when a student's attribute changes (e.g. they're no longer taking a certain subject).
 </div>
 
 ![Result of deleting attributes](images/deltagUI.png)
