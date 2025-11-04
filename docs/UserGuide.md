@@ -39,7 +39,7 @@ This guide is designed to help you, a private tutor, efficiently manage all your
 
 4. In the home folder, right click and select `Open in Terminal`
 
-5. Use the `java -jar classrosterpro.jar` command to run the application.<br>
+5. Use the `java -jar ClassRosterPro.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
