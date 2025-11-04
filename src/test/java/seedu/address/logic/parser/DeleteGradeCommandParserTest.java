@@ -32,9 +32,13 @@ public class DeleteGradeCommandParserTest {
     }
 
     @Test
+    public void parse_missingSubPrefixOnlyIndex_throwsParseException() {
+        assertParseFailure(parser, "1", MESSAGE_INVALID_FORMAT);
+    }
+
+    @Test
     public void parse_missingIndex_throwsParseException() {
-        assertParseFailure(parser, "sub/MATH/WA1",
-                DeleteGradeCommand.MESSAGE_USAGE);
+        assertParseFailure(parser, "sub/MATH/WA1", MESSAGE_INVALID_FORMAT);
     }
 
     @Test
