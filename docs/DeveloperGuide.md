@@ -706,8 +706,8 @@ Removes a specific grade entry (identified by subject and assessment) from a stu
 
 - `INDEX` — required, 1-based. Identifies the student in the current filtered list.
 - `sub/SUBJECT/ASSESSMENT` — required. Specifies which grade to remove:
-  - `SUBJECT` — subject name (must match exactly).
-  - `ASSESSMENT` — assessment type (must match exactly).
+  - `SUBJECT` — subject name (must match exactly, including case).
+  - `ASSESSMENT` — assessment type (must match exactly, including case).
 
 #### Overview
 
@@ -749,6 +749,7 @@ Key classes: `DeleteGradeCommand`, `Model`, `Person`, `GradeList`.
 - **Error Prevention**: Checking for grade existence before removal provides clear feedback and prevents silent failures.
 - **Immutability**: The command creates new `GradeList` and `Person` objects, maintaining immutability consistent with other commands.
 - **Precision**: Requiring exact subject-assessment match ensures tutors remove the intended grade without ambiguity.
+- **Case Sensitivity**: Both subject and assessment must match exactly (including case) to the originally recorded grade. This ensures precise identification and prevents accidental deletions due to capitalization mismatches.
 - **Symmetry**: The command complements the `grade` command, providing complete CRUD operations for grade management.
 
 
