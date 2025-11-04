@@ -5,11 +5,11 @@ skinparam ArrowFontSize 12
 start
 :User enters command to edit person;
 :Logic parses index and optional fields;
-if () then ([empty fiield])
-  :Display error about missing fields;
+if () then ([no fields to edit provided])
+  :Display format error;
   stop
-else ([non-empty field])
-  :Create and execute EditCommand;
+else ([at least one field provided])
+  :Create EditCommand with EditPersonDescriptor;
 endif
 if () then ([invalid person index])
   :Display invalid index error;

@@ -290,7 +290,7 @@ Examples:
 _Adds attributes `subject=math,science` and `age=16` to the 2nd student._
 
 <div markdown="span" class="alert alert-primary">:warning: Common Mistake:
-Using the same attribute key multiple times in a single command - duplicate keys will be ignored (only the last one is used).
+Duplicate attribute keys in a single command are ignored; only the final value provided is applied.
 </div>
 
 
