@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUB;
 
 import seedu.address.commons.core.index.Index;
@@ -18,7 +19,7 @@ public class DeleteGradeCommandParser implements Parser<DeleteGradeCommand> {
                 DeleteGradeCommand.MESSAGE_USAGE);
 
         if (!argMultimap.getValue(PREFIX_SUB).isPresent()) {
-            throw new ParseException(DeleteGradeCommand.MESSAGE_USAGE);
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteGradeCommand.MESSAGE_USAGE));
         }
 
         String[] parts = argMultimap.getValue(PREFIX_SUB).get().split("/", -1);
